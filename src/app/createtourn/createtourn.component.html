@@ -1,0 +1,19 @@
+<div class="container-fluid">
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+      <div class="form-group">
+        <label for="Deck">Deck</label>
+        <input
+        type="text"
+        class="form-control"
+        id="Deck"
+        aria-describedby="deckHelp"
+        placeholder="Enter keyforgegame.com URL"
+        ngModel
+        required
+        name="Deck"
+        >
+        <small id="deckHelp" class="form-text text-muted">Ex: https://www.keyforgegame.com/deck-details/6d42472e-2e9c-457b-bc89-20801bbf96dc</small>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid">Submit</button>
+    </form>
+  </div>
