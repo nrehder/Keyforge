@@ -4,6 +4,15 @@
       <h5>Tournament Info</h5>
       <label for="name">Tournament Name</label>
       <input type="text" class="form-control" id="name" formControlName="tournamentName">
+      <span
+      class="help-block"
+      style="color:red;"
+      *ngIf="createForm.get('tournamentName').invalid
+      && createForm.get('tournamentName').touched">
+        Please enter a name for the tournament.
+      </span>
+    </div>
+    <div class="form-group">
       <label for="tournType">Tournament Type</label>
       <select id="tournType" class="form-control" formControlName="tournamentType">
         <option value="swiss">Swiss Style</option>
@@ -14,35 +23,26 @@
     <div formArrayName="decks" class="form-group">
       <h5>Enter Player Decks Below</h5>
       <small id="deckHelp" class="form-text text-muted">Ex: https://www.keyforgegame.com/deck-details/6d42472e-2e9c-457b-bc89-20801bbf96dc</small>
-      <div style="display:flex;" *ngFor="let deck of createForm.get('decks').controls; let i=index">
-        <p class="col-1" style="margin-right:1rem">Player {{i+1}}</p>
-        <div class="col-11">
-            <input type="text" class="form-control" [formControlName]="i" placeholder="Enter keyforgegame.com URL">
+      <span
+        class="help-block"
+        style="color:red;"
+        *ngIf="createForm.get('decks').invalid
+        && createForm.get('decks').touched">
+        Please enter a valid URL.
+      </span>
+      <div *ngFor="let deck of createForm.get('decks').controls; let i=index">
+        <div style="display:flex;">
+          <p class="col-1" style="margin-right:1rem">Player {{i+1}}</p>
+          <div class="col-11">
+              <input type="text" class="form-control" [formControlName]="i" placeholder="Enter keyforgegame.com URL">
+          </div>
+          <div class="col-1">
+            <button class="btn btn-danger" type="button" (click)="onDeleteDeck(i)">X</button>
+          </div>
         </div>
-        </div>
+      </div>
       <button type="button" class="btn btn-secondary" (click)="onAddDeck()">Add Another Player</button>
     </div>
-    <button type="submit" class="btn btn-primary" >Submit</button>
+    <button type="submit" class="btn btn-primary" [disabled]="createForm.invalid">Submit</button>
   </form>
 </div>
-
-
-<!-- <div class="container-fluid">
-    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-      <div class="form-group">
-        <label for="Deck">Deck</label>
-        <input
-        type="text"
-        class="form-control"
-        id="Deck"
-        aria-describedby="deckHelp"
-        placeholder="Enter keyforgegame.com URL"
-        ngModel
-        required
-        name="Deck"
-        >
-        <small id="deckHelp" class="form-text text-muted">Ex: https://www.keyforgegame.com/deck-details/6d42472e-2e9c-457b-bc89-20801bbf96dc</small>
-      </div>
-      <button type="submit" class="btn btn-primary" [disabled]="f.invalid">Submit</button>
-    </form>
-  </div> -->

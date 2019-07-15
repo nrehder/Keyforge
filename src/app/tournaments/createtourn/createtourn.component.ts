@@ -32,6 +32,10 @@ export class CreatetournComponent {
     (<FormArray>this.createForm.get("decks")).push(control);
   }
 
+  onDeleteDeck(index:number){
+    (<FormArray>this.createForm.get('decks')).removeAt(index);
+  }
+
   validateDeckUrl(control:FormControl):{[s:string]:boolean}{
     if(control.value !== null){
       if(control.value.length != 78 || control.value.search('keyforgegame.com')===-1 || control.value.search('deck-details')===-1){
