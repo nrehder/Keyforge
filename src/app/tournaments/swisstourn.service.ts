@@ -16,7 +16,8 @@ export interface deck {
 export class SwissService {
     decks:{ [name:string]:deck}={};
     standings:string[]=[];
-    name:string
+    name:string;
+    round:number;
     
     createSwiss(name:string,decks:{name:string,chains?:number}[]){
         this.name=name;
@@ -42,6 +43,8 @@ export class SwissService {
             this.standings[i] = this.standings[rand];
             this.standings[rand] = temp;
         }
+
+        this.round = 1;
     }
 
     updateStandings(update:{name:string,opponent:string,result:string}[]){
@@ -60,12 +63,13 @@ export class SwissService {
         this.calculateSoS();
         this.calculateESoS();
         this.sortStandings();
+        this.round +=1;
     }
 
     //Pairs decks based off of current rank and not having faced each other yet
     getPairings(){
         let currentStandings = [...this.standings]
-        let pairings:{[game:number]:{deck1:string,deck2:string}}
+        let pairings:{deck1:string,deck2:string}[]
         let gameNumber = 0;
         while(currentStandings.length>1){
             let i=1;

@@ -3,6 +3,7 @@ import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 
 import { DecksService, DeckData } from '../../shared/decks.service';
 import { SwissService } from '../swisstourn.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-createtourn',
@@ -12,8 +13,13 @@ import { SwissService } from '../swisstourn.service';
 export class CreatetournComponent {
 
   createForm:FormGroup;
+  isloading:boolean;
 
-  constructor(private deckService:DecksService,private swiss:SwissService){}
+  constructor(
+    private deckService:DecksService,
+    private swiss:SwissService,
+    private route:Router
+    ){}
 
   ngOnInit(){
     this.createForm = new FormGroup({
@@ -51,7 +57,7 @@ export class CreatetournComponent {
     const decks = [];
     const formArray = this.createForm.get('decks').value
 
-    
+    this.isloading = true;
     this.deckService.getTournamentDecks(formArray)
     .subscribe((decksData:DeckData[])=>{
       let decks = [];
@@ -72,7 +78,10 @@ export class CreatetournComponent {
         }
       }
       this.swiss.createSwiss(this.createForm.get("tournamentName").value,decks)
+
       
+      this.isloading = false;
+      this.route.navigate(["/tournaments","manage"])
     })
   }
 
