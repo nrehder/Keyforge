@@ -16,8 +16,10 @@ export interface deck {
 export class SwissService {
     decks:{ [name:string]:deck};
     standings:string[];
+    name:string
     
-    createSwiss(decks:{name:string,chains:number}[]){
+    createSwiss(name:string,decks:{name:string,chains:number}[]){
+        this.name=name;
         //Adds decks to the data storage
         for(let i=0;i<decks.length;i++){
             this.decks[decks[i].name] = {
