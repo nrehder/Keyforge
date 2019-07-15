@@ -42,8 +42,6 @@ export class SwissService {
             this.standings[i] = this.standings[rand];
             this.standings[rand] = temp;
         }
-        console.log(this.standings)
-        console.log(this.decks)
     }
 
     updateStandings(update:{name:string,opponent:string,result:string}[]){

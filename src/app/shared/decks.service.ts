@@ -65,16 +65,16 @@ export class DecksService {
         return forkJoin(deckHttpRequests)
     }
 
-    getTournamentDeck(key:string,chains:boolean){
-        return this.http.get<DeckData>('https://cors-anywhere.herokuapp.com/https://www.keyforgegame.com/api/decks/' + key + '/?links=cards,notes')
-        .pipe(map(resData=>{
-            if(chains){
-                return {
-                    name:resData.data.name,
-                    chains:resData.data.chains
-                }
-            }
-            return resData.data.name
-        }))
-    }
+    // getTournamentDeck(key:string,chains:boolean){
+    //     return this.http.get<DeckData>('https://cors-anywhere.herokuapp.com/https://www.keyforgegame.com/api/decks/' + key + '/?links=cards,notes')
+    //     .pipe(map(resData=>{
+    //         if(chains){
+    //             return {
+    //                 name:resData.data.name,
+    //                 chains:resData.data.chains
+    //             }
+    //         }
+    //         return resData.data.name
+    //     }))
+    // }
 }

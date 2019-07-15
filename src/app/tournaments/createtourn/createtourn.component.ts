@@ -76,8 +76,4 @@ export class CreatetournComponent {
     })
   }
 
-  getDecks(){
-
-  }
-
 }
