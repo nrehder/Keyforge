@@ -9,21 +9,21 @@ export interface deck {
     opponents:string[]
     SoS:number,
     ESoS:number,
-    chains:number
+    chains?:number
 }
 
 @Injectable({providedIn:'root'})
 export class SwissService {
-    decks:{ [name:string]:deck};
-    standings:string[];
+    decks:{ [name:string]:deck}={};
+    standings:string[]=[];
     name:string
     
-    createSwiss(name:string,decks:{name:string,chains:number}[]){
+    createSwiss(name:string,decks:{name:string,chains?:number}[]){
         this.name=name;
         //Adds decks to the data storage
         for(let i=0;i<decks.length;i++){
             this.decks[decks[i].name] = {
-                ...decks[i],
+                name:decks[i].name,
                 wins:0,
                 losses:0,
                 buys:0,
@@ -32,7 +32,7 @@ export class SwissService {
                 SoS:0,
                 ESoS:0
             }
-            this.standings[i] = decks[i].name
+            this.standings.push(decks[i].name)
         }
 
         //randomizes standings for first game
@@ -42,6 +42,8 @@ export class SwissService {
             this.standings[i] = this.standings[rand];
             this.standings[rand] = temp;
         }
+        console.log(this.standings)
+        console.log(this.decks)
     }
 
     updateStandings(update:{name:string,opponent:string,result:string}[]){

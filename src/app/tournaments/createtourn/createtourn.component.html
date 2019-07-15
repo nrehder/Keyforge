@@ -19,6 +19,14 @@
         <option value="roundRobin">Round Robin</option>
       </select>
     </div>
+    <div class="form-group">
+        <label for="chains">Do you want to include chains?</label>
+        <select id="chains" class="form-control" formControlName="chains">
+          <option value="no">No Chains</option>
+          <option value="official">Official Chains</option>
+          <option value="unofficial">Unofficial Chains</option>
+        </select>
+      </div>
     
     <div formArrayName="decks" class="form-group">
       <h5>Enter Player Decks Below</h5>

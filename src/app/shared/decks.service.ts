@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { Observable, forkJoin } from 'rxjs';
 
 export interface DeckData {
     data:{
@@ -54,9 +55,25 @@ export interface DeckData {
 @Injectable({providedIn:'root'})
 export class DecksService {
     constructor(private http:HttpClient){}
-    getDeckName(key:string){
+
+    getTournamentDecks(urls:string[]){
+        let deckHttpRequests = [];
+        for(let i=0;i<urls.length;i++){
+            let key = urls[i].substr(urls[i].search('deck-details')+13,36);
+            deckHttpRequests.push(this.http.get('https://cors-anywhere.herokuapp.com/https://www.keyforgegame.com/api/decks/' + key + '/?links=cards,notes'))
+        }
+        return forkJoin(deckHttpRequests)
+    }
+
+    getTournamentDeck(key:string,chains:boolean){
         return this.http.get<DeckData>('https://cors-anywhere.herokuapp.com/https://www.keyforgegame.com/api/decks/' + key + '/?links=cards,notes')
         .pipe(map(resData=>{
+            if(chains){
+                return {
+                    name:resData.data.name,
+                    chains:resData.data.chains
+                }
+            }
             return resData.data.name
         }))
     }
