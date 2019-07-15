@@ -1,6 +1,6 @@
 .match{
     border: 1px solid black;
-    height:3rem;
+    min-height:3rem;
     text-align: center;
 }
 .winner{

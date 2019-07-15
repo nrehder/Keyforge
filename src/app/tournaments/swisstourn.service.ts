@@ -69,7 +69,7 @@ export class SwissService {
     //Pairs decks based off of current rank and not having faced each other yet
     getPairings(){
         let currentStandings = [...this.standings]
-        let pairings:{deck1:string,deck2:string}[]
+        let pairings:{deck1:string,deck2:string}[]=[];
         let gameNumber = 0;
         while(currentStandings.length>1){
             let i=1;
@@ -79,10 +79,10 @@ export class SwissService {
                     this.decks[currentStandings[0]].opponents.indexOf(currentStandings[i])<0 &&
                     this.decks[currentStandings[i]].opponents.indexOf(currentStandings[0])
                     ){
-                    pairings[gameNumber] = {
+                    pairings.push({
                         deck1:currentStandings[0],
                         deck2:currentStandings[1]
-                    }
+                    })
                     currentStandings.shift();
                     currentStandings.shift();
                     searching = false;

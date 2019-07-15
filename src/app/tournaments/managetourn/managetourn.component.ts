@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { SwissService } from '../swisstourn.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-managetourn',
@@ -9,21 +8,32 @@ import { Subscription } from 'rxjs';
 })
 export class ManagetournComponent implements OnInit {
 
-  tournName:string="default";
-  round:number=1;
+  tournName:string;
+  round:number;
   //:{deck1:string,deck2:string,winner?:string}[]
-  pairings = [
-    {deck1:{name:'test1',winner:false},deck2:{name:'test2',winner:false}},
-    {deck1:{name:'test3',winner:false},deck2:{name:'test4',winner:false}},
-    {deck1:{name:'test5',winner:false},deck2:{name:'test6',winner:false}}
-  ];
+  pairings:{
+    deck1:{name:string,winner:boolean},
+    deck2:{name:string,winner:boolean}
+  }[]=[];
 
   constructor(private swiss:SwissService) { }
 
   ngOnInit() {
-    // this.tournName = this.swiss.name;
-    // this.round = this.swiss.round;
-    // this.pairings = this.swiss.getPairings();
+    this.tournName = this.swiss.name;
+    this.round = this.swiss.round;
+    let tempPairings = this.swiss.getPairings();
+    for(let i=0;i<tempPairings.length;i++){
+      this.pairings.push({
+        deck1:{
+          name:tempPairings[i].deck1,
+          winner:false
+        },
+        deck2:{
+          name:tempPairings[i].deck2,
+          winner:false
+        }
+      })
+    }
   }
 
   updateData(){
@@ -45,6 +55,14 @@ export class ManagetournComponent implements OnInit {
       this.pairings[index].deck2.winner = true;
       this.pairings[index].deck1.winner = false;
     }
+  }
+
+  onSave(){
+
+  }
+
+  onFinish(){
+
   }
 
 }
