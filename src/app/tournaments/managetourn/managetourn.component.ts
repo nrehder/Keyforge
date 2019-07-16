@@ -19,7 +19,7 @@ export class ManagetournComponent implements OnInit {
   constructor(private swiss:SwissService) { }
 
   ngOnInit() {
-    this.tournName = this.swiss.name;
+    this.tournName = this.swiss.tournament.name;
     this.round = this.swiss.round;
     let tempPairings = this.swiss.getPairings();
     for(let i=0;i<tempPairings.length;i++){
