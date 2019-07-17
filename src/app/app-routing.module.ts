@@ -12,19 +12,20 @@ import { RunCurrentTournamentComponent } from './current-tournaments/view-curren
 import { FinishedTournamentsComponent } from './finished-tournaments/finished-tournaments.component';
 import { ViewFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/view-finished-tournament.component';
 import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
+import { CurrentTournamentsResolver } from './current-tournaments/current-tournaments.resolver';
 
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
-  { path: "tournaments", component: CurrentTournamentsComponent, children:[
+  { path: "tournaments", component: CurrentTournamentsComponent, resolve:[CurrentTournamentsResolver], children:[
     { path: "create", component: CreateTournamentComponent },
     { path: ":id", component: ViewCurrentTournamentComponent },
-    { path: ":id/run", component: RunCurrentTournamentComponent },
-    { path: "finished", component:FinishedTournamentsComponent, children:[
-      { path: ":id", component: ViewFinishedTournamentComponent },
-      { path: ":id/full", component: FullFinishedTournamentComponent }
-    ] }
+    { path: ":id/run", component: RunCurrentTournamentComponent }
   ]},
+  { path: "finished", component:FinishedTournamentsComponent, children:[
+    { path: ":id", component: ViewFinishedTournamentComponent },
+    { path: ":id/full", component: FullFinishedTournamentComponent }
+  ] },
   { path:"login",component:UserComponent }
 ];
 

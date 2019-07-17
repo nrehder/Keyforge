@@ -5,5 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class SingleElimService {
 
+  //functionality to run a single elimination service
+
   constructor() { }
 }

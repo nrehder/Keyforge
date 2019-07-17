@@ -1,1 +1,22 @@
-<p>current-tournaments works!</p>
+<!--
+    Should have LHS as a list of all current tournaments
+    RHS should be either:
+        router-outlet to show selected tournament
+        'please select tournament' if no selected tournaent
+ -->
+
+<div class="row">
+    <div class="col-md-5">
+        <div *ngFor="let curTourn of currentTournaments; let i=index">
+                <a style="cursor:pointer" class="list-group-item clearfix" [routerLink]="[index]" routerLinkActive="active">
+                <div class="pull-left">
+                    <h4 class="list-group-item-heading">{{curTourn.name}}</h4>
+                    <p class="list-group-item-text">{{curTourn.type}}</p>
+                </div>
+                </a>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <router-outlet></router-outlet>
+    </div>
+</div>

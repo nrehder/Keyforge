@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CurrentTournamentsService, tournament } from './services/current-tournaments.service';
+import { DatabaseService } from '../shared/database.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-current-tournaments',
@@ -7,9 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CurrentTournamentsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private db:DatabaseService, private currentTournsService:CurrentTournamentsService) { }
+
+  currentTournSub:Subscription;
+  currentTournaments:tournament[];
 
   ngOnInit() {
+    this.currentTournSub = this.currentTournsService.currentTournChanged
+    .subscribe((tourns:tournament[])=>{
+      this.currentTournaments = tourns;
+    })
+    this.currentTournaments = this.currentTournsService.getTournaments();
   }
 
 }

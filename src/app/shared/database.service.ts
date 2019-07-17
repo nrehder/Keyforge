@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import { CurrentTournamentsService, tournament } from '../current-tournaments/services/current-tournaments.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,30 +9,49 @@ import { map } from 'rxjs/operators';
 export class DatabaseService {
 
   constructor(
-    private db:AngularFirestore
+    private db:AngularFirestore,
+    private currentTourns:CurrentTournamentsService
     ){}
 
-saveTournament(tourn){
-    this.db.collection('testing').doc('tournaments').collection("current").doc(tourn.name).set(tourn)
-}
+    saveTournament(tourn:tournament){
+        this.db.collection('testing').doc('tournaments').collection("current").doc(tourn.name).set(tourn)
+    }
 
-loadTournament(name:string){
-    return this.db.collection('testing').doc('tournaments').collection("current").doc(name).get()
-    // .subscribe((doc)=>{
-    //     console.log(doc.data())
-    // })
-}
+    loadTournament(name:string){
+        return this.db.collection('testing').doc('tournaments').collection("current").doc(name).get()
+        // .subscribe((doc)=>{
+        //     console.log(doc.data())
+        // })
+    }
 
-loadTournaments(type:string){
-    return this.db.collection('testing').doc('tournaments').collection(type).get()
-    .pipe(
-        map((item:firebase.firestore.QuerySnapshot) => {
-            return item.docs
-            .map((dataItem: firebase.firestore.QueryDocumentSnapshot) => dataItem.data());
+    loadTournaments(type:string){
+        let tournaments=this.db.collection('testing').doc('tournaments').collection(type).get()
+        .pipe(
+            take(1),
+            map((item:firebase.firestore.QuerySnapshot) => {
+                return item.docs
+                .map((dataItem: firebase.firestore.QueryDocumentSnapshot) => {
+                    return <tournament>dataItem.data()
+                });
+            })
+        )
+
+        return tournaments;
+    }
+
+    loadCurrentTournaments(){
+        this.db.collection('testing').doc('tournaments').collection('current').get()
+        .pipe(
+            take(1),
+            map((item:firebase.firestore.QuerySnapshot) => {
+                return item.docs
+                .map((dataItem: firebase.firestore.QueryDocumentSnapshot) => {
+                    return <tournament>dataItem.data()
+                });
+            })
+        )
+        .subscribe(tourns=>{
+            this.currentTourns.setTournaments(tourns)
         })
-    )
-    // .subscribe(doc=>{
-    //     console.log(doc)
-    // })
-}
+    }
 }
