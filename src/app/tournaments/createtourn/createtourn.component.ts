@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 
-import { DecksService, DeckData } from '../../shared/decks.service';
+import { DeckRetrievalService, DeckData } from '../../shared/deck-retrieval.service';
 import { SwissService } from '../swisstourn.service';
 import { Router } from '@angular/router';
 
@@ -16,7 +16,7 @@ export class CreatetournComponent {
   isloading:boolean;
 
   constructor(
-    private deckService:DecksService,
+    private deckService:DeckRetrievalService,
     private swiss:SwissService,
     private route:Router
     ){}
