@@ -16,6 +16,8 @@ import { CreatetournComponent } from './tournaments/createtourn/createtourn.comp
 import { TournamentsComponent } from './tournaments/tournaments.component';
 import { ManagetournComponent } from './tournaments/managetourn/managetourn.component';
 import { FinishedTournamentsComponent } from './tournaments/finished-tournaments/finished-tournaments.component';
+import { ManageviewComponent } from './tournaments/managetourn/manageview/manageview.component';
+import { ManagelistComponent } from './tournaments/managetourn/managelist/managelist.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { FinishedTournamentsComponent } from './tournaments/finished-tournaments
     TournamentsComponent,
     ManagetournComponent,
     UserComponent,
-    FinishedTournamentsComponent
+    FinishedTournamentsComponent,
+    ManageviewComponent,
+    ManagelistComponent
   ],
   imports: [
     BrowserModule,

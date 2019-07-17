@@ -54,7 +54,6 @@ export class CreatetournComponent {
   }
   
   onSubmit(){
-    const decks = [];
     const formArray = this.createForm.get('decks').value
 
     this.isloading = true;
