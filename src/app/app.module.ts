@@ -18,6 +18,12 @@ import { ManagetournComponent } from './tournaments/managetourn/managetourn.comp
 import { FinishedTournamentsComponent } from './tournaments/finished-tournaments/finished-tournaments.component';
 import { ManageviewComponent } from './tournaments/managetourn/manageview/manageview.component';
 import { ManagelistComponent } from './tournaments/managetourn/managelist/managelist.component';
+import { CurrentTournamentsComponent } from './current-tournaments/current-tournaments.component';
+import { ViewCurrentTournamentComponent } from './current-tournaments/view-current-tournament/view-current-tournament.component';
+import { RunCurrentTournamentComponent } from './current-tournaments/view-current-tournament/run-current-tournament/run-current-tournament.component';
+import { CreateTournamentComponent } from './current-tournaments/create-tournament/create-tournament.component';
+import { ViewFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/view-finished-tournament.component';
+import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +35,13 @@ import { ManagelistComponent } from './tournaments/managetourn/managelist/manage
     UserComponent,
     FinishedTournamentsComponent,
     ManageviewComponent,
-    ManagelistComponent
+    ManagelistComponent,
+    CurrentTournamentsComponent,
+    ViewCurrentTournamentComponent,
+    RunCurrentTournamentComponent,
+    CreateTournamentComponent,
+    ViewFinishedTournamentComponent,
+    FullFinishedTournamentComponent
   ],
   imports: [
     BrowserModule,
