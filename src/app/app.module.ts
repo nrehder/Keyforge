@@ -12,10 +12,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { UserComponent } from './user/user.component';
 
-import { CreatetournComponent } from './tournaments/createtourn/createtourn.component';
-import { TournamentsComponent } from './tournaments/tournaments.component';
-import { ManagetournComponent } from './tournaments/managetourn/managetourn.component';
-import { ManageviewComponent } from './tournaments/managetourn/manageview/manageview.component';
 import { CurrentTournamentsComponent } from './current-tournaments/current-tournaments.component';
 import { ViewCurrentTournamentComponent } from './current-tournaments/view-current-tournament/view-current-tournament.component';
 import { RunCurrentTournamentComponent } from './current-tournaments/view-current-tournament/run-current-tournament/run-current-tournament.component';
@@ -27,11 +23,7 @@ import { FullFinishedTournamentComponent } from './finished-tournaments/view-fin
   declarations: [
     AppComponent,
     HeaderComponent,
-    CreatetournComponent,
-    TournamentsComponent,
-    ManagetournComponent,
     UserComponent,
-    ManageviewComponent,
     CurrentTournamentsComponent,
     ViewCurrentTournamentComponent,
     RunCurrentTournamentComponent,
