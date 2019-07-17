@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DataStorageService } from '../shared/data-storage.service';
+import { DatabaseService } from '../shared/database.service';
 
 export interface deck {
     name:string,
@@ -31,7 +31,7 @@ export class SwissService {
     }
     round:number;
 
-    constructor(private dataStorage:DataStorageService){}
+    constructor(private dataStorage:DatabaseService){}
     
     createSwiss(name:string,decks:{name:string,chains?:number}[]){
         this.dataStorage.loadTournament(name);
