@@ -1,18 +1,31 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-// import { UserComponent } from './user/user.component';
-// import { TournamentsComponent } from './tournaments/tournaments.component';
-// import { CreatetournComponent } from './tournaments/createtourn/createtourn.component';
-// import { ManagetournComponent } from './tournaments/managetourn/managetourn.component';
+import { HomeComponent } from './home/home.component';
+import { UserComponent } from './user/user.component';
+
+import { CurrentTournamentsComponent } from './current-tournaments/current-tournaments.component';
+import { CreateTournamentComponent } from './current-tournaments/create-tournament/create-tournament.component';
+import { ViewCurrentTournamentComponent } from './current-tournaments/view-current-tournament/view-current-tournament.component';
+import { RunCurrentTournamentComponent } from './current-tournaments/view-current-tournament/run-current-tournament/run-current-tournament.component';
+
+import { FinishedTournamentsComponent } from './finished-tournaments/finished-tournaments.component';
+import { ViewFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/view-finished-tournament.component';
+import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
+
 
 const routes: Routes = [
-  // {path:"",redirectTo:"/tournaments",pathMatch:"full"},
-  // {path:"tournaments",component:TournamentsComponent,children:[
-  //   {path:"create",component:CreatetournComponent},
-  //   {path:"manage",component:ManagetournComponent}
-  // ]},
-  // {path:"login",component:UserComponent}
+  { path: "", component: HomeComponent },
+  { path: "tournaments", component: CurrentTournamentsComponent, children:[
+    { path: "create", component: CreateTournamentComponent },
+    { path: ":id", component: ViewCurrentTournamentComponent },
+    { path: ":id/run", component: RunCurrentTournamentComponent },
+    { path: "finished", component:FinishedTournamentsComponent, children:[
+      { path: ":id", component: ViewFinishedTournamentComponent },
+      { path: ":id/full", component: FullFinishedTournamentComponent }
+    ] }
+  ]},
+  { path:"login",component:UserComponent }
 ];
 
 @NgModule({

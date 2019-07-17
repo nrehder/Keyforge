@@ -16,8 +16,10 @@ import { CurrentTournamentsComponent } from './current-tournaments/current-tourn
 import { ViewCurrentTournamentComponent } from './current-tournaments/view-current-tournament/view-current-tournament.component';
 import { RunCurrentTournamentComponent } from './current-tournaments/view-current-tournament/run-current-tournament/run-current-tournament.component';
 import { CreateTournamentComponent } from './current-tournaments/create-tournament/create-tournament.component';
+
 import { ViewFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/view-finished-tournament.component';
 import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { FullFinishedTournamentComponent } from './finished-tournaments/view-fin
     RunCurrentTournamentComponent,
     CreateTournamentComponent,
     ViewFinishedTournamentComponent,
-    FullFinishedTournamentComponent
+    FullFinishedTournamentComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
