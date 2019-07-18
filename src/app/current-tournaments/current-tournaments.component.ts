@@ -23,4 +23,8 @@ export class CurrentTournamentsComponent implements OnInit {
     this.currentTournaments = this.currentTournsService.getTournaments();
   }
 
+  ngOnDestroy(){
+    this.currentTournSub.unsubscribe;
+  }
+
 }

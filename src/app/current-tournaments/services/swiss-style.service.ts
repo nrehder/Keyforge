@@ -6,7 +6,7 @@ export interface deck {
   name:string,
   wins:number,
   losses:number,
-  buys:number,
+  byes:number,
   games:number,
   opponents:string[]
   SoS:number,
@@ -54,7 +54,7 @@ constructor(private dataStorage:DatabaseService){}
                 name:decks[i].name,
                 wins:0,
                 losses:0,
-                buys:0,
+                byes:0,
                 games:0,
                 opponents:[],
                 SoS:0,
@@ -87,7 +87,7 @@ constructor(private dataStorage:DatabaseService){}
                 this.tournament[this.round].decks[update[i].name].opponents.push(update[i].opponent);
                 this.tournament[this.round].decks[update[i].name].losses += 1;
             } else {
-                this.tournament[this.round].decks[update[i].name].buys += 1;
+                this.tournament[this.round].decks[update[i].name].byes += 1;
             }
             this.tournament[this.round].decks[update[i].name].games += 1;
         }
@@ -126,7 +126,7 @@ constructor(private dataStorage:DatabaseService){}
         if(currentStandings.length>0){
             pairings[gameNumber] = {
                 deck1:currentStandings[0],
-                deck2:'buy'
+                deck2:'bye'
             }
         }
         return pairings;
@@ -138,7 +138,7 @@ constructor(private dataStorage:DatabaseService){}
                 let sum = 0;
                 for(let i=0;i<this.tournament[this.round].decks[deck].opponents.length;i++){
                     let opponent:string = this.tournament[this.round].decks[deck].opponents[i];
-                    sum += (this.tournament[this.round].decks[opponent].wins + this.tournament[this.round].decks[opponent].buys)/this.tournament[this.round].decks[opponent].games
+                    sum += (this.tournament[this.round].decks[opponent].wins + this.tournament[this.round].decks[opponent].byes)/this.tournament[this.round].decks[opponent].games
                 }
                 this.tournament[this.round].decks[deck].SoS = sum / this.tournament[this.round].decks[deck].opponents.length
             }
@@ -160,8 +160,8 @@ constructor(private dataStorage:DatabaseService){}
 
     private sortStandings(){
         this.tournament[this.round].standings.sort((a,b)=>{
-            let a_wins = this.tournament[this.round].decks[a].wins + this.tournament[this.round].decks[a].buys;
-            let b_wins = this.tournament[this.round].decks[b].wins + this.tournament[this.round].decks[b].buys;
+            let a_wins = this.tournament[this.round].decks[a].wins + this.tournament[this.round].decks[a].byes;
+            let b_wins = this.tournament[this.round].decks[b].wins + this.tournament[this.round].decks[b].byes;
             if(a_wins>b_wins){
                 return -1;
             } else if(a_wins<b_wins) {

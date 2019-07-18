@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { DeckRetrievalService, DeckData } from '../../shared/deck-retrieval.service';
-import { SwissStyleService } from '../services/swiss-style.service';
-import { Router } from '@angular/router';
+import { CurrentTournamentsService, tournament } from '../services/current-tournaments.service';
+import { DatabaseService } from 'src/app/shared/database.service';
 
 @Component({
   selector: 'app-create-tournament',
@@ -17,8 +18,9 @@ export class CreateTournamentComponent implements OnInit {
 
   constructor(
     private deckService:DeckRetrievalService,
-    private swiss:SwissStyleService,
-    private route:Router
+    private route:Router,
+    private currentTournsService:CurrentTournamentsService,
+    private db:DatabaseService
     ){}
 
   ngOnInit(){
@@ -27,10 +29,22 @@ export class CreateTournamentComponent implements OnInit {
       "tournamentType": new FormControl("swiss",Validators.required),
       "chains": new FormControl("no",Validators.required),
       "decks": new FormArray([
-        new FormControl("https://www.keyforgegame.com/deck-details/18374c28-ad98-4d1f-9a61-938fdeed0d4c",[Validators.required,this.validateDeckUrl]),
-        new FormControl("https://www.keyforgegame.com/deck-details/facb832f-e76d-4295-bc78-d59d7e5886bc",[Validators.required,this.validateDeckUrl]),
-        new FormControl("https://www.keyforgegame.com/deck-details/4556dbec-3af7-4da2-8dea-53c56e28dfda",[Validators.required,this.validateDeckUrl]),
-        new FormControl("https://www.keyforgegame.com/deck-details/04c802a6-0428-44d1-81a6-e0bb9a0ea76d",[Validators.required,this.validateDeckUrl])
+        new FormGroup({
+          "name": new FormControl(null,Validators.required),
+          "deck": new FormControl("https://www.keyforgegame.com/deck-details/18374c28-ad98-4d1f-9a61-938fdeed0d4c",[Validators.required,this.validateDeckUrl])
+        }),
+        new FormGroup({
+          "name": new FormControl(null,Validators.required),
+          "deck": new FormControl("https://www.keyforgegame.com/deck-details/289a7505-141b-4ab9-9963-4dd83c657126",[Validators.required,this.validateDeckUrl])
+        }),
+        new FormGroup({
+          "name": new FormControl(null,Validators.required),
+          "deck": new FormControl("https://www.keyforgegame.com/deck-details/b2d1936e-7b6a-48db-a9f0-cd951e7ba79f",[Validators.required,this.validateDeckUrl])
+        }),
+        new FormGroup({
+          "name": new FormControl(null,Validators.required),
+          "deck": new FormControl("https://www.keyforgegame.com/deck-details/a27134ae-523f-4954-ab1b-675b4ed72709",[Validators.required,this.validateDeckUrl])
+        })
       ])
     })
   }
@@ -55,32 +69,45 @@ export class CreateTournamentComponent implements OnInit {
   
   onSubmit(){
     const formArray = this.createForm.get('decks').value
+    const getArray = [];
+    for(let i=0; i<formArray.length;i++){
+      getArray.push(formArray[i].deck)
+    }
+    console.log(formArray)
 
     this.isloading = true;
-    this.deckService.getTournamentDecks(formArray)
+    this.deckService.getTournamentDecks(getArray)
     .subscribe((decksData:DeckData[])=>{
       let decks = [];
       for(let i=0; i<decksData.length;i++){
         if(this.createForm.get("chains").value === "no"){
           decks.push({
-            name:decksData[i].data.name
+            player:formArray[i].name,
+            deckName:decksData[i].data.name
           })
         } else if(this.createForm.get("chains").value === "official") {
           decks.push({
-            name:decksData[i].data.name,
+            player:formArray[i].name,
+            deckName:decksData[i].data.name,
             chains:decksData[i].data.chains
           })
         } else {
           decks.push({
-            name:decksData[i].data.name
+            player:formArray[i].name,
+            deckName:decksData[i].data.name
           })
         }
       }
-      this.swiss.createSwiss(this.createForm.get("tournamentName").value,decks)
 
-      
+      console.log(this.createForm.get("tournamentName").value)
+      console.log(this.createForm.get("tournamentType").value)
+      console.log(decks)
+
+      this.currentTournsService.newTournament(this.createForm.get("tournamentName").value,this.createForm.get("tournamentType").value,decks)
       this.isloading = false;
-      this.route.navigate(["/tournaments","manage"])
+      console.log(this.currentTournsService.getTournaments())
+      this.db.saveCurrentTournaments();
+      this.route.navigate(["/tournaments",this.currentTournsService.currentTournaments.length-1])
     })
   }
 

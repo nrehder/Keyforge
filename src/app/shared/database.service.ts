@@ -39,6 +39,15 @@ export class DatabaseService {
         return tournaments;
     }
 
+    //Here or below is new
+
+    saveCurrentTournaments(){
+        const tourns = this.currentTourns.getTournaments();
+        for(let i=0;i<tourns.length;i++){
+            this.db.collection('testing').doc('tournaments').collection("current").doc(tourns[i].name).set(tourns[i])
+        }
+    }
+
     loadCurrentTournaments(){
         this.db.collection('testing').doc('tournaments').collection('current').get()
         .pipe(

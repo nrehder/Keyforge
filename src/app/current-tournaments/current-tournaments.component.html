@@ -3,20 +3,27 @@
     RHS should be either:
         router-outlet to show selected tournament
         'please select tournament' if no selected tournaent
- -->
-
+-->
+<br>
 <div class="row">
-    <div class="col-md-5">
-        <div *ngFor="let curTourn of currentTournaments; let i=index">
-                <a style="cursor:pointer" class="list-group-item clearfix" [routerLink]="[index]" routerLinkActive="active">
-                <div class="pull-left">
-                    <h4 class="list-group-item-heading">{{curTourn.name}}</h4>
-                    <p class="list-group-item-text">{{curTourn.type}}</p>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-success" routerLink="create" type="button">New Tournament</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div *ngFor="let curTourn of currentTournaments; let i=index">
+                    <a style="cursor:pointer" class="list-group-item clearfix" [routerLink]="[index]" routerLinkActive="active">
+                        <h4 class="list-group-item-heading">{{curTourn.name}}</h4>
+                        <p class="list-group-item-text">{{curTourn.type}}</p>
+                    </a>
                 </div>
-                </a>
+            </div>
         </div>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-10">
         <router-outlet></router-outlet>
     </div>
 </div>
