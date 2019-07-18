@@ -1,39 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+
 import { SwissStyleService } from '../../services/swiss-style.service';
+import { CurrentTournamentsService, tournament } from '../../services/current-tournaments.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-run-current-tournament',
   templateUrl: './run-current-tournament.component.html',
   styleUrls: ['./run-current-tournament.component.css']
 })
-export class RunCurrentTournamentComponent implements OnInit {
+export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
 
+  tournSub:Subscription;
+  tournType:string;
+  tournId:number;
   tournName:string;
   round:number;
-  //:{deck1:string,deck2:string,winner?:string}[]
   pairings:{
     deck1:{name:string,winner:boolean},
     deck2:{name:string,winner:boolean}
   }[]=[];
 
-  constructor(private swiss:SwissStyleService) { }
+  constructor(private swiss:SwissStyleService, private route:ActivatedRoute, private curTournService:CurrentTournamentsService) { }
 
   ngOnInit() {
-    this.tournName = this.swiss.tournament.name;
-    this.round = this.swiss.round;
-    let tempPairings = this.swiss.getPairings();
-    for(let i=0;i<tempPairings.length;i++){
-      this.pairings.push({
-        deck1:{
-          name:tempPairings[i].deck1,
-          winner:false
-        },
-        deck2:{
-          name:tempPairings[i].deck2,
-          winner:false
-        }
+
+    this.route.params.subscribe((params:Params)=>{
+      this.tournId = +params['id'];
+    })
+
+    if(this.curTournService.currentTournaments){
+      this.tournName = this.curTournService.currentTournaments[this.tournId].name;
+      this.round = this.curTournService.currentTournaments[this.tournId].curRound;
+      this.tournType = this.curTournService.currentTournaments[this.tournId].type;
+    } else{
+      this.tournSub = this.curTournService.currentTournChanged
+      .subscribe((tourns:tournament[])=>{
+        console.log(tourns[this.tournId])
+        this.tournName = tourns[this.tournId].name;
+        this.round = tourns[this.tournId].curRound;
+        this.tournType = tourns[this.tournId].type;
       })
     }
+    
+
+    // let tempPairings = this.swiss.getPairings();
+    // for(let i=0;i<tempPairings.length;i++){
+    //   this.pairings.push({
+    //     deck1:{
+    //       name:tempPairings[i].deck1,
+    //       winner:false
+    //     },
+    //     deck2:{
+    //       name:tempPairings[i].deck2,
+    //       winner:false
+    //     }
+    //   })
+    // }
   }
 
   updateData(){
@@ -63,6 +87,12 @@ export class RunCurrentTournamentComponent implements OnInit {
 
   onFinish(){
 
+  }
+
+  ngOnDestroy(){
+    if(this.tournSub){
+      this.tournSub.unsubscribe();
+    }
   }
 
 }

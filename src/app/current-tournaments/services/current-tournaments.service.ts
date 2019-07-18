@@ -5,6 +5,7 @@ import { DatabaseService } from 'src/app/shared/database.service';
 export interface tournament {
   name:string,
   type:string,
+  curRound:number,
   maxRounds:number,
   [roundNumber:number]:{
     standings:string[],
@@ -54,6 +55,7 @@ export class CurrentTournamentsService {
     let newTourn:tournament = {
       name:name,
       type:type,
+      curRound:1,
       maxRounds:Math.ceil(Math.log2(decks.length)),
       1:{
         players:{},

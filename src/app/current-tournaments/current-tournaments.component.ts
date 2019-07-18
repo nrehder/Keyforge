@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CurrentTournamentsService, tournament } from './services/current-tournaments.service';
 import { DatabaseService } from '../shared/database.service';
 import { Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './current-tournaments.component.html',
   styleUrls: ['./current-tournaments.component.css']
 })
-export class CurrentTournamentsComponent implements OnInit {
+export class CurrentTournamentsComponent implements OnInit, OnDestroy {
 
   constructor(private db:DatabaseService, private currentTournsService:CurrentTournamentsService) { }
 
