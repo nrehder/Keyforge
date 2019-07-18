@@ -13,11 +13,13 @@ import { FinishedTournamentsComponent } from './finished-tournaments/finished-to
 import { ViewFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/view-finished-tournament.component';
 import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
 import { CurrentTournamentsResolver } from './current-tournaments/current-tournaments.resolver';
+import { NoTournamentComponent } from './current-tournaments/no-tournament/no-tournament.component';
 
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
   { path: "tournaments", component: CurrentTournamentsComponent, resolve:[CurrentTournamentsResolver], children:[
+    { path: "", component:NoTournamentComponent,pathMatch:"full"},
     { path: "create", component: CreateTournamentComponent },
     { path: ":id", component: ViewCurrentTournamentComponent },
     { path: ":id/run", component: RunCurrentTournamentComponent }
