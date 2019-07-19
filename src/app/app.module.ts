@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AngularFireModule } from 'angularfire2'
+import { AngularFireModule } from 'angularfire2';
+import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 
 import { environment } from '../environments/environment'
 
@@ -45,7 +46,8 @@ import { NoTournamentComponent } from './current-tournaments/no-tournament/no-to
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    RxReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

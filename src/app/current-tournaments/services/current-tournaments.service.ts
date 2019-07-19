@@ -2,6 +2,24 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DatabaseService } from 'src/app/shared/database.service';
 
+export interface player {
+  playername:string,
+  deckname:string,
+  wins:number,
+  losses:number,
+  byes:number,
+  games:number,
+  opponents:string[],
+  chains?:number,
+  SoS?:number,
+  ESoS?:number,
+  eliminated?:boolean
+}
+
+export interface players {
+  [name:string]:player
+}
+
 export interface tournament {
   name:string,
   type:string,
@@ -9,21 +27,7 @@ export interface tournament {
   maxRounds:number,
   [roundNumber:number]:{
     standings:string[],
-    players:{
-      [name:string]:{
-        playername:string,
-        deckname:string,
-        wins:number,
-        losses:number,
-        byes:number,
-        games:number,
-        opponents:string[],
-        chains?:number,
-        SoS?:number,
-        ESoS?:number,
-        eliminated?:boolean
-      }
-    }
+    players:players
   }
 }
 

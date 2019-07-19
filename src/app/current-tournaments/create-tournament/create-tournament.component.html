@@ -9,7 +9,7 @@
                 style="color:red;"
                 *ngIf="createForm.get('tournamentName').invalid
                 && createForm.get('tournamentName').touched">
-                    Please enter a name for the tournament.
+                    Please enter a unique name for the tournament.
                 </span>
             </div>
             <div class="form-group">
@@ -47,7 +47,14 @@
                 </div>
                 <span
                 class="help-block"
-                style="color:red;"
+                style="color:red; padding:0 15px;"
+                *ngIf="deck.controls.name.invalid
+                && deck.controls.name.touched">
+                Please enter a unique name.
+                </span>
+                <span
+                class="help-block"
+                style="color:red; padding:0 15px;"
                 *ngIf="deck.controls.deck.invalid
                 && deck.controls.deck.touched">
                 Please enter a valid URL.
