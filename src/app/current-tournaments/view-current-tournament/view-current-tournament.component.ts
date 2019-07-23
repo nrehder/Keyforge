@@ -13,6 +13,7 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
 
   tournId:number;
   currentTournaments:Observable<DocumentData[]>;
+  deleting:boolean = false;
 
   constructor(private route:ActivatedRoute, private db:DatabaseService) { }
 
@@ -23,6 +24,10 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
 
     this.currentTournaments = this.db.loadCurrentTournaments();
 
+  }
+
+  onDelete(){
+    this.deleting = true;
   }
 
   ngOnDestroy(){

@@ -22,7 +22,7 @@
                 <div *ngFor="let curTourn of currentTournaments | async; let i=index">
                     <a style="cursor:pointer" class="list-group-item clearfix" [routerLink]="i" routerLinkActive="active">
                         <h4 class="list-group-item-heading">{{curTourn.name}}</h4>
-                        <p class="list-group-item-text">{{curTourn.type}}</p>
+                        <p class="list-group-item-text">{{curTourn.type | titlecase}}</p>
                     </a>
                 </div>
             </div>

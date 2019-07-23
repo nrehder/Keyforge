@@ -17,67 +17,62 @@
                     <h4>Current Standings:</h4>
                 </div>
             </div>
-            <!-- <div class="row" *ngFor="let player of players">
+            <div class="row">
                 <div class="col">
                     <div class="row">
-                        <div class="col match">
-                            <h5>{{player.playername}}</h5>
+                        <div class="col match parent">
+                            <h4 class="child">Player Name</h4>
                         </div>
                     </div>
                 </div>
-            </div> -->
+                <div class="col">
+                    <div class="row">
+                        <div class="col match parent">
+                            <h4 class="child">Wins</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col match parent">
+                            <h4 class="child">Losses</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngFor="let player of tourn.rounds[tourn.curRound-1].players">
+                <div class="col">
+                    <div class="row">
+                        <div class="col match parent">
+                            <h5 class="child">{{player.playername}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col match parent">
+                            <h5 class="child">{{player.wins}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col match parent">
+                            <h5 class="child">{{player.losses}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ng-template>
     </div>
     
 </div>
-
-
-
-
-<!-- 
-    Code is from running tournaments to show how I did the table
-    To be deleted once player iteration works
- -->
-<!-- <div class="row">
-        <div class="col-3 match">
-            <h5 class="box h-100 d-flex justify-content-center flex-column">Match</h5>
-        </div>
-        <div class="col">
-            <div class="row">
-                <div class="col match align-items-center">
-                    <h6 class="box h-100 d-flex justify-content-center flex-column">Player 1</h6>
-                </div>
-                <div class="col match align-items-center">
-                    <h6 class="box h-100 d-flex justify-content-center flex-column">Player 2</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-<div class="row" *ngFor="let pair of pairings; let i=index">
-    <div class="col-3 match">
-        <h5 class="box h-100 d-flex justify-content-center flex-column">{{i+1}}</h5>
-    </div>
-    <div class="col">
-        <div class="row">
-            <div class="col match align-items-center" [ngClass]="{'winner':pair.deck1.winner}" (click)="onClickPlayer(i,pair.deck1.name)">
-                <h6 class="box h-100 d-flex justify-content-center flex-column">{{pair.deck1.name}}</h6>
-            </div>
-            <div class="col match align-items-center" [ngClass]="{'winner':pair.deck2.winner}" (click)="onClickPlayer(i,pair.deck2.name)">
-                <h6 class="box h-100 d-flex justify-content-center flex-column">{{pair.deck2.name}}</h6>
-            </div>
-        </div>
-    </div>
-</div> -->
 <br>
 <div class="row">
-    <div class="col">
-
+    <div class="col" style="text-align: center;">
+        <button class="btn btn-primary" type="button" routerLink="run">Run Tournament</button>
     </div>
-    <div class="col">
-        <button type="button" class="btn btn-secondary" (click)="onSave()">Save Tournament</button>
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-primary" (click)="onFinish()">Finish Round</button>
+    <div class="col" style="text-align: center;">
+        <button class="btn btn-danger" type="button" (click)="onDelete()">Delete Tournament</button>
     </div>
 </div>
-<button class="btn btn-primary" type="button" routerLink="run">Run Tournament</button>
