@@ -23,6 +23,7 @@ import { FinishedTournamentsComponent } from './finished-tournaments/finished-to
 import { ViewFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/view-finished-tournament.component';
 import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
 import { NoTournamentComponent } from './current-tournaments/no-tournament/no-tournament.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NoTournamentComponent } from './current-tournaments/no-tournament/no-to
     FullFinishedTournamentComponent,
     FinishedTournamentsComponent,
     HomeComponent,
-    NoTournamentComponent
+    NoTournamentComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,

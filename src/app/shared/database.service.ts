@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { map, take } from 'rxjs/operators';
-import { CurrentTournamentsService, tournament } from '../current-tournaments/services/current-tournaments.service';
+import { tournament } from '../shared/tournament.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,49 +11,17 @@ export class DatabaseService {
 
   constructor(
     private db:AngularFirestore,
-    private currentTourns:CurrentTournamentsService
+    private route:Router
     ){}
 
-    saveTournament(tourn:tournament){
-        this.db.collection('testing').doc('tournaments').collection("current").doc(tourn.name).set(tourn)
-    }
-
-    loadTournament(name:string){
-        return this.db.collection('testing').doc('tournaments').collection("current").doc(name).get()
-        // .subscribe((doc)=>{
-        //     console.log(doc.data())
-        // })
-    }
-
-    loadTournaments(type:string){
-        let tournaments=this.db.collection('testing').doc('tournaments').collection(type).get()
+    addNewTournament(newTourn:tournament){
+        //takes 1 snapshot of current database
+        this.db.collection('testing').doc('tournaments').collection('current')
+        .get()
         .pipe(
             take(1),
             map((item:firebase.firestore.QuerySnapshot) => {
-                return item.docs
-                .map((dataItem: firebase.firestore.QueryDocumentSnapshot) => {
-                    return <tournament>dataItem.data()
-                });
-            })
-        )
-
-        return tournaments;
-    }
-
-    //Here or below is new
-
-    saveCurrentTournaments(){
-        const tourns = this.currentTourns.getTournaments();
-        for(let i=0;i<tourns.length;i++){
-            this.db.collection('testing').doc('tournaments').collection("current").doc(tourns[i].name).set(tourns[i])
-        }
-    }
-
-    loadCurrentTournaments(){
-        this.db.collection('testing').doc('tournaments').collection('current').get()
-        .pipe(
-            take(1),
-            map((item:firebase.firestore.QuerySnapshot) => {
+                //maps DocumentData[] to tournament[]
                 return item.docs
                 .map((dataItem: firebase.firestore.QueryDocumentSnapshot) => {
                     return <tournament>dataItem.data()
@@ -60,7 +29,20 @@ export class DatabaseService {
             })
         )
         .subscribe(tourns=>{
-            this.currentTourns.setTournaments(tourns)
+            tourns.push(newTourn)
+
+            //adds a doc for each tournament
+            for(let i=0;i<tourns.length;i++){
+                this.db.collection('testing').doc('tournaments').collection("current").doc(tourns[i].name)
+                .set(tourns[i])
+            }
+            this.route.navigate(["/tournaments",tourns.length-1])
         })
+    }
+
+    //returns an observable that will 'next' each time the database updates
+    loadCurrentTournaments(){
+        return this.db.collection('testing').doc('tournaments').collection('current')
+        .valueChanges()
     }
 }

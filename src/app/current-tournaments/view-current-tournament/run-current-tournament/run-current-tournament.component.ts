@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import { SwissStyleService } from '../../services/swiss-style.service';
-import { CurrentTournamentsService, tournament } from '../../services/current-tournaments.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +21,7 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     deck2:{name:string,winner:boolean}
   }[]=[];
 
-  constructor(private swiss:SwissStyleService, private route:ActivatedRoute, private curTournService:CurrentTournamentsService) { }
+  constructor(private swiss:SwissStyleService, private route:ActivatedRoute) { }
 
   ngOnInit() {
 
@@ -30,19 +29,19 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
       this.tournId = +params['id'];
     })
 
-    if(this.curTournService.currentTournaments){
-      this.tournName = this.curTournService.currentTournaments[this.tournId].name;
-      this.round = this.curTournService.currentTournaments[this.tournId].curRound;
-      this.tournType = this.curTournService.currentTournaments[this.tournId].type;
-    } else{
-      this.tournSub = this.curTournService.currentTournChanged
-      .subscribe((tourns:tournament[])=>{
-        console.log(tourns[this.tournId])
-        this.tournName = tourns[this.tournId].name;
-        this.round = tourns[this.tournId].curRound;
-        this.tournType = tourns[this.tournId].type;
-      })
-    }
+    // if(this.curTournService.currentTournaments){
+    //   this.tournName = this.curTournService.currentTournaments[this.tournId].name;
+    //   this.round = this.curTournService.currentTournaments[this.tournId].curRound;
+    //   this.tournType = this.curTournService.currentTournaments[this.tournId].type;
+    // } else{
+    //   this.tournSub = this.curTournService.currentTournChanged
+    //   .subscribe((tourns:tournament[])=>{
+    //     console.log(tourns[this.tournId])
+    //     this.tournName = tourns[this.tournId].name;
+    //     this.round = tourns[this.tournId].curRound;
+    //     this.tournType = tourns[this.tournId].type;
+    //   })
+    // }
     
 
     // let tempPairings = this.swiss.getPairings();
@@ -68,7 +67,7 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         result:"won"
       }
     ]
-    this.swiss.updateStandings(results)
+    // this.swiss.updateStandings(results)
   }
 
   onClickPlayer(index:number,winner:string){

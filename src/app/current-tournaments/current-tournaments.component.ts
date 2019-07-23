@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CurrentTournamentsService, tournament } from './services/current-tournaments.service';
+import { Observable } from 'rxjs';
+import { DocumentData } from 'angularfire2/firestore';
+
 import { DatabaseService } from '../shared/database.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-current-tournaments',
@@ -10,21 +11,15 @@ import { Subscription } from 'rxjs';
 })
 export class CurrentTournamentsComponent implements OnInit, OnDestroy {
 
-  constructor(private db:DatabaseService, private currentTournsService:CurrentTournamentsService) { }
+  constructor(private db:DatabaseService) { }
 
-  currentTournSub:Subscription;
-  currentTournaments:tournament[];
+  currentTournaments:Observable<DocumentData[]>;
 
   ngOnInit() {
-    this.currentTournSub = this.currentTournsService.currentTournChanged
-    .subscribe((tourns:tournament[])=>{
-      this.currentTournaments = tourns;
-    })
-    this.currentTournaments = this.currentTournsService.getTournaments();
+    this.currentTournaments = this.db.loadCurrentTournaments();
   }
 
   ngOnDestroy(){
-    this.currentTournSub.unsubscribe;
   }
 
 }

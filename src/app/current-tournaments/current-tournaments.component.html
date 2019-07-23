@@ -19,7 +19,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <div *ngFor="let curTourn of currentTournaments; let i=index">
+                <div *ngFor="let curTourn of currentTournaments | async; let i=index">
                     <a style="cursor:pointer" class="list-group-item clearfix" [routerLink]="i" routerLinkActive="active">
                         <h4 class="list-group-item-heading">{{curTourn.name}}</h4>
                         <p class="list-group-item-text">{{curTourn.type}}</p>

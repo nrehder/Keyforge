@@ -1,32 +1,44 @@
-<div class="row">
-    <div class="col" style="text-align: center;">
-        <h3>{{tournName}}</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col" style="text-align: center;">
-        <h3>Round {{round}} of {{maxRound}}</h3>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col" style="text-align: center;">
-        <h4>Current Standings:</h4>
-    </div>
-</div>
-<div class="row" *ngFor="let player of players">
+<div class="row" *ngFor="let tourn of currentTournaments | async; let i=index">
     <div class="col">
-        <div class="row">
-            <div class="col match">
-                <h5>{{player.playername}}</h5>
+        <ng-template [ngIf]="i===tournId">
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    <h3>{{tourn.name}}</h3>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    <h3>Round {{tourn.curRound}} of {{tourn.maxRounds}}</h3>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    <h4>Current Standings:</h4>
+                </div>
+            </div>
+            <!-- <div class="row" *ngFor="let player of players">
+                <div class="col">
+                    <div class="row">
+                        <div class="col match">
+                            <h5>{{player.playername}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </ng-template>
     </div>
+    
 </div>
 
 
 
-<div class="row">
+
+<!-- 
+    Code is from running tournaments to show how I did the table
+    To be deleted once player iteration works
+ -->
+<!-- <div class="row">
         <div class="col-3 match">
             <h5 class="box h-100 d-flex justify-content-center flex-column">Match</h5>
         </div>
@@ -55,7 +67,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <br>
 <div class="row">
     <div class="col">

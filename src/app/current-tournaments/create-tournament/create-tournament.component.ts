@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { DeckRetrievalService, DeckData } from '../../shared/deck-retrieval.service';
-import { CurrentTournamentsService, tournament } from '../services/current-tournaments.service';
-import { DatabaseService } from 'src/app/shared/database.service';
+import { tournament } from '../../shared/tournament.model';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { DatabaseService } from 'src/app/shared/database.service';
 
 @Component({
   selector: 'app-create-tournament',
@@ -15,27 +14,24 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
 })
 export class CreateTournamentComponent implements OnInit, OnDestroy {
 
-  currentTournSub:Subscription;
+  databaseSub:Subscription;
   createForm:FormGroup;
   isloading:boolean;
   tournamentNames:string[] = [];
 
   constructor(
     private deckService:DeckRetrievalService,
-    private route:Router,
-    private currentTournsService:CurrentTournamentsService,
     private db:DatabaseService
     ){}
 
   ngOnInit(){
-    this.currentTournSub = this.currentTournsService.currentTournChanged
+
+    this.databaseSub = this.db.loadCurrentTournaments()
     .subscribe((tourns:tournament[])=>{
-      let tournNames = [];
-      for(let i=0; i<tourns.length;i++){
-        tournNames.push(tourns[i].name)
+      for(let i=0;i<tourns.length;i++){
+        this.tournamentNames.push(tourns[i].name)
       }
-      this.tournamentNames = tournNames;
-    });
+    })
 
     this.createForm = new FormGroup({
       "tournamentName":new FormControl(null,[Validators.required, this.validateTournamentName.bind(this)]),
@@ -96,7 +92,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     for(let i=0; i<formArray.length;i++){
       getArray.push(formArray[i].deck)
     }
-    console.log(formArray)
 
     this.isloading = true;
     this.deckService.getTournamentDecks(getArray)
@@ -122,20 +117,74 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         }
       }
 
-      console.log(this.createForm.get("tournamentName").value)
-      console.log(this.createForm.get("tournamentType").value)
-      console.log(decks)
-
-      this.currentTournsService.newTournament(this.createForm.get("tournamentName").value,this.createForm.get("tournamentType").value,decks)
+      this.newTournament(this.createForm.get("tournamentName").value,this.createForm.get("tournamentType").value,decks)
       this.isloading = false;
-      console.log(this.currentTournsService.getTournaments())
-      this.db.saveCurrentTournaments();
-      this.route.navigate(["/tournaments",this.currentTournsService.currentTournaments.length-1])
     })
   }
 
+  private newTournament(
+    name:string,
+    type:string,
+    decks:{
+      player:string,
+      deckName:string,
+      chains?:number
+    }[]
+  ){
+    let newTourn:tournament = {
+      name:name,
+      type:type,
+      curRound:1,
+      maxRounds:Math.ceil(Math.log2(decks.length)),
+      rounds:[
+        {
+          players:[],
+          standings:[]
+        }
+      ]
+    };
+
+    //adds players to the players and standings array
+    for(let i=0;i<decks.length;i++){
+      newTourn.rounds[0].players.push({
+        playername:decks[i].player,
+        deckname:decks[i].deckName,
+        wins:0,
+        losses:0,
+        byes:0,
+        games:0,
+        opponents:[]
+      })
+      
+      newTourn.rounds[0].standings.push(decks[i].player)
+
+      if(typeof decks[i].chains === "number"){
+        newTourn.rounds[0].players[i].chains = decks[i].chains;
+      }
+
+      if(newTourn.type === "swiss"){
+        newTourn.rounds[0].players[i].SoS=0;
+        newTourn.rounds[0].players[i].ESoS=0;
+      } else if(newTourn.type === "singleElim") {
+        newTourn.rounds[0].players[i].eliminated = false;
+      }
+    }
+
+    console.log(newTourn)
+    //randomizes initial standings to give random pairings round 1
+    for (let i=0; i<decks.length;i++){
+      let rand = Math.floor(Math.random()*decks.length);
+      let temp = newTourn.rounds[0].standings[i];
+      newTourn.rounds[0].standings[i]=newTourn.rounds[0].standings[rand];
+      newTourn.rounds[0].standings[rand]=temp;
+    }
+
+    //saves the new tournament to the database
+    this.db.addNewTournament(newTourn)
+  }
+
   ngOnDestroy(){
-    this.currentTournSub.unsubscribe();
+    this.databaseSub.unsubscribe()
   }
 
 }
