@@ -19,8 +19,6 @@
     "@angular/platform-browser": "~8.0.0",
     "@angular/platform-browser-dynamic": "~8.0.0",
     "@angular/router": "~8.0.0",
-    "@ngrx/effects": "^8.1.0",
-    "@ngrx/store": "^8.1.0",
     "@rxweb/reactive-form-validators": "^1.9.1",
     "angularfire2": "^5.2.1",
     "bootstrap": "^4.3.1",
