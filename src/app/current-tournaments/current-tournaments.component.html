@@ -6,7 +6,7 @@
 -->
 <br>
 <div class="row">
-    <div class="col">
+    <div class="col-md-3">
         <div class="row">
             <div class="col">
                 <h4 style="text-align: center">Active Tournaments</h4>
@@ -20,15 +20,15 @@
         <div class="row">
             <div class="col">
                 <div *ngFor="let curTourn of currentTournaments | async; let i=index">
-                    <a style="cursor:pointer" class="list-group-item clearfix" [routerLink]="i" routerLinkActive="active">
-                        <h4 class="list-group-item-heading">{{curTourn.name}}</h4>
+                    <a style="cursor:pointer;" class="list-group-item clearfix" [routerLink]="i" routerLinkActive="active">
+                        <h5 class="list-group-item-heading">{{curTourn.name}}</h5>
                         <p class="list-group-item-text">{{curTourn.type | titlecase}}</p>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-9">
         <router-outlet></router-outlet>
     </div>
 </div>

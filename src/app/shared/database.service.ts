@@ -30,13 +30,17 @@ export class DatabaseService {
         )
         .subscribe(tourns=>{
             tourns.push(newTourn)
+            let tournNames=[];
 
             //adds a doc for each tournament
             for(let i=0;i<tourns.length;i++){
                 this.db.collection('testing').doc('tournaments').collection("current").doc(tourns[i].name)
                 .set(tourns[i])
+                tournNames.push(tourns[i].name)
             }
-            this.route.navigate(["/tournaments",tourns.length-1])
+
+            tournNames.sort((a,b)=>a>b?1:-1)
+            this.route.navigate(["/tournaments",tournNames.indexOf(newTourn.name)])
         })
     }
 
