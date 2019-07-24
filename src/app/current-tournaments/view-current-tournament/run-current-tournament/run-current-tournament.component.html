@@ -1,54 +1,107 @@
-<div class="row">
-    <div class="col" style="text-align: center">
-        <h3>{{tournName}}</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col" style="text-align: center">
-        <h3>Round {{round}}</h3>
-    </div>
-</div>
-<br>
-<small>Click on the winner of the match</small>
-<div class="row">
-        <div class="col-3 match">
-            <h5 class="box h-100 d-flex justify-content-center flex-column">Match</h5>
-        </div>
-        <div class="col">
-            <div class="row">
-                <div class="col match align-items-center">
-                    <h6 class="box h-100 d-flex justify-content-center flex-column">Player 1</h6>
-                </div>
-                <div class="col match align-items-center">
-                    <h6 class="box h-100 d-flex justify-content-center flex-column">Player 2</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-<div class="row" *ngFor="let pair of pairings; let i=index">
-    <div class="col-3 match">
-        <h5 class="box h-100 d-flex justify-content-center flex-column">{{i+1}}</h5>
-    </div>
-    <div class="col">
+<div
+    class="row"
+    style="margin:0;"
+    *ngFor="let tourn of currentTournaments | async; let i = index"
+>
+    <div class="col" *ngIf="i === tournId">
         <div class="row">
-            <div class="col match align-items-center" [ngClass]="{'winner':pair.deck1.winner}" (click)="onClickPlayer(i,pair.deck1.name)">
-                <h6 class="box h-100 d-flex justify-content-center flex-column">{{pair.deck1.name}}</h6>
-            </div>
-            <div class="col match align-items-center" [ngClass]="{'winner':pair.deck2.winner}" (click)="onClickPlayer(i,pair.deck2.name)">
-                <h6 class="box h-100 d-flex justify-content-center flex-column">{{pair.deck2.name}}</h6>
+            <div class="col" style="text-align: center;">
+                <h3>{{ tourn.name }}</h3>
             </div>
         </div>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col">
+        <div class="row">
+            <div class="col" style="text-align: center;">
+                <h3>Round {{ tourn.curRound }} of {{ tourn.maxRounds }}</h3>
+            </div>
+        </div>
+        <br />
 
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-secondary" (click)="onSave()">Save Tournament</button>
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-primary" (click)="onFinish()">Finish Round</button>
+        <small>Click on the winner of the match</small>
+        <div class="row">
+            <div class="col-3 match">
+                <h5 class="box h-100 d-flex justify-content-center flex-column">
+                    Match
+                </h5>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col match align-item-center">
+                        <h6
+                            class="box h-100 d-flex justify-content-center flex-column"
+                        >
+                            Player 1
+                        </h6>
+                    </div>
+                    <div class="col match align-item-center">
+                        <h6
+                            class="box h-100 d-flex justify-content-center flex-column"
+                        >
+                            Player 2
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="row"
+            *ngFor="
+                let pair of tourn.rounds[tourn.curRound - 1].pairings;
+                let i = index
+            "
+        >
+            <div class="col-3 match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h5>{{ i + 1 }}</h5>
+                </div>
+            </div>
+            <div
+                class="col match"
+                (click)="onClickPlayer(i, pair.player1.name)"
+                [ngClass]="{ winner: pair.player1.winner }"
+            >
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <p>
+                        {{ pair.player1.name }}
+                    </p>
+                    <small *ngIf="pair.player1.chains >= 0">
+                        Chains: {{ pair.player1.chains }}
+                    </small>
+                    <small>{{ pair.player1.deck | deckName }}</small>
+                </div>
+            </div>
+            <div
+                class="col match"
+                (click)="onClickPlayer(i, pair.player2.name)"
+                [ngClass]="{ winner: pair.player2.winner }"
+            >
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <p>
+                        {{ pair.player2.name }}
+                    </p>
+                    <small *ngIf="pair.player2.chains >= 0">
+                        Chains: {{ pair.player2.chains }}
+                    </small>
+                    <small>{{ pair.player2.deck | deckName }}</small>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col align-item-center">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onFinish()"
+                >
+                    End Round
+                </button>
+            </div>
+        </div>
     </div>
 </div>

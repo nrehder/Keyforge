@@ -1,70 +1,92 @@
-<div class="row" style="margin:0;" *ngFor="let tourn of currentTournaments | async; let i=index">
-    <div class="col">
-        <ng-template [ngIf]="i===tournId">
-            <div class="row">
-                <div class="col" style="text-align: center;">
-                    <h3>{{tourn.name}}</h3>
+<div
+    class="row"
+    style="margin:0;"
+    *ngFor="let tourn of currentTournaments | async; let i = index"
+>
+    <div class="col" *ngIf="i === tournId">
+        <div class="row">
+            <div class="col" style="text-align: center;">
+                <h3>{{ tourn.name }}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="text-align: center;">
+                <h3>Round {{ tourn.curRound }} of {{ tourn.maxRounds }}</h3>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col" style="text-align: center;">
+                <h4>Current Standings:</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h4 class="child">Player Name</h4>
                 </div>
             </div>
-            <div class="row">
-                <div class="col" style="text-align: center;">
-                    <h3>Round {{tourn.curRound}} of {{tourn.maxRounds}}</h3>
+            <div class="col match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h4 class="child">Wins</h4>
                 </div>
             </div>
-            <br>
-            <div class="row">
-                <div class="col" style="text-align: center;">
-                    <h4>Current Standings:</h4>
+            <div class="col match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h4 class="child">Losses</h4>
                 </div>
             </div>
-            <div class="row">
-                <div class="col match">
-                    <div class="box h-100 d-flex justify-content-center align-item-center flex-column">
-                        <h4 class="child">Player Name</h4>
-                    </div>
-                </div>
-                <div class="col match">
-                    <div class="box h-100 d-flex justify-content-center align-item-center flex-column">
-                        <h4 class="child">Wins</h4>
-                    </div>
-                </div>
-                <div class="col match">
-                    <div class="box h-100 d-flex justify-content-center align-item-center flex-column">
-                        <h4 class="child">Losses</h4>
-                    </div>
+        </div>
+        <div
+            class="row"
+            *ngFor="let player of tourn.rounds[tourn.curRound - 1].players"
+        >
+            <div class="col match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h5>{{ player.playername }}</h5>
+                    <small>{{ player.deckname | deckName }}</small>
                 </div>
             </div>
-            <div class="row" *ngFor="let player of tourn.rounds[tourn.curRound-1].players">
-                <div class="col match">
-                    <div class="box h-100 d-flex justify-content-center align-item-center flex-column">
-                        <h5>{{player.playername}}</h5>
-                        <small>{{player.deckname | deckName}}</small>
-                    </div>
-                </div>
-                <div class="col match">
-                    <div class="box h-100 d-flex justify-content-center align-items-center flex-column">
-                        <h5>{{player.wins}}</h5>
-                    </div>
-                    
-                </div>
-                <div class="col match">
-                    <div class="box h-100 d-flex justify-content-center align-item-center flex-column">
-                        <h5>{{player.losses}}</h5>
-                    </div>
+            <div class="col match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h5>{{ player.wins }}</h5>
                 </div>
             </div>
-        </ng-template>
-    </div>
-    
-</div>
-<br>
-<div class="row">
-    <div class="col" style="text-align: center;">
-        <button class="btn btn-primary" type="button" routerLink="run">Run Tournament</button>
-    </div>
-    <div class="col" style="text-align: center;">
-        <button class="btn btn-danger" type="button" (click)="onDelete()">Delete Tournament</button>
+            <div class="col match">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h5>{{ player.losses }}</h5>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<app-delete-confirmation *ngIf="deleting" (choice)="onConfirmation($event)"></app-delete-confirmation>
+<br />
+
+<div class="row">
+    <div class="col" style="text-align: center;">
+        <button class="btn btn-primary" type="button" routerLink="run">
+            Run Tournament
+        </button>
+    </div>
+    <div class="col" style="text-align: center;">
+        <button class="btn btn-danger" type="button" (click)="onDelete()">
+            Delete Tournament
+        </button>
+    </div>
+</div>
+
+<app-delete-confirmation *ngIf="deleting" (choice)="onConfirmation($event)">
+</app-delete-confirmation>
