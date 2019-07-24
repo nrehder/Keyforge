@@ -3,6 +3,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DatabaseService } from 'src/app/shared/database.service';
 import { DocumentData } from 'angularfire2/firestore';
+import { take } from 'rxjs/operators';
+import { tournament } from 'src/app/shared/tournament.model';
 
 @Component({
   selector: 'app-view-current-tournament',
@@ -14,6 +16,7 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
   tournId:number;
   currentTournaments:Observable<DocumentData[]>;
   deleting:boolean = false;
+  loading:boolean = false;
 
   constructor(private route:ActivatedRoute, private db:DatabaseService) { }
 
@@ -28,6 +31,20 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
 
   onDelete(){
     this.deleting = true;
+  }
+
+  onConfirmation(choice:string){
+    if(choice === "close"){
+      this.deleting = false;
+    } else if(choice === "delete"){
+      this.deleting = false;
+      this.loading = true;
+      this.db.loadCurrentTournaments()
+      .pipe(take(1))
+      .subscribe((tourns:tournament[])=>{
+        this.db.deleteTournament("current",tourns[this.tournId].name)
+      })
+    }
   }
 
   ngOnDestroy(){

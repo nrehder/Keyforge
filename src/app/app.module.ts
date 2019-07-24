@@ -24,6 +24,7 @@ import { ViewFinishedTournamentComponent } from './finished-tournaments/view-fin
 import { FullFinishedTournamentComponent } from './finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component';
 import { NoTournamentComponent } from './current-tournaments/no-tournament/no-tournament.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { DeleteConfirmationComponent } from './shared/delete-confirmation/delete-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     FinishedTournamentsComponent,
     HomeComponent,
     NoTournamentComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    DeleteConfirmationComponent
   ],
   imports: [
     BrowserModule,

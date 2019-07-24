@@ -39,19 +39,19 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
       "chains": new FormControl("no",Validators.required),
       "decks": new FormArray([
         new FormGroup({
-          "name": new FormControl(null,[Validators.required,RxwebValidators.unique()]),
+          "name": new FormControl(1,[Validators.required,RxwebValidators.unique()]),
           "deck": new FormControl("https://www.keyforgegame.com/deck-details/18374c28-ad98-4d1f-9a61-938fdeed0d4c",[Validators.required,this.validateDeckUrl])
         }),
         new FormGroup({
-          "name": new FormControl(null,[Validators.required,RxwebValidators.unique()]),
+          "name": new FormControl(2,[Validators.required,RxwebValidators.unique()]),
           "deck": new FormControl("https://www.keyforgegame.com/deck-details/289a7505-141b-4ab9-9963-4dd83c657126",[Validators.required,this.validateDeckUrl])
         }),
         new FormGroup({
-          "name": new FormControl(null,[Validators.required,RxwebValidators.unique()]),
+          "name": new FormControl(3,[Validators.required,RxwebValidators.unique()]),
           "deck": new FormControl("https://www.keyforgegame.com/deck-details/b2d1936e-7b6a-48db-a9f0-cd951e7ba79f",[Validators.required,this.validateDeckUrl])
         }),
         new FormGroup({
-          "name": new FormControl(null,[Validators.required,RxwebValidators.unique()]),
+          "name": new FormControl(4,[Validators.required,RxwebValidators.unique()]),
           "deck": new FormControl("https://www.keyforgegame.com/deck-details/a27134ae-523f-4954-ab1b-675b4ed72709",[Validators.required,this.validateDeckUrl])
         })
       ])
@@ -170,7 +170,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log(newTourn)
     //randomizes initial standings to give random pairings round 1
     for (let i=0; i<decks.length;i++){
       let rand = Math.floor(Math.random()*decks.length);

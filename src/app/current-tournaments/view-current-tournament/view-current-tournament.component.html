@@ -76,3 +76,5 @@
         <button class="btn btn-danger" type="button" (click)="onDelete()">Delete Tournament</button>
     </div>
 </div>
+
+<app-delete-confirmation *ngIf="deleting" (choice)="onConfirmation($event)"></app-delete-confirmation>

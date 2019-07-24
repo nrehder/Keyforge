@@ -1,0 +1,8 @@
+<div class="backdrop" (click)="onClose()"></div>
+<div class="alert-box">
+    <p>Are you sure you wish to delete {{tournament}}</p>
+    <div>
+        <button class="btn btn-primary alert-box-actions" (click)="onDelete()">Delete</button>
+        <button class="btn btn-secondary alert-box-actions" (click)="onClose()">Cancel</button>
+    </div>
+</div>
