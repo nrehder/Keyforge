@@ -19,7 +19,7 @@ export class DatabaseService {
         this.db.collection('testing').doc('tournaments').collection('current')
         .doc(newTourn.name).set(newTourn)
         .then(()=>{
-            //navigate
+            //gets new list of tournament names
             this.db.collection("testing").doc("tournaments").collection("current")
             .get()
             .pipe(
@@ -38,6 +38,7 @@ export class DatabaseService {
                 })
             )
             .subscribe(tourns=>{
+                //navigates to the tournament that was just added
                 this.route.navigate(["/tournaments",tourns.indexOf(newTourn.name)])
             })
         })

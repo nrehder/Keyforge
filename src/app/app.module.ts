@@ -25,6 +25,7 @@ import { FullFinishedTournamentComponent } from './finished-tournaments/view-fin
 import { NoTournamentComponent } from './current-tournaments/no-tournament/no-tournament.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { DeleteConfirmationComponent } from './shared/delete-confirmation/delete-confirmation.component';
+import { DeckNamePipe } from './shared/deck-name.pipe';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { DeleteConfirmationComponent } from './shared/delete-confirmation/delete
     HomeComponent,
     NoTournamentComponent,
     LoadingSpinnerComponent,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+    DeckNamePipe
   ],
   imports: [
     BrowserModule,
