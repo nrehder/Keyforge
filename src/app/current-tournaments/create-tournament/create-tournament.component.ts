@@ -228,7 +228,14 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         }
 
         //sets up pairings array for first round
-        for (let i = 0; i < newTourn.rounds[0].players.length / 2; i++) {
+        console.log(newTourn.rounds[0].players.length / 2);
+        for (
+            let i = 0;
+            i < Math.floor(newTourn.rounds[0].players.length / 2);
+            i++
+        ) {
+            console.log("attempt " + i + ": ");
+            console.log(newTourn.rounds[0].pairings);
             newTourn.rounds[0].pairings.push({
                 player1: {
                     name: newTourn.rounds[0].players[2 * i].playername,
@@ -266,7 +273,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     winner: true,
                 },
                 player2: {
-                    name: "bye",
+                    name: "BYE",
                     deck: "",
                     winner: false,
                 },

@@ -1,8 +1,12 @@
-.match{
+.match {
     border: 1px solid black;
-    min-height:3rem;
+    min-height: 3rem;
     text-align: center;
 }
-.winner{
+.winner {
     background-color: lightblue;
+}
+p,
+h5 {
+    margin-bottom: 0;
 }

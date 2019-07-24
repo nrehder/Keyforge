@@ -87,7 +87,9 @@
                     <small *ngIf="pair.player2.chains >= 0">
                         Chains: {{ pair.player2.chains }}
                     </small>
-                    <small>{{ pair.player2.deck | deckName }}</small>
+                    <small *ngIf="!pair.player2.deck === ''">{{
+                        pair.player2.deck | deckName
+                    }}</small>
                 </div>
             </div>
         </div>

@@ -1,5 +1,10 @@
-.match{
+.match {
     border: 1px solid black;
-    min-height:4rem;
+    min-height: 4rem;
     text-align: center;
+}
+p,
+h4,
+h5 {
+    margin-bottom: 0;
 }
