@@ -91,4 +91,29 @@ export class DatabaseService {
                 console.log(error);
             });
     }
+
+    finishCurrentTournament(tourn: tournament) {
+        this.db
+            .collection("testing")
+            .doc("tournaments")
+            .collection("finished")
+            .doc(tourn.name)
+            .set(tourn)
+            .then(() => {
+                this.db
+                    .collection("testing")
+                    .doc("tournaments")
+                    .collection("current")
+                    .doc(tourn.name)
+                    .delete()
+                    .catch(err => {
+                        console.log(err);
+                    });
+
+                //add navigation to finished version
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 }

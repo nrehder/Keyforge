@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -211,6 +211,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 newTourn.rounds[0].players[i].chains = decks[i].chains;
             }
 
+            //adds extra data based on type of tournament
             if (newTourn.type === "swiss") {
                 newTourn.rounds[0].players[i].SoS = 0;
                 newTourn.rounds[0].players[i].ESoS = 0;
@@ -219,56 +220,66 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             }
         }
 
+        //sets up round 1 pairings depending on the type of tournament
+        if (newTourn.type === "swiss") {
+            this.swissSetup(newTourn);
+        } else if (newTourn.type === "singleElim") {
+            this.singleElimSetup(newTourn);
+        } else {
+            this.roundRobinSetup(newTourn);
+        }
+    }
+
+    swissSetup(tourn: tournament) {
         //randomizes initial standings
-        for (let i = 0; i < decks.length; i++) {
-            let rand = Math.floor(Math.random() * decks.length);
-            let temp = newTourn.rounds[0].players[i];
-            newTourn.rounds[0].players[i] = newTourn.rounds[0].players[rand];
-            newTourn.rounds[0].players[rand] = temp;
+        for (let i = 0; i < tourn.rounds[0].players.length; i++) {
+            let rand = Math.floor(
+                Math.random() * tourn.rounds[0].players.length
+            );
+            let temp = tourn.rounds[0].players[i];
+            tourn.rounds[0].players[i] = tourn.rounds[0].players[rand];
+            tourn.rounds[0].players[rand] = temp;
         }
 
         //sets up pairings array for first round
-        console.log(newTourn.rounds[0].players.length / 2);
         for (
             let i = 0;
-            i < Math.floor(newTourn.rounds[0].players.length / 2);
+            i < Math.floor(tourn.rounds[0].players.length / 2);
             i++
         ) {
-            console.log("attempt " + i + ": ");
-            console.log(newTourn.rounds[0].pairings);
-            newTourn.rounds[0].pairings.push({
+            tourn.rounds[0].pairings.push({
                 player1: {
-                    name: newTourn.rounds[0].players[2 * i].playername,
-                    deck: newTourn.rounds[0].players[2 * i].deckname,
+                    name: tourn.rounds[0].players[2 * i].playername,
+                    deck: tourn.rounds[0].players[2 * i].deckname,
                     winner: false,
                 },
                 player2: {
-                    name: newTourn.rounds[0].players[2 * i + 1].playername,
-                    deck: newTourn.rounds[0].players[2 * i + 1].deckname,
+                    name: tourn.rounds[0].players[2 * i + 1].playername,
+                    deck: tourn.rounds[0].players[2 * i + 1].deckname,
                     winner: false,
                 },
             });
             if (
-                typeof newTourn.rounds[0].players[2 * i].chains === "number" &&
-                typeof newTourn.rounds[0].players[2 * i + 1].chains === "number"
+                typeof tourn.rounds[0].players[2 * i].chains === "number" &&
+                typeof tourn.rounds[0].players[2 * i + 1].chains === "number"
             ) {
-                newTourn.rounds[0].pairings[i].player1.chains =
-                    newTourn.rounds[0].players[2 * i].chains;
-                newTourn.rounds[0].pairings[i].player2.chains =
-                    newTourn.rounds[0].players[2 * i + 1].chains;
+                tourn.rounds[0].pairings[i].player1.chains =
+                    tourn.rounds[0].players[2 * i].chains;
+                tourn.rounds[0].pairings[i].player2.chains =
+                    tourn.rounds[0].players[2 * i + 1].chains;
             }
         }
         //accounts for odd number of players
-        if (newTourn.rounds[0].players.length % 2 === 1) {
-            newTourn.rounds[0].pairings.push({
+        if (tourn.rounds[0].players.length % 2 === 1) {
+            tourn.rounds[0].pairings.push({
                 player1: {
                     name:
-                        newTourn.rounds[0].players[
-                            newTourn.rounds[0].players.length - 1
+                        tourn.rounds[0].players[
+                            tourn.rounds[0].players.length - 1
                         ].playername,
                     deck:
-                        newTourn.rounds[0].players[
-                            newTourn.rounds[0].players.length - 1
+                        tourn.rounds[0].players[
+                            tourn.rounds[0].players.length - 1
                         ].deckname,
                     winner: true,
                 },
@@ -279,10 +290,12 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 },
             });
         }
-
-        //saves the new tournament to the database
-        this.db.addNewTournament(newTourn);
+        this.db.addNewTournament(tourn);
     }
+
+    singleElimSetup(tourn: tournament) {}
+
+    roundRobinSetup(tourn: tournament) {}
 
     ngOnDestroy() {
         this.databaseSub.unsubscribe();

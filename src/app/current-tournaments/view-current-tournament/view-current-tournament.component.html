@@ -25,21 +25,28 @@
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h4 class="child">Player Name</h4>
+                    <h4>Player Name</h4>
                 </div>
             </div>
             <div class="col match">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h4 class="child">Wins</h4>
+                    <h4>Record</h4>
                 </div>
             </div>
-            <div class="col match">
+            <div class="col match" *ngIf="tourn.type === 'swiss'">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h4 class="child">Losses</h4>
+                    <h4>SoS</h4>
+                </div>
+            </div>
+            <div class="col match" *ngIf="tourn.type === 'swiss'">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h4>ESoS</h4>
                 </div>
             </div>
         </div>
@@ -51,7 +58,7 @@
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h5>{{ player.playername }}</h5>
+                    <h6>{{ player.playername }}</h6>
                     <small>{{ player.deckname | deckName }}</small>
                 </div>
             </div>
@@ -59,14 +66,21 @@
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h5>{{ player.wins }}</h5>
+                    <h5>{{ player.wins }} - {{ player.losses }}</h5>
                 </div>
             </div>
-            <div class="col match">
+            <div class="col match" *ngIf="tourn.type === 'swiss'">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h5>{{ player.losses }}</h5>
+                    <h5>{{ player.SoS }}</h5>
+                </div>
+            </div>
+            <div class="col match" *ngIf="tourn.type === 'swiss'">
+                <div
+                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                >
+                    <h5>{{ player.ESoS }}</h5>
                 </div>
             </div>
         </div>

@@ -29,45 +29,6 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         });
 
         this.currentTournaments = this.db.loadCurrentTournaments();
-
-        // if(this.curTournService.currentTournaments){
-        //   this.tournName = this.curTournService.currentTournaments[this.tournId].name;
-        //   this.round = this.curTournService.currentTournaments[this.tournId].curRound;
-        //   this.tournType = this.curTournService.currentTournaments[this.tournId].type;
-        // } else{
-        //   this.tournSub = this.curTournService.currentTournChanged
-        //   .subscribe((tourns:tournament[])=>{
-        //     console.log(tourns[this.tournId])
-        //     this.tournName = tourns[this.tournId].name;
-        //     this.round = tourns[this.tournId].curRound;
-        //     this.tournType = tourns[this.tournId].type;
-        //   })
-        // }
-
-        // let tempPairings = this.swiss.getPairings();
-        // for(let i=0;i<tempPairings.length;i++){
-        //   this.pairings.push({
-        //     deck1:{
-        //       name:tempPairings[i].deck1,
-        //       winner:false
-        //     },
-        //     deck2:{
-        //       name:tempPairings[i].deck2,
-        //       winner:false
-        //     }
-        //   })
-        // }
-    }
-
-    updateData() {
-        let results = [
-            {
-                name: "a",
-                opponent: "b",
-                result: "won",
-            },
-        ];
-        // this.swiss.updateStandings(results)
     }
 
     onClickPlayer(index: number, winner: string) {
@@ -83,9 +44,9 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
                     (!curPairing.player1.winner &&
                         curPairing.player1.name === winner) ||
                     (!curPairing.player2.winner &&
-                        curPairing.player2.name === winner)
+                        curPairing.player2.name === winner &&
+                        curPairing.player2.name !== "BYE")
                 ) {
-                    console.log("switching");
                     if (
                         curPairing.player1.name === winner &&
                         !curPairing.player1.winner
@@ -106,7 +67,13 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
             });
     }
 
-    onFinish() {}
+    onNextRound() {
+        this.swiss.onNextRound(this.tournId);
+    }
+
+    onFinish() {
+        this.swiss.onFinish(this.tournId);
+    }
 
     ngOnDestroy() {}
 }

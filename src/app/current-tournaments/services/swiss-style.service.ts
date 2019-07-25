@@ -1,184 +1,292 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { take, map } from "rxjs/operators";
 
-import { DatabaseService } from '../../shared/database.service';
+import { DatabaseService } from "../../shared/database.service";
+import { tournament, round, player } from "../../shared/tournament.model";
 
 export interface deck {
-  name:string,
-  wins:number,
-  losses:number,
-  byes:number,
-  games:number,
-  opponents:string[]
-  SoS:number,
-  ESoS:number,
-  chains?:number
+    name: string;
+    wins: number;
+    losses: number;
+    byes: number;
+    games: number;
+    opponents: string[];
+    SoS: number;
+    ESoS: number;
+    chains?: number;
 }
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: "root",
 })
 export class SwissStyleService {
-
     //functionality to run a swiss style tournament
-    
-    /*
-    Changes to be implemented:
-        remove tournament object to the current tournaments service
-        implement updates, etc to call to there
-    */
 
-//   tournament:{
-//     name:string,
-//     [round:number]:{
-//         decks:{ [name:string]:deck},
-//         standings:string[]
-//     }
-// } = {
-//     name:"",
-//     [1]:{
-//         decks:{},
-//         standings:[]
-//     }
-// }
-// round:number;
+    constructor(private db: DatabaseService) {}
 
-// constructor(private dataStorage:DatabaseService){}
+    curTourn: tournament;
+    curRound: round = {
+        pairings: [],
+        players: [],
+    };
 
-//     createSwiss(name:string,decks:{name:string,chains?:number}[]){
-//         this.dataStorage.loadTournament(name);
-//         this.round = 1;
-//         this.tournament.name=name;
-//         //Adds decks to the data storage
-//         for(let i=0;i<decks.length;i++){
-//             this.tournament[this.round].decks[decks[i].name] = {
-//                 name:decks[i].name,
-//                 wins:0,
-//                 losses:0,
-//                 byes:0,
-//                 games:0,
-//                 opponents:[],
-//                 SoS:0,
-//                 ESoS:0
-//             }
-//             this.tournament[this.round].standings.push(decks[i].name)
-//         }
+    onNextRound(tournId: number) {
+        this.db
+            .loadCurrentTournaments()
+            .pipe(take(1))
+            .subscribe((tourns: tournament[]) => {
+                this.copyTournament(tournId, tourns);
+                this.updateStats();
+                this.getPairings();
+                this.updateTournament();
+            });
+    }
 
-//         //randomizes standings for first game
-//         for(let i=0;i<this.tournament[this.round].standings.length;i++){
-//             let temp = this.tournament[this.round].standings[i];
-//             let rand = Math.floor(Math.random() * decks.length);
-//             this.tournament[this.round].standings[i] = this.tournament[this.round].standings[rand];
-//             this.tournament[this.round].standings[rand] = temp;
-//         }
-//         // this.dataStorage.saveTournament(this.tournament)
-//     }
+    onFinish(tournId: number) {
+        this.db
+            .loadCurrentTournaments()
+            .pipe(take(1))
+            .subscribe((tourns: tournament[]) => {
+                this.copyTournament(tournId, tourns);
+                this.updateStats();
+                this.finishTournament();
+            });
+    }
 
-//     loadSwiss(){
+    private copyTournament(tournId: number, tourns: tournament[]) {
+        this.curTourn = tourns[tournId];
 
-//     }
+        //makes a copy of the current round and gets new arrays/objects
+        //prevents editing previous round while making new round
+        let originalRound = this.curTourn.rounds[this.curTourn.curRound - 1];
+        for (let i = 0; i < originalRound.pairings.length; i++) {
+            this.curRound.pairings.push({
+                ...originalRound.pairings[i],
+            });
+        }
+        for (let i = 0; i < originalRound.players.length; i++) {
+            this.curRound.players.push({
+                ...originalRound.players[i],
+                opponents: [...originalRound.players[i].opponents],
+            });
+        }
+        console.log(this.curRound);
+    }
 
-//     updateStandings(update:{name:string,opponent:string,result:string}[]){
-//         this.round +=1;
-//         for(let i=0;i<update.length;i++){
-//             if(update[i].result === "win"){
-//                 this.tournament[this.round].decks[update[i].name].opponents.push(update[i].opponent);
-//                 this.tournament[this.round].decks[update[i].name].wins += 1;
-//             } else if (update[i].result === "loss"){
-//                 this.tournament[this.round].decks[update[i].name].opponents.push(update[i].opponent);
-//                 this.tournament[this.round].decks[update[i].name].losses += 1;
-//             } else {
-//                 this.tournament[this.round].decks[update[i].name].byes += 1;
-//             }
-//             this.tournament[this.round].decks[update[i].name].games += 1;
-//         }
-//         this.calculateSoS();
-//         this.calculateESoS();
-//         this.sortStandings();
-//     }
+    private updateStats() {
+        for (let i = 0; i < this.curRound.pairings.length; i++) {
+            for (let j = 0; j < this.curRound.players.length; j++) {
+                //checks if current round player matches first player in pairing
+                if (
+                    this.curRound.players[j].playername ===
+                    this.curRound.pairings[i].player1.name
+                ) {
+                    this.curRound.players[j].games += 1;
+                    //adds player 2's name to player 1's opponent list IF not a BYE
+                    if (this.curRound.pairings[i].player2.name !== "BYE") {
+                        this.curRound.players[j].opponents.push(
+                            this.curRound.pairings[i].player2.name
+                        );
+                        //updates wins, losses and byes
+                        if (this.curRound.pairings[i].player1.winner) {
+                            this.curRound.players[j].wins += 1;
+                        } else {
+                            this.curRound.players[j].losses += 1;
+                        }
+                    } else {
+                        this.curRound.players[j].byes += 1;
+                    }
+                } else if (
+                    this.curRound.players[j].playername ===
+                    this.curRound.pairings[i].player2.name
+                ) {
+                    //adds player 1's name to player 2's opponent list
+                    this.curRound.players[j].opponents.push(
+                        this.curRound.pairings[i].player1.name
+                    );
 
-//     //Pairs decks based off of current rank and not having faced each other yet
-//     getPairings(){
-//         let currentStandings = [...this.tournament[this.round].standings]
-//         let pairings:{deck1:string,deck2:string}[]=[];
-//         let gameNumber = 0;
-//         while(currentStandings.length>1){
-//             let i=1;
-//             let searching = true;
-//             while(searching){
-//                 if(
-//                     this.tournament[this.round].decks[currentStandings[0]].opponents.indexOf(currentStandings[i])<0 &&
-//                     this.tournament[this.round].decks[currentStandings[i]].opponents.indexOf(currentStandings[0])
-//                     ){
-//                     pairings.push({
-//                         deck1:currentStandings[0],
-//                         deck2:currentStandings[1]
-//                     })
-//                     currentStandings.shift();
-//                     currentStandings.shift();
-//                     searching = false;
-//                 } else {
-//                     i++;
-//                 }
-//             }
+                    //updates wins, losses and games
+                    if (this.curRound.pairings[i].player2.winner) {
+                        this.curRound.players[j].wins += 1;
+                        this.curRound.players[j].games += 1;
+                    } else {
+                        this.curRound.players[j].losses += 1;
+                        this.curRound.players[j].games += 1;
+                    }
+                }
+            }
+        }
+        this.calculateSoS();
+    }
 
-//             gameNumber++;
-//         }
-//         if(currentStandings.length>0){
-//             pairings[gameNumber] = {
-//                 deck1:currentStandings[0],
-//                 deck2:'bye'
-//             }
-//         }
-//         return pairings;
-//     }
+    private calculateSoS() {
+        //does calculation for each player in the game
+        for (let i = 0; i < this.curRound.players.length; i++) {
+            //checks if player had BYE the first round (SOS=0 in that case)
+            if (this.curRound.players[i].opponents.length !== 0) {
+                //Adds all of the win+bye / total games of opponents
+                let sum = 0;
+                for (
+                    let j = 0;
+                    j < this.curRound.players[i].opponents.length;
+                    j++
+                ) {
+                    let opponent: string = this.curRound.players[i].opponents[
+                        j
+                    ];
 
-//     private calculateSoS(){
-//         for(let deck in this.tournament[this.round].decks){
-//             if( this.tournament[this.round].decks.hasOwnProperty(deck) && this.tournament[this.round].decks[deck].opponents.length>0){
-//                 let sum = 0;
-//                 for(let i=0;i<this.tournament[this.round].decks[deck].opponents.length;i++){
-//                     let opponent:string = this.tournament[this.round].decks[deck].opponents[i];
-//                     sum += (this.tournament[this.round].decks[opponent].wins + this.tournament[this.round].decks[opponent].byes)/this.tournament[this.round].decks[opponent].games
-//                 }
-//                 this.tournament[this.round].decks[deck].SoS = sum / this.tournament[this.round].decks[deck].opponents.length
-//             }
-//         }
-//     }
+                    //finds their opponent in the main array and gets their wins/byes
+                    for (let k = 0; k < this.curRound.players.length; k++) {
+                        if (this.curRound.players[k].playername === opponent) {
+                            sum +=
+                                (this.curRound.players[k].wins +
+                                    this.curRound.players[k].byes) /
+                                this.curRound.players[k].games;
+                        }
+                    }
+                }
+                this.curRound.players[i].SoS =
+                    sum / this.curRound.players[i].opponents.length;
+            } else {
+                this.curRound.players[i].SoS = 0;
+            }
+        }
+        this.calculateESoS();
+    }
 
-//     private calculateESoS(){
-//         for(let deck in this.tournament[this.round].decks){
-//             if(this.tournament[this.round].decks.hasOwnProperty(deck) && this.tournament[this.round].decks[deck].opponents.length>0){
-//                 let sum = 0;
-//                 for(let i=0;i<this.tournament[this.round].decks[deck].opponents.length;i++){
-//                     let opponent:string = this.tournament[this.round].decks[deck].opponents[i];
-//                     sum += this.tournament[this.round].decks[opponent].SoS
-//                 }
-//                 this.tournament[this.round].decks[deck].ESoS = sum / this.tournament[this.round].decks[deck].opponents.length
-//             }
-//         }
-//     }
+    private calculateESoS() {
+        //does calculation for each player in the game
+        for (let i = 0; i < this.curRound.players.length; i++) {
+            //checks if player had BYE the first round (SOS=0 in that case)
+            if (this.curRound.players[i].opponents.length !== 0) {
+                //Adds all of the SOS of opponents
+                let sum = 0;
+                for (
+                    let j = 0;
+                    j < this.curRound.players[i].opponents.length;
+                    j++
+                ) {
+                    let opponent: string = this.curRound.players[i].opponents[
+                        j
+                    ];
+                    //finds their opponent in the main array and gets their SOS
+                    for (let k = 0; k < this.curRound.players.length; k++) {
+                        if (this.curRound.players[k].playername === opponent) {
+                            sum += this.curRound.players[k].SoS;
+                        }
+                    }
+                }
+                this.curRound.players[i].ESoS =
+                    sum / this.curRound.players[i].opponents.length;
+            } else {
+                /*
+				Ensures that the BYE player appears to have the same record as
+				a winner.  Otherwise, BYE player would always get paired down
+				*/
+                this.curRound.players[i].ESoS = 1;
+            }
+        }
 
-//     private sortStandings(){
-//         this.tournament[this.round].standings.sort((a,b)=>{
-//             let a_wins = this.tournament[this.round].decks[a].wins + this.tournament[this.round].decks[a].byes;
-//             let b_wins = this.tournament[this.round].decks[b].wins + this.tournament[this.round].decks[b].byes;
-//             if(a_wins>b_wins){
-//                 return -1;
-//             } else if(a_wins<b_wins) {
-//                 return 1;
-//             } else {
-//                 if(this.tournament[this.round].decks[a].SoS>this.tournament[this.round].decks[b].SoS){
-//                     return -1;
-//                 } else if(this.tournament[this.round].decks[a].SoS<this.tournament[this.round].decks[b].SoS){
-//                     return 1;
-//                 } else {
-//                     if(this.tournament[this.round].decks[a].ESoS>this.tournament[this.round].decks[b].ESoS){
-//                         return -1;
-//                     } else {
-//                         return 1;
-//                     }
-//                 }
-//             }
-//         })
-//     }
+        this.sortStandings();
+    }
+
+    private sortStandings() {
+        //randomizes before sorting
+        for (let i = 0; i < this.curRound.players.length; i++) {
+            let rand = Math.floor(Math.random() * this.curRound.players.length);
+            let temp = this.curRound.players[i];
+            this.curRound.players[i] = this.curRound.players[rand];
+            this.curRound.players[rand] = temp;
+        }
+
+        this.curRound.players.sort((a, b) => {
+            let a_wins = a.wins + a.byes;
+            let b_wins = b.wins + b.byes;
+            if (a_wins > b_wins) {
+                return -1;
+            } else if (a_wins < b_wins) {
+                return 1;
+            } else {
+                if (a.SoS > b.SoS) {
+                    return -1;
+                } else if (a.SoS < b.SoS) {
+                    return 1;
+                } else {
+                    if (a.ESoS > b.ESoS) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            }
+        });
+    }
+
+    private getPairings() {
+        this.curRound.pairings = [];
+        //pairs up players starting with the 1st and 2nd place, then 3rd vs 4th, etc
+        for (let i = 0; i < Math.floor(this.curRound.players.length / 2); i++) {
+            this.curRound.pairings.push({
+                player1: {
+                    name: this.curRound.players[2 * i].playername,
+                    deck: this.curRound.players[2 * i].deckname,
+                    winner: false,
+                },
+                player2: {
+                    name: this.curRound.players[2 * i + 1].playername,
+                    deck: this.curRound.players[2 * i + 1].deckname,
+                    winner: false,
+                },
+            });
+            if (
+                typeof this.curRound.players[2 * i].chains === "number" &&
+                typeof this.curRound.players[2 * i + 1].chains === "number"
+            ) {
+                this.curRound.pairings[
+                    i
+                ].player1.chains = this.curRound.players[2 * i].chains;
+                this.curRound.pairings[
+                    i
+                ].player2.chains = this.curRound.players[2 * i + 1].chains;
+            }
+        }
+        //gives a BYE to the last player in the case of an odd number of players
+        if (this.curRound.players.length % 2 === 1) {
+            this.curRound.pairings.push({
+                player1: {
+                    name: this.curRound.players[
+                        this.curRound.players.length - 1
+                    ].playername,
+                    deck: this.curRound.players[
+                        this.curRound.players.length - 1
+                    ].deckname,
+                    winner: true,
+                },
+                player2: {
+                    name: "BYE",
+                    deck: "",
+                    winner: false,
+                },
+            });
+        }
+    }
+
+    private updateTournament() {
+        this.curTourn.curRound += 1;
+        this.curTourn.rounds.push(this.curRound);
+        this.db.updateTournament(this.curTourn);
+        this.curRound = {
+            pairings: [],
+            players: [],
+        };
+    }
+
+    private finishTournament() {
+        this.curTourn.rounds.push(this.curRound);
+        this.db.finishCurrentTournament(this.curTourn);
+        this.curRound = {
+            pairings: [],
+            players: [],
+        };
+    }
 }

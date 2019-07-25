@@ -87,7 +87,7 @@
                     <small *ngIf="pair.player2.chains >= 0">
                         Chains: {{ pair.player2.chains }}
                     </small>
-                    <small *ngIf="!pair.player2.deck === ''">{{
+                    <small *ngIf="!(pair.player2.deck === '')">{{
                         pair.player2.deck | deckName
                     }}</small>
                 </div>
@@ -95,13 +95,23 @@
         </div>
         <br />
         <div class="row">
-            <div class="col align-item-center">
+            <div class="col text-center">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onNextRound()"
+                    *ngIf="tourn.curRound < tourn.maxRounds"
+                    style="height:50px;width:200px;"
+                >
+                    <h5 class="font-weight-bold">End Round</h5>
+                </button>
                 <button
                     type="button"
                     class="btn btn-primary"
                     (click)="onFinish()"
+                    *ngIf="tourn.curRound === tourn.maxRounds"
                 >
-                    End Round
+                    <h5 class="font-weight-bold">End Tournament</h5>
                 </button>
             </div>
         </div>
