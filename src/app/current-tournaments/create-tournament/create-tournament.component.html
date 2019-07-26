@@ -60,7 +60,7 @@
 
             <div
                 *ngFor="
-                    let deck of createForm.get('decks').controls;
+                    let deck of createForm.get('decks')['controls'];
                     let i = index
                 "
                 [formGroupName]="i"
