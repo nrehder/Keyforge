@@ -21,28 +21,28 @@
             </div>
         </div>
         <div class="row">
-            <div class="col match">
+            <div class="col-3 match">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
                     <h4>Player Name</h4>
                 </div>
             </div>
-            <div class="col match">
+            <div class="col-3 match">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h4>Wins-Losses-Byes</h4>
+                    <h4>W-L-B</h4>
                 </div>
             </div>
-            <div class="col match" *ngIf="tourn.type === 'swiss'">
+            <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
                     <h4>SoS</h4>
                 </div>
             </div>
-            <div class="col match" *ngIf="tourn.type === 'swiss'">
+            <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
@@ -54,17 +54,17 @@
             class="row"
             *ngFor="let player of tourn.rounds[tourn.curRound - 1].players"
         >
-            <div class="col match">
+            <div class="col-3 match">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
                     <h6>{{ player.playername }}</h6>
                     <a href="{{ player.deckUrl }}" target="_blank">
-                        <small>{{ player.deckname | deckName }}</small>
+                        <small>{{ player.deckname | deckName: 12 }}</small>
                     </a>
                 </div>
             </div>
-            <div class="col match">
+            <div class="col-3 match">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
@@ -74,18 +74,18 @@
                     </h5>
                 </div>
             </div>
-            <div class="col match" *ngIf="tourn.type === 'swiss'">
+            <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h5>{{ player.SoS }}</h5>
+                    <h5>{{ player.SoS | number }}</h5>
                 </div>
             </div>
-            <div class="col match" *ngIf="tourn.type === 'swiss'">
+            <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
                 <div
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
-                    <h5>{{ player.ESoS }}</h5>
+                    <h5>{{ player.ESoS | number }}</h5>
                 </div>
             </div>
         </div>
