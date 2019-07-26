@@ -107,5 +107,9 @@
     </div>
 </div>
 
-<app-delete-confirmation *ngIf="deleting" (choice)="onConfirmation($event)">
-</app-delete-confirmation>
+<app-variable-confirmation
+    [message]="'delete ' + tournName"
+    *ngIf="deleting"
+    (choice)="onConfirmation($event)"
+>
+</app-variable-confirmation>

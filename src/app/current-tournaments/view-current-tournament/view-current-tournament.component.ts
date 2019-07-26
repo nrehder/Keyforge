@@ -1,54 +1,59 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { DatabaseService } from 'src/app/shared/database.service';
-import { DocumentData } from 'angularfire2/firestore';
-import { take } from 'rxjs/operators';
-import { tournament } from 'src/app/shared/tournament.model';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ActivatedRoute, Params } from "@angular/router";
+import { Observable } from "rxjs";
+import { DatabaseService } from "src/app/shared/database.service";
+import { DocumentData } from "angularfire2/firestore";
+import { take } from "rxjs/operators";
+import { tournament } from "src/app/shared/tournament.model";
 
 @Component({
-  selector: 'app-view-current-tournament',
-  templateUrl: './view-current-tournament.component.html',
-  styleUrls: ['./view-current-tournament.component.css']
+    selector: "app-view-current-tournament",
+    templateUrl: "./view-current-tournament.component.html",
+    styleUrls: ["./view-current-tournament.component.css"],
 })
 export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
+    tournName: string;
+    tournId: number;
+    currentTournaments: Observable<DocumentData[]>;
+    deleting: boolean = false;
+    loading: boolean = false;
 
-  tournId:number;
-  currentTournaments:Observable<DocumentData[]>;
-  deleting:boolean = false;
-  loading:boolean = false;
+    constructor(private route: ActivatedRoute, private db: DatabaseService) {}
 
-  constructor(private route:ActivatedRoute, private db:DatabaseService) { }
+    ngOnInit() {
+        this.route.params.subscribe((params: Params) => {
+            this.tournId = +params["id"];
+        });
 
-  ngOnInit() {
-    this.route.params.subscribe((params:Params)=>{
-      this.tournId = +params['id'];
-    })
-
-    this.currentTournaments = this.db.loadCurrentTournaments();
-
-  }
-
-  onDelete(){
-    this.deleting = true;
-  }
-
-  onConfirmation(choice:string){
-    if(choice === "close"){
-      this.deleting = false;
-    } else if(choice === "delete"){
-      this.deleting = false;
-      this.loading = true;
-      this.db.loadCurrentTournaments()
-      .pipe(take(1))
-      .subscribe((tourns:tournament[])=>{
-        this.db.deleteTournament("current",tourns[this.tournId].name)
-      })
+        this.currentTournaments = this.db.loadCurrentTournaments();
+        this.currentTournaments
+            .pipe(take(1))
+            .subscribe((tourns: tournament[]) => {
+                this.tournName = tourns[this.tournId].name;
+            });
     }
-  }
 
-  ngOnDestroy(){
+    onDelete() {
+        this.deleting = true;
+    }
 
-  }
+    onConfirmation(choice: string) {
+        if (choice === "cancel") {
+            this.deleting = false;
+        } else if (choice === "confirm") {
+            this.deleting = false;
+            this.loading = true;
+            this.db
+                .loadCurrentTournaments()
+                .pipe(take(1))
+                .subscribe((tourns: tournament[]) => {
+                    this.db.deleteTournament(
+                        "current",
+                        tourns[this.tournId].name
+                    );
+                });
+        }
+    }
 
+    ngOnDestroy() {}
 }
