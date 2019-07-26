@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { DatabaseService } from "../shared/database.service";
+import { Observable } from "rxjs";
+import { DocumentData } from "angularfire2/firestore";
 
 @Component({
-  selector: 'app-finished-tournaments',
-  templateUrl: './finished-tournaments.component.html',
-  styleUrls: ['./finished-tournaments.component.css']
+    selector: "app-finished-tournaments",
+    templateUrl: "./finished-tournaments.component.html",
+    styleUrls: ["./finished-tournaments.component.css"],
 })
 export class FinishedTournamentsComponent implements OnInit {
+    constructor(private db: DatabaseService) {}
 
-  constructor() { }
+    finishedTournaments: Observable<DocumentData[]>;
 
-  ngOnInit() {
-  }
-
+    ngOnInit() {
+        this.finishedTournaments = this.db.loadFinishedTournaments();
+    }
 }
