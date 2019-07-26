@@ -16,6 +16,8 @@ import { take, map } from "rxjs/operators";
 export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     tournId: number;
     currentTournaments: Observable<DocumentData[]>;
+    finishedPairings: boolean[] = [];
+    allFinished: boolean;
 
     constructor(
         private swiss: SwissStyleService,
@@ -29,6 +31,26 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         });
 
         this.currentTournaments = this.db.loadCurrentTournaments();
+
+        this.currentTournaments
+            .pipe(take(1))
+            .subscribe((tourns: tournament[]) => {
+                const curPairings =
+                    tourns[this.tournId].rounds[
+                        tourns[this.tournId].curRound - 1
+                    ].pairings;
+                for (let i = 0; i < curPairings.length; i++) {
+                    if (
+                        curPairings[i].player1.winner ||
+                        curPairings[i].player2.winner
+                    ) {
+                        this.finishedPairings.push(true);
+                    } else {
+                        this.finishedPairings.push(false);
+                    }
+                }
+                this.checkFinished();
+            });
     }
 
     onClickPlayer(index: number, winner: string) {
@@ -39,6 +61,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
                 const curTourn = tourns[this.tournId];
                 const curPairing =
                     curTourn.rounds[curTourn.curRound - 1].pairings[index];
+
+                this.finishedPairings[index] = true;
 
                 if (
                     (!curPairing.player1.winner &&
@@ -64,15 +88,37 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
 
                     this.db.updateTournament(curTourn);
                 }
+                this.checkFinished();
             });
     }
 
     onNextRound() {
         this.swiss.onNextRound(this.tournId);
+        this.clearFinished();
     }
 
     onFinish() {
         this.swiss.onFinish(this.tournId);
+    }
+
+    private clearFinished() {
+        for (let i = 0; i < this.finishedPairings.length; i++) {
+            this.finishedPairings[i] = false;
+        }
+        this.allFinished = false;
+        console.log(this.finishedPairings);
+    }
+
+    private checkFinished() {
+        let unfinished = 0;
+        for (let element of this.finishedPairings) {
+            if (!element) {
+                unfinished += 1;
+            }
+        }
+        if (unfinished === 0) {
+            this.allFinished = true;
+        }
     }
 
     ngOnDestroy() {}

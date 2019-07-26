@@ -68,7 +68,8 @@
                         {{ pair.player1.name }}
                     </p>
                     <small>{{ pair.player1.deck | deckName }}</small>
-                    <small
+
+                    <!-- <small
                         >W
                         {{
                             tourn.rounds[tourn.curRound - 1].players[2 * i].wins
@@ -82,7 +83,7 @@
                         {{
                             tourn.rounds[tourn.curRound - 1].players[2 * i].byes
                         }}</small
-                    >
+                    > -->
                     <small *ngIf="pair.player1.chains >= 0">
                         Chains: {{ pair.player1.chains }}
                     </small>
@@ -102,7 +103,7 @@
                     <small *ngIf="!(pair.player2.deck === '')">{{
                         pair.player2.deck | deckName
                     }}</small>
-                    <small *ngIf="!(pair.player2.deck === '')"
+                    <!-- <small *ngIf="!(pair.player2.deck === '')"
                         >W
                         {{
                             tourn.rounds[tourn.curRound - 1].players[2 * i + 1]
@@ -118,7 +119,7 @@
                             tourn.rounds[tourn.curRound - 1].players[2 * i + 1]
                                 .byes
                         }}</small
-                    >
+                    > -->
                     <small *ngIf="pair.player2.chains >= 0">
                         Chains: {{ pair.player2.chains }}
                     </small>
@@ -134,6 +135,7 @@
                     (click)="onNextRound()"
                     *ngIf="tourn.curRound < tourn.maxRounds"
                     style="height:50px;width:200px;"
+                    [disabled]="!allFinished"
                 >
                     <h5 class="font-weight-bold">End Round</h5>
                 </button>
@@ -142,8 +144,12 @@
                     class="btn btn-primary"
                     (click)="onFinish()"
                     *ngIf="tourn.curRound === tourn.maxRounds"
+                    style="height:50px;width:200px;"
+                    [disabled]="!allFinished"
                 >
-                    <h5 class="font-weight-bold">End Tournament</h5>
+                    <h5 class="font-weight-bold">
+                        End Tournament
+                    </h5>
                 </button>
             </div>
         </div>
