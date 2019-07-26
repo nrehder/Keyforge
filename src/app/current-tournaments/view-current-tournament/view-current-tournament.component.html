@@ -59,7 +59,9 @@
                     class="box h-100 d-flex justify-content-center align-item-center flex-column"
                 >
                     <h6>{{ player.playername }}</h6>
-                    <small>{{ player.deckname | deckName }}</small>
+                    <a href="{{ player.deckUrl }}" target="_blank">
+                        <small>{{ player.deckname | deckName }}</small>
+                    </a>
                 </div>
             </div>
             <div class="col match">
