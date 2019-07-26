@@ -14,10 +14,13 @@ import { take, map } from "rxjs/operators";
     styleUrls: ["./run-current-tournament.component.css"],
 })
 export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
+    curRound: number;
     tournId: number;
     currentTournaments: Observable<DocumentData[]>;
     finishedPairings: boolean[] = [];
     allFinished: boolean;
+    endingRound: boolean;
+    endingTourn: boolean;
 
     constructor(
         private swiss: SwissStyleService,
@@ -35,6 +38,7 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         this.currentTournaments
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
+                this.curRound = tourns[this.tournId].curRound;
                 const curPairings =
                     tourns[this.tournId].rounds[
                         tourns[this.tournId].curRound - 1
@@ -93,12 +97,31 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     }
 
     onNextRound() {
-        this.swiss.onNextRound(this.tournId);
-        this.clearFinished();
+        this.endingRound = true;
+    }
+
+    onConfirmNextRound(choice: string) {
+        if (choice === "cancel") {
+            this.endingRound = false;
+        } else if (choice === "confirm") {
+            this.endingRound = false;
+            this.swiss.onNextRound(this.tournId);
+            this.clearFinished();
+        }
     }
 
     onFinish() {
-        this.swiss.onFinish(this.tournId);
+        this.endingTourn = true;
+    }
+
+    onConfirmEndTourn(choice: string) {
+        if (choice === "cancel") {
+            this.endingTourn = false;
+        } else if (choice === "confirm") {
+            this.endingTourn = false;
+            this.swiss.onFinish(this.tournId);
+            this.clearFinished();
+        }
     }
 
     private clearFinished() {

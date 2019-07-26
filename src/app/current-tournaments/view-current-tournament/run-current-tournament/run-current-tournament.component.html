@@ -155,3 +155,17 @@
         </div>
     </div>
 </div>
+
+<app-variable-confirmation
+    [message]="'end round ' + curRound"
+    *ngIf="endingRound"
+    (choice)="onConfirmNextRound($event)"
+>
+</app-variable-confirmation>
+
+<app-variable-confirmation
+    [message]="'end the tournament?'"
+    *ngIf="endingTourn"
+    (choice)="onConfirmEndTourn($event)"
+>
+</app-variable-confirmation>
