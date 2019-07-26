@@ -1,0 +1,15 @@
+<div class="backdrop" (click)="onCancel()"></div>
+<div class="alert-box">
+    <p>Are you sure you wish to {{ message }}?</p>
+    <div>
+        <button class="btn btn-primary alert-box-actions" (click)="onConfirm()">
+            Confirm
+        </button>
+        <button
+            class="btn btn-secondary alert-box-actions"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</div>
