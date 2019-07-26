@@ -10,18 +10,29 @@ import { Router } from "@angular/router";
 export class DatabaseService {
     constructor(private db: AngularFirestore, private route: Router) {}
 
-    updateTournament(upTourn: tournament) {
-        this.db
+    //returns an observable that will 'next' each time the database updates
+    loadCurrentTournaments() {
+        return this.db
             .collection("testing")
             .doc("tournaments")
             .collection("current")
-            .doc(upTourn.name)
-            .set(upTourn)
-            .catch(err => {
-                console.log(err);
-            });
+            .valueChanges();
+    }
+    loadFinishedTournaments() {
+        return this.db
+            .collection("testing")
+            .doc("tournaments")
+            .collection("finished")
+            .valueChanges();
     }
 
+    /*
+		Adds the provided new tournament to the collection
+		Gets a new copy of the tournaments and maps the DocumentData[]
+			to tournament[] then to an array of the tournament names
+		Finds the tournament that was just added and navigates to the
+			'view current tournament' that corresponds to it
+	*/
     addNewTournament(newTourn: tournament) {
         this.db
             .collection("testing")
@@ -49,6 +60,7 @@ export class DatabaseService {
                             );
                         }),
                         map(tournArray => {
+                            //converts the tournament[] to string[]
                             return tournArray.map(element => {
                                 return element.name;
                             });
@@ -67,15 +79,10 @@ export class DatabaseService {
             });
     }
 
-    //returns an observable that will 'next' each time the database updates
-    loadCurrentTournaments() {
-        return this.db
-            .collection("testing")
-            .doc("tournaments")
-            .collection("current")
-            .valueChanges();
-    }
-
+    /*
+	takes in either 'finished' or 'current' for collection
+	document is the tournament name
+	*/
     deleteTournament(collection: string, document: string) {
         this.db
             .collection("testing")
@@ -84,14 +91,19 @@ export class DatabaseService {
             .doc(document)
             .delete()
             .then(() => {
-                console.log("Deleted Successfully");
+                // console.log("Deleted Successfully");
             })
             .catch(error => {
-                console.log("error");
                 console.log(error);
             });
     }
 
+    /*
+		takes in the finalized tournament from swiss/etc service
+		Adds it to the finished collection in the database
+		Deletes the tournament from the current section of the database
+		Navigates to the 'view finished' component
+	*/
     finishCurrentTournament(tourn: tournament) {
         this.db
             .collection("testing")
@@ -112,6 +124,19 @@ export class DatabaseService {
 
                 //add navigation to finished version
             })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    //takes in updated tournament and saves it to database
+    updateTournament(upTourn: tournament) {
+        this.db
+            .collection("testing")
+            .doc("tournaments")
+            .collection("current")
+            .doc(upTourn.name)
+            .set(upTourn)
             .catch(err => {
                 console.log(err);
             });
