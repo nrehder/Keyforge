@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
 import * as firebase from "firebase/app";
@@ -39,6 +39,8 @@ export class AuthService {
             })
         );
     }
+
+    emailLogin() {}
 
     googleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();

@@ -1,0 +1,124 @@
+<div class="row" style="min-height: 300px">
+    <div class="col">
+        <br />
+        <!-- Log In Mode -->
+        <div
+            class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
+            *ngIf="!signUp"
+        >
+            <h4>Log In</h4>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        class="form-control"
+                        formControlName="username"
+                    />
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        formControlName="password"
+                    />
+                </div>
+                <button
+                    class="btn btn-primary w-100"
+                    type="submit"
+                    style="margin-bottom: 10px"
+                >
+                    Submit
+                </button>
+            </form>
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col text-center">
+                    <button class="btn btn-link btn-sm">
+                        Forgot Password
+                    </button>
+                </div>
+                <div class="col text-center">
+                    <button
+                        (click)="onChangeMode()"
+                        class="btn btn-link btn-sm"
+                    >
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+
+            <button
+                (click)="authService.googleLogin()"
+                class="btn btn-social btn-google"
+            >
+                <span class="fa fa-google"></span>Sign in with Google
+            </button>
+        </div>
+        <!-- Sign Up Mode -->
+        <div
+            class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
+            *ngIf="signUp"
+        >
+            <h4>Sign Up</h4>
+            <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignup()">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        class="form-control"
+                        formControlName="username"
+                    />
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-control"
+                        formControlName="email"
+                    />
+                    <label for="verifyEmail">Verify Email</label>
+                    <input
+                        type="email"
+                        id="verifyEmail"
+                        class="form-control"
+                        formControlName="verifyEmail"
+                    />
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        formControlName="password"
+                    />
+                    <label for="verifyPassword">Password</label>
+                    <input
+                        type="password"
+                        id="verifyPassword"
+                        class="form-control"
+                        formControlName="verifyPassword"
+                    />
+                </div>
+                <button
+                    class="btn btn-primary w-100"
+                    type="submit"
+                    style="margin-bottom: 10px"
+                >
+                    Submit
+                </button>
+            </form>
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col text-center">
+                    <button
+                        (click)="onChangeMode()"
+                        class="btn btn-link btn-sm"
+                    >
+                        Return to Log In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

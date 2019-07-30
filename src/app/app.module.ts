@@ -16,19 +16,21 @@ import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./header/header.component";
 import { UserComponent } from "./user/user.component";
 import { HomeComponent } from "./home/home.component";
+import { LoginComponent } from "./login/login.component";
 
 import { CurrentTournamentsComponent } from "./current-tournaments/current-tournaments.component";
 import { ViewCurrentTournamentComponent } from "./current-tournaments/view-current-tournament/view-current-tournament.component";
 import { RunCurrentTournamentComponent } from "./current-tournaments/view-current-tournament/run-current-tournament/run-current-tournament.component";
 import { CreateTournamentComponent } from "./current-tournaments/create-tournament/create-tournament.component";
+import { NoTournamentComponent } from "./current-tournaments/no-tournament/no-tournament.component";
 
 import { FinishedTournamentsComponent } from "./finished-tournaments/finished-tournaments.component";
 import { ViewFinishedTournamentComponent } from "./finished-tournaments/view-finished-tournament/view-finished-tournament.component";
 import { FullFinishedTournamentComponent } from "./finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component";
-import { NoTournamentComponent } from "./current-tournaments/no-tournament/no-tournament.component";
 import { LoadingSpinnerComponent } from "./shared/loading-spinner/loading-spinner.component";
-import { DeckNamePipe } from "./shared/deck-name.pipe";
+
 import { VariableConfirmationComponent } from "./shared/variable-confirmation/variable-confirmation.component";
+import { DeckNamePipe } from "./shared/deck-name.pipe";
 
 @NgModule({
     declarations: [
@@ -47,6 +49,7 @@ import { VariableConfirmationComponent } from "./shared/variable-confirmation/va
         LoadingSpinnerComponent,
         VariableConfirmationComponent,
         DeckNamePipe,
+        LoginComponent,
     ],
     imports: [
         BrowserModule,
