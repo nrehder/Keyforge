@@ -2,8 +2,11 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
+
 import { AngularFirestoreModule } from "angularfire2/firestore";
 import { AngularFireModule } from "angularfire2";
+import { AngularFireAuthModule } from "angularfire2/auth";
+
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { environment } from "../environments/environment";
@@ -49,6 +52,7 @@ import { VariableConfirmationComponent } from "./shared/variable-confirmation/va
         BrowserModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFirestoreModule,
+        AngularFireAuthModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,

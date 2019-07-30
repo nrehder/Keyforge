@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
     <div class="col-xs-12 col-md-6 col-offset-3">
         <form [formGroup]="loginForm" ngSubmit="onSubmitLogin()">
             <div class="form-group" *ngIf="!signUp">
@@ -26,4 +26,20 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->
+
+<div *ngIf="authService.user | async; then authenticated; else guest"></div>
+
+<ng-template #guest>
+    <p>Login to get started...</p>
+    <button (click)="authService.googleLogin()">
+        Connect Google
+    </button>
+</ng-template>
+
+<ng-template #authenticated>
+    <div *ngIf="authService.user | async as user">
+        <h3>Howdy, {{ user.displayName }}</h3>
+        <img src="{{ user.photoUrl }}" />
+    </div>
+</ng-template>

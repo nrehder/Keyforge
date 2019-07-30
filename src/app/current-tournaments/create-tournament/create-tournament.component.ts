@@ -16,7 +16,8 @@ import { DatabaseService } from "src/app/shared/database.service";
     styleUrls: ["./create-tournament.component.css"],
 })
 export class CreateTournamentComponent implements OnInit, OnDestroy {
-    databaseSub: Subscription;
+    currentSub: Subscription;
+    finishedSub: Subscription;
     createForm: FormGroup;
     isloading: boolean;
     tournamentNames: string[] = [];
@@ -27,8 +28,15 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.databaseSub = this.db
+        this.currentSub = this.db
             .loadCurrentTournaments()
+            .subscribe((tourns: tournament[]) => {
+                for (let i = 0; i < tourns.length; i++) {
+                    this.tournamentNames.push(tourns[i].name);
+                }
+            });
+        this.finishedSub = this.db
+            .loadFinishedTournaments()
             .subscribe((tourns: tournament[]) => {
                 for (let i = 0; i < tourns.length; i++) {
                     this.tournamentNames.push(tourns[i].name);
@@ -298,6 +306,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     roundRobinSetup(tourn: tournament) {}
 
     ngOnDestroy() {
-        this.databaseSub.unsubscribe();
+        this.currentSub.unsubscribe();
+        this.finishedSub.unsubscribe();
     }
 }
