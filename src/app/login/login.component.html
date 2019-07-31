@@ -1,3 +1,11 @@
+<div *ngIf="authService.isloading" style="text-align:center;">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<app-alert
+    [message]="authService.error"
+    *ngIf="authService.error"
+    (close)="onHandleError()"
+></app-alert>
 <div class="row" style="min-height: 300px">
     <div class="col">
         <br />

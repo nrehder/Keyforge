@@ -19,8 +19,10 @@ export interface User {
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
+    error: string = "";
     user: Observable<User>;
     needUsername: boolean = false;
+    isloading: boolean = false;
 
     constructor(
         private fireAuth: AngularFireAuth,
@@ -41,32 +43,42 @@ export class AuthService {
     }
 
     createEmailLogin(email: string, password: string) {
+        this.isloading = true;
         this.fireAuth.auth
             .createUserWithEmailAndPassword(email, password)
             .then(res => {
                 this.updateUserData(res.user);
             })
             .catch(err => {
-                console.log(err);
+                this.isloading = false;
+                this.errorMessage(err);
             });
     }
 
     emailLogin(email: string, password: string) {
+        this.isloading = true;
         this.fireAuth.auth
             .signInWithEmailAndPassword(email, password)
             .then(res => {
+                this.isloading = false;
                 this.router.navigate(["/"]);
             })
             .catch(err => {
-                console.log(err);
+                this.isloading = false;
+                this.errorMessage(err);
             });
     }
 
     googleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        return this.fireAuth.auth.signInWithPopup(provider).then(credential => {
-            this.updateUserData(credential.user);
-        });
+        this.fireAuth.auth
+            .signInWithPopup(provider)
+            .then(credential => {
+                this.updateUserData(credential.user);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     private updateUserData(user) {
@@ -95,8 +107,10 @@ export class AuthService {
             )
             .subscribe(doc => {
                 if (doc.username === undefined) {
+                    this.isloading = false;
                     this.needUsername = true;
                 } else {
+                    this.isloading = false;
                     this.router.navigate(["/"]);
                 }
             });
@@ -104,6 +118,7 @@ export class AuthService {
 
     addUsername(username: string) {
         this.needUsername = false;
+        this.isloading = true;
         this.user.pipe(take(1)).subscribe(user => {
             this.angFire
                 .collection("users")
@@ -119,8 +134,13 @@ export class AuthService {
                 .catch(err => {
                     console.log(err);
                 });
+            this.isloading = false;
             this.router.navigate(["/"]);
         });
+    }
+
+    private errorMessage(err) {
+        this.error = err.message;
     }
 
     signOut() {

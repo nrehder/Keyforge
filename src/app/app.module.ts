@@ -30,6 +30,7 @@ import { FullFinishedTournamentComponent } from "./finished-tournaments/view-fin
 import { LoadingSpinnerComponent } from "./shared/loading-spinner/loading-spinner.component";
 import { VariableConfirmationComponent } from "./shared/variable-confirmation/variable-confirmation.component";
 import { DeckNamePipe } from "./shared/deck-name.pipe";
+import { AlertComponent } from "./shared/alert/alert.component";
 
 import { LoginComponent } from "./login/login.component";
 
@@ -51,6 +52,7 @@ import { LoginComponent } from "./login/login.component";
         VariableConfirmationComponent,
         DeckNamePipe,
         LoginComponent,
+        AlertComponent,
     ],
     imports: [
         BrowserModule,

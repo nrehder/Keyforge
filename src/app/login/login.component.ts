@@ -65,4 +65,8 @@ export class LoginComponent implements OnInit {
     onSubmitUsername() {
         this.authService.addUsername(this.usernameForm.get("username").value);
     }
+
+    onHandleError() {
+        this.authService.error = "";
+    }
 }
