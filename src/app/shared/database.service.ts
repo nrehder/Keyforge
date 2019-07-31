@@ -3,24 +3,29 @@ import { AngularFirestore } from "angularfire2/firestore";
 import { map, take } from "rxjs/operators";
 import { tournament } from "../shared/tournament.model";
 import { Router } from "@angular/router";
+import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class DatabaseService {
-    constructor(private db: AngularFirestore, private route: Router) {}
+    constructor(
+        private db: AngularFirestore,
+        private route: Router,
+        private authService: AuthService
+    ) {}
 
     //returns an observable that will 'next' each time the database updates
     loadCurrentTournaments() {
         return this.db
-            .collection("testing")
+            .collection(this.authService.username)
             .doc("tournaments")
             .collection("current")
             .valueChanges();
     }
     loadFinishedTournaments() {
         return this.db
-            .collection("testing")
+            .collection(this.authService.username)
             .doc("tournaments")
             .collection("finished")
             .valueChanges();
@@ -35,7 +40,7 @@ export class DatabaseService {
 	*/
     addNewTournament(newTourn: tournament) {
         this.db
-            .collection("testing")
+            .collection(this.authService.username)
             .doc("tournaments")
             .collection("current")
             .doc(newTourn.name)
@@ -43,7 +48,7 @@ export class DatabaseService {
             .then(() => {
                 //gets new list of tournament names
                 this.db
-                    .collection("testing")
+                    .collection(this.authService.username)
                     .doc("tournaments")
                     .collection("current")
                     .get()
@@ -85,7 +90,7 @@ export class DatabaseService {
 	*/
     deleteTournament(collection: string, document: string) {
         this.db
-            .collection("testing")
+            .collection(this.authService.username)
             .doc("tournaments")
             .collection(collection)
             .doc(document)
@@ -106,14 +111,14 @@ export class DatabaseService {
 	*/
     finishCurrentTournament(tourn: tournament) {
         this.db
-            .collection("testing")
+            .collection(this.authService.username)
             .doc("tournaments")
             .collection("finished")
             .doc(tourn.name)
             .set(tourn)
             .then(() => {
                 this.db
-                    .collection("testing")
+                    .collection(this.authService.username)
                     .doc("tournaments")
                     .collection("current")
                     .doc(tourn.name)
@@ -132,7 +137,7 @@ export class DatabaseService {
     //takes in updated tournament and saves it to database
     updateTournament(upTourn: tournament) {
         this.db
-            .collection("testing")
+            .collection(this.authService.username)
             .doc("tournaments")
             .collection("current")
             .doc(upTourn.name)
