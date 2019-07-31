@@ -1,6 +1,14 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import {
+    FormGroup,
+    FormControl,
+    Validators,
+    AbstractControl,
+} from "@angular/forms";
+
 import { AuthService } from "../shared/auth.service";
+import { Observable } from "rxjs";
+import { AngularFirestore } from "@angular/fire/firestore";
 
 @Component({
     selector: "app-login",
@@ -14,7 +22,10 @@ export class LoginComponent implements OnInit {
     usernameForm: FormGroup;
     isLoading: boolean = false;
 
-    constructor(public authService: AuthService) {}
+    constructor(
+        public authService: AuthService,
+        private angFire: AngularFirestore
+    ) {}
 
     ngOnInit() {
         this.loginForm = new FormGroup({
@@ -22,27 +33,40 @@ export class LoginComponent implements OnInit {
                 Validators.required,
                 Validators.email,
             ]),
-            password: new FormControl(null, [Validators.required]),
-        });
-        this.signupForm = new FormGroup({
-            username: new FormControl(null, [Validators.required]),
-            email: new FormControl(null, [
+            password: new FormControl(null, [
                 Validators.required,
-                Validators.email,
+                this.validPassword,
             ]),
-            verifyEmail: new FormControl(null, [
-                Validators.required,
-                Validators.email,
-            ]),
-            password: new FormControl(null, Validators.required),
-            verifyPassword: new FormControl(null, Validators.required),
         });
+        this.signupForm = new FormGroup(
+            {
+                email: new FormControl(null, [
+                    Validators.required,
+                    Validators.email,
+                ]),
+                verifyEmail: new FormControl(null, [
+                    Validators.required,
+                    Validators.email,
+                ]),
+                password: new FormControl(null, [
+                    Validators.required,
+                    this.validPassword,
+                ]),
+                verifyPassword: new FormControl(null, [
+                    Validators.required,
+                    this.validPassword,
+                ]),
+            },
+            [this.emailMatch, this.passwordMatch]
+        );
         this.usernameForm = new FormGroup({
-            username: new FormControl(null, [Validators.required]),
+            username: new FormControl(
+                null,
+                [Validators.required],
+                this.usernameAvailable.bind(this)
+            ),
         });
     }
-
-    validUsername(control: FormControl) {}
 
     onChangeMode() {
         this.signUp = !this.signUp;
@@ -68,5 +92,65 @@ export class LoginComponent implements OnInit {
 
     onHandleError() {
         this.authService.error = "";
+    }
+
+    //Validators
+    private usernameAvailable(
+        control: FormControl
+    ): Promise<any> | Observable<any> {
+        return this.authService.checkUsername(control.value);
+    }
+
+    private emailMatch(control: AbstractControl): { [s: string]: boolean } {
+        const email = control.get("email").value;
+        const verifyEmail = control.get("verifyEmail").value;
+
+        if (email !== verifyEmail) {
+            control.get("verifyEmail").setErrors({
+                ...control.get("verifyEmail").errors,
+                NoEmailMatch: true,
+            });
+        }
+
+        return null;
+    }
+
+    private passwordMatch(control: AbstractControl): { [s: string]: boolean } {
+        const password = control.get("password").value;
+        const verifyPassword = control.get("verifyPassword").value;
+
+        if (password !== verifyPassword) {
+            control.get("verifyPassword").setErrors({
+                ...control.get("verifyPassword").errors,
+                NoPasswordMatch: true,
+            });
+        }
+
+        return null;
+    }
+
+    private validPassword(control: FormControl): { [s: string]: boolean } {
+        if (!control.value) {
+            return null;
+        }
+        let hasNum: RegExp = /[0-9]/;
+        let hasCap: RegExp = /[A-Z]/;
+        let hasLow: RegExp = /[a-z]/;
+
+        const errors = {};
+
+        if (!hasNum.test(control.value)) {
+            errors["hasNoNum"] = true;
+        }
+        if (!hasCap.test(control.value)) {
+            errors["hasNoCap"] = true;
+        }
+        if (!hasLow.test(control.value)) {
+            errors["hasNoLow"] = true;
+        }
+        if (control.value.length < 8) {
+            errors["tooShort"] = true;
+        }
+        return errors;
     }
 }

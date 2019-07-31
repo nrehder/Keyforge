@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -232,9 +232,9 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         if (newTourn.type === "swiss") {
             this.swissSetup(newTourn);
         } else if (newTourn.type === "singleElim") {
-            this.singleElimSetup(newTourn);
+            this.singleElimSetup();
         } else {
-            this.roundRobinSetup(newTourn);
+            this.roundRobinSetup();
         }
     }
 
@@ -301,9 +301,9 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         this.db.addNewTournament(tourn);
     }
 
-    singleElimSetup(tourn: tournament) {}
+    singleElimSetup() {}
 
-    roundRobinSetup(tourn: tournament) {}
+    roundRobinSetup() {}
 
     ngOnDestroy() {
         this.currentSub.unsubscribe();

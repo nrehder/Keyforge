@@ -19,11 +19,21 @@
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input
-                        type="text"
+                        type="email"
                         id="email"
                         class="form-control"
                         formControlName="email"
                     />
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            loginForm.get('email').invalid &&
+                            loginForm.get('email').touched
+                        "
+                        >Please enter a valid email!</small
+                    >
+                </div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input
                         type="password"
@@ -31,6 +41,14 @@
                         class="form-control"
                         formControlName="password"
                     />
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            loginForm.get('password').invalid &&
+                            loginForm.get('password').touched
+                        "
+                        >Please enter a valid password!</small
+                    >
                 </div>
                 <button
                     class="btn btn-primary w-100"
@@ -64,6 +82,7 @@
                 <span class="fa fa-google"></span>Sign in with Google
             </button>
         </div>
+
         <!-- Sign Up Mode -->
         <div
             class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
@@ -79,6 +98,16 @@
                         class="form-control"
                         formControlName="email"
                     />
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.get('email').invalid &&
+                                signupForm.get('email').touched
+                            "
+                            >Please enter a valid email!</small
+                        >
+                    </p>
                     <label for="verifyEmail">Verify Email</label>
                     <input
                         type="email"
@@ -86,6 +115,19 @@
                         class="form-control"
                         formControlName="verifyEmail"
                     />
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.verifyEmail.hasError(
+                                    'NoEmailMatch'
+                                )
+                            "
+                            >Emails do not match!</small
+                        >
+                    </p>
+                </div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input
                         type="password"
@@ -93,18 +135,118 @@
                         class="form-control"
                         formControlName="password"
                     />
-                    <label for="verifyPassword">Password</label>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.password.hasError(
+                                    'hasNoNum'
+                                )
+                            "
+                            >A number is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.password.hasError(
+                                    'hasNoCap'
+                                )
+                            "
+                            >A capital letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.password.hasError(
+                                    'hasNoLow'
+                                )
+                            "
+                            >A lowercase letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.password.hasError(
+                                    'tooShort'
+                                )
+                            "
+                            >Password must have a length of 8 or more!</small
+                        >
+                    </p>
+                    <label for="verifyPassword">Verify Password</label>
                     <input
                         type="password"
                         id="verifyPassword"
                         class="form-control"
                         formControlName="verifyPassword"
                     />
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.verifyPassword.hasError(
+                                    'hasNoNum'
+                                )
+                            "
+                            >A number is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.verifyPassword.hasError(
+                                    'hasNoCap'
+                                )
+                            "
+                            >A capital letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.verifyPassword.hasError(
+                                    'hasNoLow'
+                                )
+                            "
+                            >A lowercase letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.verifyPassword.hasError(
+                                    'tooShort'
+                                )
+                            "
+                            >Password must have a length of 8 or more!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                signupForm.controls.verifyPassword.hasError(
+                                    'NoPasswordMatch'
+                                )
+                            "
+                            >Passwords do not match!</small
+                        >
+                    </p>
                 </div>
                 <button
                     class="btn btn-primary w-100"
                     type="submit"
                     style="margin-bottom: 10px"
+                    [disabled]="signupForm.invalid"
                 >
                     Submit
                 </button>
@@ -121,6 +263,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Add username after signup -->
         <div *ngIf="authService.needUsername">
             <div class="backdrop"></div>
@@ -142,7 +285,19 @@
                             class="form-control"
                             formControlName="username"
                         />
+                        <p>
+                            <small
+                                style="color:red"
+                                *ngIf="
+                                    usernameForm.controls.username.hasError(
+                                        'usernameTaken'
+                                    )
+                                "
+                                >Username is already in use!</small
+                            >
+                        </p>
                     </div>
+
                     <button
                         class="btn btn-primary w-100"
                         type="submit"

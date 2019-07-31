@@ -5,7 +5,7 @@ import { SwissStyleService } from "../../services/swiss-style.service";
 import { Subscription, Observable } from "rxjs";
 import { tournament } from "../../../shared/tournament.model";
 import { DatabaseService } from "src/app/shared/database.service";
-import { DocumentData } from "angularfire2/firestore";
+import { DocumentData } from "@angular/fire/firestore";
 import { take, map } from "rxjs/operators";
 
 @Component({

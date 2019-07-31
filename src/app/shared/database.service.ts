@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore } from "angularfire2/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { map, take } from "rxjs/operators";
 import { tournament } from "../shared/tournament.model";
 import { Router } from "@angular/router";

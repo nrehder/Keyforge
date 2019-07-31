@@ -2,11 +2,12 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
 import * as firebase from "firebase/app";
-import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireAuth } from "@angular/fire/auth";
 import {
     AngularFirestore,
     AngularFirestoreDocument,
-} from "angularfire2/firestore";
+    QueryFn,
+} from "@angular/fire/firestore";
 
 import { Observable, of } from "rxjs";
 import { switchMap, take, map, tap } from "rxjs/operators";
@@ -89,6 +90,34 @@ export class AuthService {
             });
     }
 
+    checkUsername(username: string) {
+        username = username.toLowerCase();
+        return this.angFire
+            .collection("usernames", ref => {
+                return ref.where("username", "==", username);
+            })
+            .get()
+            .pipe(
+                take(1),
+                map((data: firebase.firestore.QuerySnapshot) => {
+                    return data.docs.map(
+                        (
+                            dataItem: firebase.firestore.QueryDocumentSnapshot
+                        ) => {
+                            return dataItem.data();
+                        }
+                    );
+                }),
+                map(array => {
+                    if (array.length > 0) {
+                        return { usernameTaken: true };
+                    } else {
+                        return null;
+                    }
+                })
+            );
+    }
+
     private updateUserData(user) {
         const userRef: AngularFirestoreDocument<User> = this.angFire.doc(
             `users/${user.uid}`
@@ -127,6 +156,7 @@ export class AuthService {
     addUsername(username: string) {
         this.needUsername = false;
         this.isloading = true;
+        let lowerUsername = username.toLowerCase();
         this.user.pipe(take(1)).subscribe(user => {
             this.angFire
                 .collection("users")
@@ -136,9 +166,9 @@ export class AuthService {
                     console.log(err);
                 });
             this.angFire
-                .collection("users")
-                .doc("usernames")
-                .set({ [username]: username })
+                .collection("usernames")
+                .doc(lowerUsername)
+                .set({ username: lowerUsername })
                 .catch(err => {
                     console.log(err);
                 });

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { Observable } from "rxjs";
 import { DatabaseService } from "src/app/shared/database.service";
-import { DocumentData } from "angularfire2/firestore";
+import { DocumentData } from "@angular/fire/firestore";
 import { take } from "rxjs/operators";
 import { tournament } from "src/app/shared/tournament.model";
 

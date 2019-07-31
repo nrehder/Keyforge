@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
-import { DocumentData } from "angularfire2/firestore";
+import { DocumentData } from "@angular/fire/firestore";
 import { ActivatedRoute, Params } from "@angular/router";
 import { DatabaseService } from "src/app/shared/database.service";
 import { take } from "rxjs/operators";
