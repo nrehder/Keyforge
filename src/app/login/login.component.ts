@@ -11,13 +11,17 @@ export class LoginComponent implements OnInit {
     signUp = false;
     loginForm: FormGroup;
     signupForm: FormGroup;
+    usernameForm: FormGroup;
     isLoading: boolean = false;
 
-    constructor(private authService: AuthService) {}
+    constructor(public authService: AuthService) {}
 
     ngOnInit() {
         this.loginForm = new FormGroup({
-            username: new FormControl(null, Validators.required),
+            email: new FormControl(null, [
+                Validators.required,
+                Validators.email,
+            ]),
             password: new FormControl(null, [Validators.required]),
         });
         this.signupForm = new FormGroup({
@@ -33,6 +37,9 @@ export class LoginComponent implements OnInit {
             password: new FormControl(null, Validators.required),
             verifyPassword: new FormControl(null, Validators.required),
         });
+        this.usernameForm = new FormGroup({
+            username: new FormControl(null, [Validators.required]),
+        });
     }
 
     validUsername(control: FormControl) {}
@@ -42,14 +49,20 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmitLogin() {
-        console.log("submit");
+        this.authService.emailLogin(
+            this.loginForm.get("email").value,
+            this.loginForm.get("password").value
+        );
     }
 
     onSubmitSignup() {
-        console.log("SUBMIT");
+        this.authService.createEmailLogin(
+            this.signupForm.get("email").value,
+            this.signupForm.get("password").value
+        );
     }
 
-    onGoogleLogin() {
-        this.authService.googleLogin();
+    onSubmitUsername() {
+        this.authService.addUsername(this.usernameForm.get("username").value);
     }
 }
