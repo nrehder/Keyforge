@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
     signupForm: FormGroup;
     isLoading: boolean = false;
 
-    constructor(public authService: AuthService) {}
+    constructor(private authService: AuthService) {}
 
     ngOnInit() {
         this.loginForm = new FormGroup({
@@ -47,5 +47,9 @@ export class LoginComponent implements OnInit {
 
     onSubmitSignup() {
         console.log("SUBMIT");
+    }
+
+    onGoogleLogin() {
+        this.authService.googleLogin();
     }
 }
