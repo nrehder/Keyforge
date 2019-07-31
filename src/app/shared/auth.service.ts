@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 
 import * as firebase from "firebase/app";
@@ -25,7 +25,8 @@ export class AuthService {
     constructor(
         private fireAuth: AngularFireAuth,
         private angFire: AngularFirestore,
-        private router: Router
+        private router: Router,
+        private ngZone: NgZone
     ) {
         this.user = this.fireAuth.authState.pipe(
             switchMap(user => {
@@ -66,6 +67,7 @@ export class AuthService {
         };
 
         userRef.set(data, { merge: true });
+        this.ngZone.run(() => this.router.navigate(["/"])).then();
     }
 
     signOut() {
