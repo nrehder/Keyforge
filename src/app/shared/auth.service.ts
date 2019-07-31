@@ -140,7 +140,17 @@ export class AuthService {
     }
 
     private errorMessage(err) {
-        this.error = err.message;
+        switch (err.code) {
+            case "auth/wrong-password":
+            case "auth/invalid-email":
+            case "auth/user-not-found":
+                this.error = "Incorrect email or password!";
+        }
+        if ((err.code = "auth/wrong-password")) {
+            this.error = "Wrong email or password!";
+        } else {
+            this.error = err.message;
+        }
     }
 
     signOut() {
