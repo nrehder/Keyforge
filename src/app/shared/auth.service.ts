@@ -9,7 +9,7 @@ import {
 } from "angularfire2/firestore";
 
 import { Observable, of } from "rxjs";
-import { switchMap, take, map } from "rxjs/operators";
+import { switchMap, take, map, tap } from "rxjs/operators";
 
 export interface User {
     uid: string;
@@ -19,6 +19,7 @@ export interface User {
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
+    username: string;
     error: string = "";
     user: Observable<User>;
     needUsername: boolean = false;
@@ -37,6 +38,13 @@ export class AuthService {
                         .valueChanges();
                 } else {
                     return of(null);
+                }
+            }),
+            tap(user => {
+                if (user) {
+                    this.username = user.username;
+                } else {
+                    this.username = "";
                 }
             })
         );
@@ -145,11 +153,8 @@ export class AuthService {
             case "auth/invalid-email":
             case "auth/user-not-found":
                 this.error = "Incorrect email or password!";
-        }
-        if ((err.code = "auth/wrong-password")) {
-            this.error = "Wrong email or password!";
-        } else {
-            this.error = err.message;
+            default:
+                this.error = err.message;
         }
     }
 
