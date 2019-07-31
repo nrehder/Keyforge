@@ -6,3 +6,23 @@
     padding: 30px;
     border-radius: 20px;
 }
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 50;
+}
+.username-box {
+    position: fixed;
+    top: 30vh;
+    left: 35vw;
+    width: 30vw;
+    min-width: 280px;
+    padding: 30px;
+    border-radius: 20px;
+    z-index: 100;
+}
