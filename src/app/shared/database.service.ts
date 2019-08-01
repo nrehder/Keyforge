@@ -153,12 +153,14 @@ export class DatabaseService {
                         deck = { ...data.data() };
                         deck["wins"] += finalStats[i].wins;
                         deck["losses"] += finalStats[i].losses;
+                        deck["byes"] += finalStats[i].byes;
                     } else {
                         deck = {
                             deckname: finalStats[i].deckname,
                             deckUrl: finalStats[i].deckUrl,
                             losses: finalStats[i].losses,
                             wins: finalStats[i].wins,
+                            byes: finalStats[i].byes,
                             unoffChains: 0,
                         };
                     }
