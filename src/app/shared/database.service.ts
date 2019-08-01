@@ -128,6 +128,7 @@ export class DatabaseService {
                     });
 
                 //add navigation to finished version
+                this.route.navigate(["/finished"]);
             })
             .catch(err => {
                 console.log(err);
