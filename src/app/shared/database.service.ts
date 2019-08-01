@@ -18,16 +18,16 @@ export class DatabaseService {
     //returns an observable that will 'next' each time the database updates
     loadCurrentTournaments() {
         return this.db
-            .collection(this.authService.username)
-            .doc("tournaments")
-            .collection("current")
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("currentTournaments")
             .valueChanges();
     }
     loadFinishedTournaments() {
         return this.db
-            .collection(this.authService.username)
-            .doc("tournaments")
-            .collection("finished")
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("finishedTournaments")
             .valueChanges();
     }
 
@@ -40,17 +40,17 @@ export class DatabaseService {
 	*/
     addNewTournament(newTourn: tournament) {
         this.db
-            .collection(this.authService.username)
-            .doc("tournaments")
-            .collection("current")
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("currentTournaments")
             .doc(newTourn.name)
             .set(newTourn)
             .then(() => {
                 //gets new list of tournament names
                 this.db
-                    .collection(this.authService.username)
-                    .doc("tournaments")
-                    .collection("current")
+                    .collection("storage")
+                    .doc(this.authService.username)
+                    .collection("currentTournaments")
                     .get()
                     .pipe(
                         take(1),
@@ -90,8 +90,8 @@ export class DatabaseService {
 	*/
     deleteTournament(collection: string, document: string) {
         this.db
-            .collection(this.authService.username)
-            .doc("tournaments")
+            .collection("storage")
+            .doc(this.authService.username)
             .collection(collection)
             .doc(document)
             .delete()
@@ -111,16 +111,16 @@ export class DatabaseService {
 	*/
     finishCurrentTournament(tourn: tournament) {
         this.db
-            .collection(this.authService.username)
-            .doc("tournaments")
-            .collection("finished")
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("finishedTournaments")
             .doc(tourn.name)
             .set(tourn)
             .then(() => {
                 this.db
                     .collection(this.authService.username)
                     .doc("tournaments")
-                    .collection("current")
+                    .collection("currentTournaments")
                     .doc(tourn.name)
                     .delete()
                     .catch(err => {
@@ -247,9 +247,9 @@ export class DatabaseService {
     //takes in updated tournament and saves it to database
     updateTournament(upTourn: tournament) {
         this.db
-            .collection(this.authService.username)
-            .doc("tournaments")
-            .collection("current")
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("currentTournaments")
             .doc(upTourn.name)
             .set(upTourn)
             .catch(err => {

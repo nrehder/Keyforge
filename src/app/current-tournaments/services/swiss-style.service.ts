@@ -70,7 +70,6 @@ export class SwissStyleService {
                 opponents: [...originalRound.players[i].opponents],
             });
         }
-        console.log(this.curRound);
     }
 
     private updateStats() {

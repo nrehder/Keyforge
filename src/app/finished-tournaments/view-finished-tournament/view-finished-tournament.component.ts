@@ -48,7 +48,7 @@ export class ViewFinishedTournamentComponent implements OnInit {
                 .pipe(take(1))
                 .subscribe((tourns: tournament[]) => {
                     this.db.deleteTournament(
-                        "finished",
+                        "finishedTournament",
                         tourns[this.tournId].name
                     );
                 });

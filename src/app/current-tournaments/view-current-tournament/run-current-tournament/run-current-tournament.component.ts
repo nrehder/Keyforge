@@ -142,7 +142,6 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
             this.finishedPairings[this.finishedPairings.length - 1] = true;
         }
         this.allFinished = false;
-        console.log(this.finishedPairings);
     }
 
     private checkFinished() {

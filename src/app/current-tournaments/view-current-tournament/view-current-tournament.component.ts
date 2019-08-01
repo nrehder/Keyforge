@@ -48,7 +48,7 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
                 .pipe(take(1))
                 .subscribe((tourns: tournament[]) => {
                     this.db.deleteTournament(
-                        "current",
+                        "currentTournament",
                         tourns[this.tournId].name
                     );
                 });
