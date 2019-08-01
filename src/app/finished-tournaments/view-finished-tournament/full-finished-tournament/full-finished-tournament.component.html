@@ -1,1 +1,218 @@
-<p>full-finished-tournament works!</p>
+<div
+    class="row"
+    style="margin:0;"
+    *ngFor="let tourn of finishedTournaments | async; let i = index"
+>
+    <div class="col" *ngIf="i === tournId">
+        <div class="row">
+            <div class="col" style="text-align: center;">
+                <h2>{{ tourn.name }}</h2>
+            </div>
+        </div>
+        <br />
+        <div class="row" *ngFor="let round of tourn.rounds; let j = index">
+            <div class="col">
+                <div *ngIf="j > 0">
+                    <div class="row">
+                        <div class="col tab" (click)="onToggleResults(j)">
+                            <h3 style="display:inline;">
+                                Round {{ j }} Results:
+                            </h3>
+                            <i
+                                class="fa fa-2x float-right"
+                                style="margin-bottom:0; margin-top: 2px"
+                                [ngClass]="{
+                                    'fa-minus': results[j],
+                                    'fa-plus': !results[j]
+                                }"
+                            ></i>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="results[j]">
+                        <div class="col-3 match">
+                            <div
+                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                            >
+                                <h4>Player Name</h4>
+                            </div>
+                        </div>
+                        <div class="col-3 match">
+                            <div
+                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                            >
+                                <h4>W-L-B</h4>
+                            </div>
+                        </div>
+                        <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
+                            <div
+                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                            >
+                                <h4>SoS</h4>
+                            </div>
+                        </div>
+                        <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
+                            <div
+                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                            >
+                                <h4>ESoS</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="results[j]">
+                        <div class="row" *ngFor="let player of round.players">
+                            <div class="col-3 match">
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <h6>{{ player.playername }}</h6>
+                                    <a
+                                        href="{{ player.deckUrl }}"
+                                        target="_blank"
+                                    >
+                                        <small>{{
+                                            player.deckname | deckName
+                                        }}</small>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-3 match">
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <h5>
+                                        {{ player.wins }} -
+                                        {{ player.losses }} -
+                                        {{ player.byes }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div
+                                class="col-3 match"
+                                *ngIf="tourn.type === 'swiss'"
+                            >
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <h5>{{ player.SoS | number }}</h5>
+                                </div>
+                            </div>
+                            <div
+                                class="col-3 match"
+                                *ngIf="tourn.type === 'swiss'"
+                            >
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <h5>{{ player.ESoS | number }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+
+                <!-- Pairings -->
+
+                <div *ngIf="j !== tourn.maxRounds">
+                    <div class="row">
+                        <div class="col tab" (click)="onTogglePairings(j)">
+                            <h3 style="display:inline;">
+                                Round {{ j + 1 }} Pairings:
+                            </h3>
+                            <i
+                                class="fa fa-2x float-right"
+                                style="margin-bottom:0; margin-top: 2px"
+                                [ngClass]="{
+                                    'fa-minus': pairings[j],
+                                    'fa-plus': !pairings[j]
+                                }"
+                            ></i>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="pairings[j]">
+                        <div class="col-3 match">
+                            <h5
+                                class="box h-100 d-flex justify-content-center flex-column"
+                            >
+                                Match
+                            </h5>
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col match align-item-center">
+                                    <h6
+                                        class="box h-100 d-flex justify-content-center flex-column"
+                                    >
+                                        Player 1
+                                    </h6>
+                                </div>
+                                <div class="col match align-item-center">
+                                    <h6
+                                        class="box h-100 d-flex justify-content-center flex-column"
+                                    >
+                                        Player 2
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="pairings[j]">
+                        <div
+                            class="row"
+                            *ngFor="let pair of round.pairings; let k = index"
+                        >
+                            <div class="col-3 match">
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <h5>{{ k + 1 }}</h5>
+                                </div>
+                            </div>
+                            <div class="col match">
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <p>
+                                        {{ pair.player1.name }}
+                                    </p>
+                                    <small>{{
+                                        pair.player1.deck | deckName
+                                    }}</small>
+
+                                    <small *ngIf="pair.player1.chains >= 0">
+                                        Chains: {{ pair.player1.chains }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col match">
+                                <div
+                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
+                                >
+                                    <p>
+                                        {{ pair.player2.name }}
+                                    </p>
+                                    <small
+                                        *ngIf="!(pair.player2.deck === '')"
+                                        >{{
+                                            pair.player2.deck | deckName
+                                        }}</small
+                                    >
+
+                                    <small *ngIf="pair.player2.chains >= 0">
+                                        Chains: {{ pair.player2.chains }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+            </div>
+
+            <!-- end -->
+        </div>
+    </div>
+</div>
+
+<br />
