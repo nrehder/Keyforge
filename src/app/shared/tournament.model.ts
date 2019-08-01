@@ -36,6 +36,7 @@ export interface round {
 export interface tournament {
     name: string;
     type: string;
+    chainType: string;
     curRound: number;
     maxRounds: number;
     rounds: round[];

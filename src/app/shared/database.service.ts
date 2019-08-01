@@ -126,13 +126,87 @@ export class DatabaseService {
                     .catch(err => {
                         console.log(err);
                     });
-
-                //add navigation to finished version
+                this.updateDeckStats(tourn);
                 this.route.navigate(["/finished"]);
             })
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    updateDeckStats(tourn: tournament) {
+        let finalStats = tourn.rounds[tourn.curRound].players;
+        const deckRef = this.db
+            .collection("storage")
+            .doc(this.authService.username.toLowerCase())
+            .collection("decks");
+
+        for (let i = 0; i < finalStats.length; i++) {
+            deckRef
+                .doc(finalStats[i].deckname)
+                .get()
+                .pipe(take(1))
+                .subscribe((data: firebase.firestore.DocumentSnapshot) => {
+                    let deck = {};
+                    //checks if deck already exists and updates wins/losses
+                    if (data.exists) {
+                        deck = { ...data.data() };
+                        deck["wins"] += finalStats[i].wins;
+                        deck["losses"] += finalStats[i].losses;
+                    } else {
+                        deck = {
+                            deckname: finalStats[i].deckname,
+                            deckUrl: finalStats[i].deckUrl,
+                            losses: finalStats[i].losses,
+                            wins: finalStats[i].wins,
+                            unoffChains: 0,
+                        };
+                    }
+
+                    //determines chains as chainbound event
+                    if (
+                        tourn.chainType === "unofficial" &&
+                        tourn.type === "swiss"
+                    ) {
+                        deck["unoffChains"] = Math.max(
+                            deck["unoffChains"] +
+                                this.swissChains(
+                                    finalStats.length,
+                                    finalStats[i].wins
+                                ),
+                            0
+                        );
+                    }
+
+                    deckRef.doc(finalStats[i].deckname).set(deck);
+                });
+        }
+    }
+
+    private swissChains(numPlayers, wins) {
+        if (numPlayers < 9) {
+            switch (wins) {
+                case 3:
+                    return 3;
+                case 2:
+                    return 2;
+                default:
+                    return -1;
+            }
+        } else {
+            if (wins >= 4) {
+                return 4;
+            } else {
+                switch (wins) {
+                    case 3:
+                        return 3;
+                    case 2:
+                        return 0;
+                    default:
+                        return -1;
+                }
+            }
+        }
     }
 
     //takes in updated tournament and saves it to database

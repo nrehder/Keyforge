@@ -173,6 +173,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 this.newTournament(
                     this.createForm.get("tournamentName").value,
                     this.createForm.get("tournamentType").value,
+                    this.createForm.get("chains").value,
                     decks
                 );
                 this.isloading = false;
@@ -182,6 +183,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     private newTournament(
         name: string,
         type: string,
+        chainType: string,
         decks: {
             player: string;
             deckName: string;
@@ -192,6 +194,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         let newTourn: tournament = {
             name: name,
             type: type,
+            chainType: chainType,
             curRound: 1,
             maxRounds: Math.ceil(Math.log2(decks.length)),
             rounds: [
