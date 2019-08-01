@@ -16,8 +16,10 @@ import { take, map } from "rxjs/operators";
 export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     curRound: number;
     tournId: number;
+    tournType: string;
     currentTournaments: Observable<DocumentData[]>;
     finishedPairings: boolean[] = [];
+    numPlayers: number;
     allFinished: boolean;
     endingRound: boolean;
     endingTourn: boolean;
@@ -39,6 +41,11 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
                 this.curRound = tourns[this.tournId].curRound;
+                this.tournType = tourns[this.tournId].type;
+                this.numPlayers =
+                    tourns[this.tournId].rounds[
+                        tourns[this.tournId].curRound - 1
+                    ].players.length;
                 const curPairings =
                     tourns[this.tournId].rounds[
                         tourns[this.tournId].curRound - 1
@@ -105,7 +112,10 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
             this.endingRound = false;
         } else if (choice === "confirm") {
             this.endingRound = false;
-            this.swiss.onNextRound(this.tournId);
+            this.curRound += 1;
+            if (this.tournType === "swiss") {
+                this.swiss.onNextRound(this.tournId);
+            }
             this.clearFinished();
         }
     }
@@ -127,6 +137,9 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     private clearFinished() {
         for (let i = 0; i < this.finishedPairings.length; i++) {
             this.finishedPairings[i] = false;
+        }
+        if (this.numPlayers % 2 === 1) {
+            this.finishedPairings[this.finishedPairings.length - 1] = true;
         }
         this.allFinished = false;
         console.log(this.finishedPairings);
