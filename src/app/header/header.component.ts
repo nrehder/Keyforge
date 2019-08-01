@@ -9,12 +9,10 @@ import { AuthService } from "../shared/auth.service";
 export class HeaderComponent implements OnInit {
     navbarOpen = false;
     tournamentDropdown = false;
-    deckDropdown = false;
 
     @HostListener("document:click", ["$event"]) clickOutside(event) {
         if (!this.eleRef.nativeElement.contains(event.target)) {
             this.tournamentDropdown = false;
-            this.deckDropdown = false;
         }
     }
 
@@ -27,14 +25,8 @@ export class HeaderComponent implements OnInit {
     }
     tournamentToggle() {
         this.tournamentDropdown = !this.tournamentDropdown;
-        this.deckDropdown = false;
-    }
-    deckToggle() {
-        this.deckDropdown = !this.deckDropdown;
-        this.tournamentDropdown = false;
     }
     clearDropdowns() {
-        this.deckDropdown = false;
         this.tournamentDropdown = false;
     }
 }

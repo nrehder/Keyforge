@@ -1,1 +1,120 @@
-<p>home works!</p>
+<br />
+<div class="row">
+    <div class="col">
+        <h4>Welcome to Krim's Unofficial Keyforge Tournaments</h4>
+        <p>
+            This website is intented to be used by groups of friends, or
+            individual players. Not local game stores, which should be using the
+            official program. This website is not affiliated with Keyforge or
+            Fantasy Flight Games in any way.
+        </p>
+        <br />
+        <p>
+            I built this webpage for serveral reasons. My first was the fact
+            that chainbound events count byes as wins when recording chains.
+            Almost every chainbound I have gone to I have gotten the first round
+            bye, and so my decks all have more chains than they really should
+            (in my opinion). When this website finishes a chainbound game, it
+            only looks at your wins, ignoring your byes.
+        </p>
+        <p>
+            The second reason I set this website up was the fact that the only
+            people I know who play this game live 2 hours from me. So I tend to
+            play my decks against each other. I was doing Swiss style and Round
+            Robin tournaments by hand, which was a pain. I started using a
+            google sheet to calculate SoS, ESoS and determine ranks after each
+            round, but then I wanted to start tracking total wins/losses/byes
+            and implement my own chainbound system to see how my decks react to
+            it. This website lets me manage my pool of decks and run tournaments
+            for myself, and so I decided to share it with the rest of the
+            community.
+        </p>
+        <br />
+        <h4>Swiss Style Tournaments</h4>
+        <p>
+            Swiss style tournaments will automatically determine the number of
+            rounds required to have at most 1 undefeated player. It will
+            randomize the players before the start of the game, and randomizes
+            them again after each round before sorting. This ensures that a
+            player who gets the first round bye is not always paired down.
+        </p>
+        <p>
+            If using unofficial chains, after the tournament is over it will
+            determine the chains by the same means as official chainbound
+            events. The only main difference is official chainbound events limit
+            to 4 rounds.
+        </p>
+        <div class="row">
+            <div class="col">
+                <h6>8 or Less Players</h6>
+                <ul class="list-group">
+                    <div class="list-group-item">
+                        0 or 1 wins = subtract 1 chain
+                    </div>
+                    <div class="list-group-item">2 wins = add 2 chains</div>
+                    <div class="list-group-item">3 wins = add 3 chains</div>
+                </ul>
+            </div>
+            <div class="col">
+                <h6>9 or More Players</h6>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        0 or 1 wins = subtract 1 chain
+                    </div>
+                    <div class="list-group-item">2 wins = no change</div>
+                    <div class="list-group-item">3 wins = add 3 chains</div>
+                    <div class="list-group-item">4 wins = add 4 chains</div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <h4>Round Robin Tournaments</h4>
+        <p>
+            Round robin tournaments will always have a number of rounds equal to
+            1 less than the number of players. This ensures that every player
+            faces every other player once. It is not suggested for large numbers
+            of players (although I do it with 10 decks over the course of a
+            week).
+        </p>
+        <p>
+            If using unofficial chains, I set up the following rules to be
+            similar to Swiss style chainbounds. I used the win percentage since
+            the number of rounds varies more than Swiss style.
+        </p>
+        <div class="row">
+            <div class="col">
+                <h6>8 or Less Players</h6>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        0-25 win % = subtract 1 chain
+                    </li>
+                    <li class="list-group-item">26-50 win % = no change</li>
+                    <li class="list-group-item">
+                        51-75 win % = add 2 chains
+                    </li>
+                    <li class="list-group-item">
+                        76-100 win % = add 3 chains
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h6>9 or More Players</h6>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        0-25 win % = subtract 1 chain
+                    </li>
+                    <li class="list-group-item">26-50 win % = no change</li>
+                    <li class="list-group-item">
+                        51-75 win % = add 3 chains
+                    </li>
+                    <li class="list-group-item">
+                        76-100 win % = add 4 chains
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />

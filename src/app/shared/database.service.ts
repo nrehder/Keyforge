@@ -138,7 +138,7 @@ export class DatabaseService {
         let finalStats = tourn.rounds[tourn.curRound].players;
         const deckRef = this.db
             .collection("storage")
-            .doc(this.authService.username.toLowerCase())
+            .doc(this.authService.username)
             .collection("decks");
 
         for (let i = 0; i < finalStats.length; i++) {
@@ -178,6 +178,18 @@ export class DatabaseService {
                                 ),
                             0
                         );
+                    } else if (
+                        tourn.chainType === "unofficial" &&
+                        tourn.type === "roundRobin"
+                    ) {
+                        deck["unoffChains"] = Math.max(
+                            deck["unoffChains"] +
+                                this.robinChains(
+                                    finalStats.length,
+                                    finalStats[i].wins / finalStats[i].games
+                                ),
+                            0
+                        );
                     }
 
                     deckRef.doc(finalStats[i].deckname).set(deck);
@@ -208,6 +220,27 @@ export class DatabaseService {
                         return -1;
                 }
             }
+        }
+    }
+
+    private robinChains(numPlayers, winPercent) {
+        if (winPercent < 0.26) {
+            return -1;
+        }
+        if (winPercent < 0.51) {
+            return 0;
+        }
+        if (winPercent < 0.76) {
+            if (numPlayers < 9) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+        if (numPlayers < 9) {
+            return 3;
+        } else {
+            return 4;
         }
     }
 
