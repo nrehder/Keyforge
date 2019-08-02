@@ -1,0 +1,15 @@
+.match {
+    border: 1px solid black;
+    min-height: 3rem;
+    text-align: center;
+}
+.winner {
+    background-color: lightblue;
+}
+p,
+h5 {
+    margin-bottom: 0;
+}
+small {
+    margin-bottom: 4px;
+}

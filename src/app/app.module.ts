@@ -38,6 +38,8 @@ import { DecksComponent } from "./decks/decks.component";
 import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
 import { CardListComponent } from './decks/view-deck/card-list/card-list.component';
 import { TournListComponent } from './decks/view-deck/tourn-list/tourn-list.component';
+import { StandingsTableComponent } from './shared/standings-table/standings-table.component';
+import { PairingsTableComponent } from './shared/pairings-table/pairings-table.component';
 
 @NgModule({
     declarations: [
@@ -62,6 +64,8 @@ import { TournListComponent } from './decks/view-deck/tourn-list/tourn-list.comp
         ViewDeckComponent,
         CardListComponent,
         TournListComponent,
+        StandingsTableComponent,
+        PairingsTableComponent,
     ],
     imports: [
         BrowserModule,

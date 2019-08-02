@@ -28,86 +28,11 @@
                             ></i>
                         </div>
                     </div>
-                    <div class="row" *ngIf="results[j]">
-                        <div class="col-3 match">
-                            <div
-                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                            >
-                                <h4>Player Name</h4>
-                            </div>
-                        </div>
-                        <div class="col-3 match">
-                            <div
-                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                            >
-                                <h4>W-L-B</h4>
-                            </div>
-                        </div>
-                        <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
-                            <div
-                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                            >
-                                <h4>SoS</h4>
-                            </div>
-                        </div>
-                        <div class="col-3 match" *ngIf="tourn.type === 'swiss'">
-                            <div
-                                class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                            >
-                                <h4>ESoS</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="results[j]">
-                        <div class="row" *ngFor="let player of round.players">
-                            <div class="col-3 match">
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <h6>{{ player.playername }}</h6>
-                                    <a
-                                        href="{{ player.deckUrl }}"
-                                        target="_blank"
-                                    >
-                                        <small>{{
-                                            player.deckname | deckName
-                                        }}</small>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-3 match">
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <h5>
-                                        {{ player.wins }} -
-                                        {{ player.losses }} -
-                                        {{ player.byes }}
-                                    </h5>
-                                </div>
-                            </div>
-                            <div
-                                class="col-3 match"
-                                *ngIf="tourn.type === 'swiss'"
-                            >
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <h5>{{ player.SoS | number }}</h5>
-                                </div>
-                            </div>
-                            <div
-                                class="col-3 match"
-                                *ngIf="tourn.type === 'swiss'"
-                            >
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <h5>{{ player.ESoS | number }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app-standings-table
+                        [tourn]="tourn"
+                        [round]="j"
+                        *ngIf="results[j]"
+                    ></app-standings-table>
                     <br />
                 </div>
 
@@ -129,82 +54,13 @@
                             ></i>
                         </div>
                     </div>
-                    <div class="row" *ngIf="pairings[j]">
-                        <div class="col-3 match">
-                            <h5
-                                class="box h-100 d-flex justify-content-center flex-column"
-                            >
-                                Match
-                            </h5>
-                        </div>
-                        <div class="col">
-                            <div class="row">
-                                <div class="col match align-item-center">
-                                    <h6
-                                        class="box h-100 d-flex justify-content-center flex-column"
-                                    >
-                                        Player 1
-                                    </h6>
-                                </div>
-                                <div class="col match align-item-center">
-                                    <h6
-                                        class="box h-100 d-flex justify-content-center flex-column"
-                                    >
-                                        Player 2
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="pairings[j]">
-                        <div
-                            class="row"
-                            *ngFor="let pair of round.pairings; let k = index"
-                        >
-                            <div class="col-3 match">
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <h5>{{ k + 1 }}</h5>
-                                </div>
-                            </div>
-                            <div class="col match">
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <p>
-                                        {{ pair.player1.name }}
-                                    </p>
-                                    <small>{{
-                                        pair.player1.deck | deckName
-                                    }}</small>
-
-                                    <small *ngIf="pair.player1.chains >= 0">
-                                        Chains: {{ pair.player1.chains }}
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col match">
-                                <div
-                                    class="box h-100 d-flex justify-content-center align-item-center flex-column"
-                                >
-                                    <p>
-                                        {{ pair.player2.name }}
-                                    </p>
-                                    <small
-                                        *ngIf="!(pair.player2.deck === '')"
-                                        >{{
-                                            pair.player2.deck | deckName
-                                        }}</small
-                                    >
-
-                                    <small *ngIf="pair.player2.chains >= 0">
-                                        Chains: {{ pair.player2.chains }}
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app-pairings-table
+                        [tourn]="tourn"
+                        [round]="j"
+                        [running]="false"
+                        [displayStats]="true"
+                        *ngIf="pairings[j]"
+                    ></app-pairings-table>
                 </div>
 
                 <br />

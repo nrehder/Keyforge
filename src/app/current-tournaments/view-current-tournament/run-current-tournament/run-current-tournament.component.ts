@@ -24,6 +24,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     endingRound: boolean;
     endingTourn: boolean;
 
+    displayStats: boolean = false;
+
     constructor(
         private swiss: SwissStyleService,
         private route: ActivatedRoute,
@@ -64,7 +66,12 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
             });
     }
 
-    onClickPlayer(index: number, winner: string) {
+    onChangeDisplay() {
+        this.displayStats = !this.displayStats;
+    }
+    onClickPlayer(event: { index: number; winner: string }) {
+        let index = event.index;
+        let winner = event.winner;
         this.db
             .loadCurrentTournaments()
             .pipe(take(1))
