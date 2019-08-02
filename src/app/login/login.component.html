@@ -290,6 +290,17 @@
                                 style="color:red"
                                 *ngIf="
                                     usernameForm.controls.username.hasError(
+                                        'oneWord'
+                                    )
+                                "
+                                >Username should be one word!</small
+                            >
+                        </p>
+                        <p>
+                            <small
+                                style="color:red"
+                                *ngIf="
+                                    usernameForm.controls.username.hasError(
                                         'usernameTaken'
                                     )
                                 "

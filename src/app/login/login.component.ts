@@ -8,7 +8,6 @@ import {
 
 import { AuthService } from "../shared/auth.service";
 import { Observable } from "rxjs";
-import { AngularFirestore } from "@angular/fire/firestore";
 
 @Component({
     selector: "app-login",
@@ -22,10 +21,7 @@ export class LoginComponent implements OnInit {
     usernameForm: FormGroup;
     isLoading: boolean = false;
 
-    constructor(
-        public authService: AuthService,
-        private angFire: AngularFirestore
-    ) {}
+    constructor(public authService: AuthService) {}
 
     ngOnInit() {
         this.loginForm = new FormGroup({
@@ -62,7 +58,7 @@ export class LoginComponent implements OnInit {
         this.usernameForm = new FormGroup({
             username: new FormControl(
                 null,
-                [Validators.required],
+                [Validators.required, this.usernameStyleValidator],
                 this.usernameAvailable.bind(this)
             ),
         });
@@ -95,6 +91,19 @@ export class LoginComponent implements OnInit {
     }
 
     //Validators
+    private usernameStyleValidator(
+        control: FormControl
+    ): { [s: string]: boolean } {
+        if (control.value) {
+            let stringArray = (<string>control.value).split(" ");
+            if (stringArray.length > 1) {
+                return { oneWord: true };
+            }
+        }
+
+        return null;
+    }
+
     private usernameAvailable(
         control: FormControl
     ): Promise<any> | Observable<any> {
