@@ -1,0 +1,6 @@
+.main {
+    top: 60px;
+    position: fixed;
+    overflow: auto;
+    height: calc(100% - 60px);
+}
