@@ -1,0 +1,14 @@
+.house-header {
+    text-align: center;
+    border-radius: 15px 15px 0 0;
+    background-color: lightskyblue;
+    padding-top: 8px;
+}
+.house-columns {
+    padding: 0;
+    margin: 0 15px;
+}
+
+p {
+    margin: 0;
+}

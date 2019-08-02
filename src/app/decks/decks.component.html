@@ -1,6 +1,6 @@
-<br />
 <div class="row">
     <div class="col-md-3">
+        <br />
         <div class="row">
             <div class="col">
                 <h4 style="text-align: center">Decks</h4>
@@ -11,19 +11,64 @@
                 <div *ngFor="let deck of decks | async; let i = index">
                     <a
                         style="cursor:pointer;"
-                        class="list-group-item list-group-item-secondary"
+                        class="list-group-item list-group-item-secondary text-center"
                         [routerLink]="i"
                         routerLinkActive="link-active"
                     >
                         <h5 class="list-group-item-heading">
-                            {{ deck.deckname }}
+                            {{ deck.deckName }}
                         </h5>
+                        <p style="margin-bottom:0">{{ deck.expansion }}</p>
+                        <div class="row">
+                            <div class="col text-center">
+                                <img
+                                    src="{{ deck.house[0].img }}"
+                                    alt="{{ deck.house[0].name }}"
+                                    style="height:5vh"
+                                    class="float-left"
+                                />
+                                <img
+                                    src="{{ deck.house[1].img }}"
+                                    alt="{{ deck.house[1].name }}"
+                                    style="height:5vh"
+                                    class="mx-auto"
+                                />
+                                <img
+                                    src="{{ deck.house[2].img }}"
+                                    alt="{{ deck.house[2].name }}"
+                                    style="height:5vh"
+                                    class="float-right"
+                                />
+                            </div>
+                            <!-- <div class="col">
+                                <img
+                                    src="{{ deck.house[0].img }}"
+                                    alt="{{ deck.house[0].name }}"
+                                    style="height:5vh;margin:0 auto"
+                                />
+                            </div>
+                            <div class="col">
+                                <img
+                                    src="{{ deck.house[1].img }}"
+                                    alt="{{ deck.house[1].name }}"
+                                    style="height:5vh"
+                                />
+                            </div>
+                            <div class="col">
+                                <img
+                                    src="{{ deck.house[2].img }}"
+                                    alt="{{ deck.house[2].name }}"
+                                    style="height:5vh"
+                                />
+                            </div> -->
+                        </div>
                     </a>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-9">
+        <br />
         <router-outlet></router-outlet>
     </div>
 </div>

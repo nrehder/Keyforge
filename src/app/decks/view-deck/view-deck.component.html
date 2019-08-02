@@ -6,15 +6,83 @@
     <div class="col" *ngIf="i === deckId">
         <div class="row">
             <div
-                class="col bg-secondary text-light"
-                style="text-align:center; border-radius: 15px"
+                class="col bg-secondary text-light "
+                style="text-align:center; border-radius: 15px; padding:15px;"
             >
-                <h2>{{ deck.deckname }}</h2>
+                <h2>{{ deck.deckName }}</h2>
             </div>
         </div>
         <div class="row">
+            <div class="col">
+                <button
+                    class="btn"
+                    [ngClass]="{
+                        'btn-primary': unofficial,
+                        'btn-outline-primary': !unofficial
+                    }"
+                    (click)="onUnofficial()"
+                >
+                    Unofficial Stats
+                </button>
+                <button
+                    class="btn"
+                    [ngClass]="{
+                        'btn-primary': !unofficial,
+                        'btn-outline-primary': unofficial
+                    }"
+                    (click)="onOfficial()"
+                >
+                    Deck List
+                </button>
+            </div>
+        </div>
+        <br />
+        <div class="row" *ngIf="unofficial">
             <div class="col" style="text-align: center">
-                <!-- {{ keyforgeDeck.data.expansion }} -->
+                Unofficial
+            </div>
+        </div>
+        <div class="row" *ngIf="!unofficial">
+            <div class="col house-columns" *ngFor="let house of deck.house">
+                <div class="row mx-0">
+                    <div class="col house-header">
+                        <img
+                            src="{{ house.img }}"
+                            alt="{{ house.name }}"
+                            style="height:7vh"
+                        />
+                        <h5>{{ house.name }}</h5>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="col">
+                        <h6>Actions</h6>
+                        <p
+                            *ngFor="
+                                let card of house.cards.Action.Common;
+                                let i = index
+                            "
+                        >
+                            {{ card.name }}
+                        </p>
+                        <p
+                            *ngFor="
+                                let card of house.cards.Action.Unommon;
+                                let i = index
+                            "
+                        >
+                            {{ card.name }}
+                        </p>
+                        <p
+                            *ngFor="
+                                let card of house.cards.Action.Rare;
+                                let i = index
+                            "
+                        >
+                            {{ card.name }}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

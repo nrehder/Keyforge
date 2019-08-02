@@ -2,10 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DocumentData } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-import { take } from "rxjs/operators";
 
 import { DatabaseService } from "../../shared/database.service";
-import { deck } from "../../shared/deck.model";
 import {
     DeckData,
     DeckRetrievalService,
@@ -20,13 +18,9 @@ export class ViewDeckComponent implements OnInit {
     deckId: number;
     decks: Observable<DocumentData[]>;
     keyforgeDeck: DeckData;
+    unofficial = false;
 
-    constructor(
-        private db: DatabaseService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private deckRetrieval: DeckRetrievalService
-    ) {}
+    constructor(private db: DatabaseService, private route: ActivatedRoute) {}
 
     ngOnInit() {
         this.route.params.subscribe((params: Params) => {
@@ -34,5 +28,16 @@ export class ViewDeckComponent implements OnInit {
         });
 
         this.decks = this.db.loadDecks();
+        this.decks.subscribe(decks => {
+            console.log(decks);
+        });
+    }
+
+    onUnofficial() {
+        this.unofficial = true;
+    }
+
+    onOfficial() {
+        this.unofficial = false;
     }
 }

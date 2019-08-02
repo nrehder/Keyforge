@@ -193,7 +193,86 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             byes: 0,
                             chains: 0,
                             expansion: "",
-                            house: [],
+                            house: [
+                                {
+                                    name: decksData[i]._linked.houses[0].name,
+                                    img: decksData[i]._linked.houses[0].image,
+                                    cards: {
+                                        Action: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Artifact: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Creature: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Upgrade: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                    },
+                                },
+                                {
+                                    name: decksData[i]._linked.houses[1].name,
+                                    img: decksData[i]._linked.houses[1].image,
+                                    cards: {
+                                        Action: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Artifact: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Creature: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Upgrade: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                    },
+                                },
+                                {
+                                    name: decksData[i]._linked.houses[2].name,
+                                    img: decksData[i]._linked.houses[2].image,
+                                    cards: {
+                                        Action: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Artifact: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Creature: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                        Upgrade: {
+                                            Common: [],
+                                            Uncommon: [],
+                                            Rare: [],
+                                        },
+                                    },
+                                },
+                            ],
                             cards: [],
                         };
 
@@ -207,26 +286,67 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             default:
                                 newDeck["expansion"] = "Unknown";
                         }
-                        for (
-                            let j = 0;
-                            j < decksData[i]._linked.houses.length;
-                            j++
-                        ) {
-                            newDeck["house"].push({
-                                name: decksData[i]._linked.houses[j].name,
-                                img: decksData[i]._linked.houses[j].image,
-                            });
-                        }
+
+                        /*
+						adds cards to the correct house sorted by card type
+						then rarity
+						*/
                         for (
                             let j = 0;
                             j < decksData[i]._linked.cards.length;
                             j++
                         ) {
-                            newDeck["cards"].push({
+                            let card = decksData[i]._linked.cards[j];
+                            let index = 0;
+                            if (card.house === newDeck.house[0].name) {
+                                index = 0;
+                            } else if (
+                                decksData[i]._linked.cards[j].house ===
+                                newDeck.house[1].name
+                            ) {
+                                index = 1;
+                            } else if (
+                                decksData[i]._linked.cards[j].house ===
+                                newDeck.house[2].name
+                            ) {
+                                index = 2;
+                            }
+                            newDeck.house[index].cards[card.card_type][
+                                card.rarity
+                            ].push({
                                 name: decksData[i]._linked.cards[j].card_title,
                                 img: decksData[i]._linked.cards[j].front_image,
                             });
                         }
+
+                        //alphabetizes the cards
+                        for (let i = 0; i < 3; i++) {
+                            for (let type in newDeck.house[i].cards) {
+                                if (
+                                    newDeck.house[i].cards.hasOwnProperty(type)
+                                ) {
+                                    for (let rarity in newDeck.house[i].cards[
+                                        type
+                                    ]) {
+                                        if (
+                                            newDeck.house[i].cards[
+                                                type
+                                            ].hasOwnProperty(rarity)
+                                        ) {
+                                            newDeck.house[i].cards[type][
+                                                rarity
+                                            ].sort((a, b) => {
+                                                if (a.name > b.name) {
+                                                    return 1;
+                                                }
+                                                return -1;
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         decks.push({
                             playerName: nameArray[i],
                             deck: newDeck,
