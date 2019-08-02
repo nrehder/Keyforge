@@ -4,7 +4,7 @@
         router-outlet to show selected tournament
         'please select tournament' if no selected tournaent
 -->
-<br>
+<br />
 <div class="row">
     <div class="col-md-3">
         <div class="row">
@@ -14,15 +14,35 @@
         </div>
         <div class="row">
             <div class="col">
-                <button class="btn btn-success btn-block" routerLink="create" type="button">New Tournament</button>
+                <button
+                    class="btn btn-success btn-block"
+                    routerLink="create"
+                    type="button"
+                >
+                    New Tournament
+                </button>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <div *ngFor="let curTourn of currentTournaments | async; let i=index">
-                    <a style="cursor:pointer;" class="list-group-item clearfix" [routerLink]="i" routerLinkActive="active">
-                        <h5 class="list-group-item-heading">{{curTourn.name}}</h5>
-                        <p class="list-group-item-text">{{curTourn.type | titlecase}}</p>
+                <div
+                    *ngFor="
+                        let curTourn of currentTournaments | async;
+                        let i = index
+                    "
+                >
+                    <a
+                        style="cursor:pointer;"
+                        class="list-group-item list-group-item-secondary"
+                        [routerLink]="i"
+                        routerLinkActive="link-active"
+                    >
+                        <h5 class="list-group-item-heading">
+                            {{ curTourn.name }}
+                        </h5>
+                        <p class="list-group-item-text">
+                            {{ curTourn.type | titlecase }}
+                        </p>
                     </a>
                 </div>
             </div>

@@ -30,6 +30,13 @@ export class DatabaseService {
             .collection("finishedTournaments")
             .valueChanges();
     }
+    loadDecks() {
+        return this.db
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("decks")
+            .valueChanges();
+    }
 
     /*
 		Adds the provided new tournament to the collection
@@ -118,8 +125,8 @@ export class DatabaseService {
             .set(tourn)
             .then(() => {
                 this.db
-                    .collection(this.authService.username)
-                    .doc("tournaments")
+                    .collection("storage")
+                    .doc(this.authService.username)
                     .collection("currentTournaments")
                     .doc(tourn.name)
                     .delete()

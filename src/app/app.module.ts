@@ -13,9 +13,11 @@ import { environment } from "../environments/environment";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+
 import { HeaderComponent } from "./header/header.component";
 import { UserComponent } from "./user/user.component";
 import { HomeComponent } from "./home/home.component";
+import { LoginComponent } from "./login/login.component";
 
 import { CurrentTournamentsComponent } from "./current-tournaments/current-tournaments.component";
 import { ViewCurrentTournamentComponent } from "./current-tournaments/view-current-tournament/view-current-tournament.component";
@@ -32,7 +34,8 @@ import { VariableConfirmationComponent } from "./shared/variable-confirmation/va
 import { DeckNamePipe } from "./shared/deck-name.pipe";
 import { AlertComponent } from "./shared/alert/alert.component";
 
-import { LoginComponent } from "./login/login.component";
+import { DecksComponent } from "./decks/decks.component";
+import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
 
 @NgModule({
     declarations: [
@@ -53,6 +56,8 @@ import { LoginComponent } from "./login/login.component";
         DeckNamePipe,
         LoginComponent,
         AlertComponent,
+        DecksComponent,
+        ViewDeckComponent,
     ],
     imports: [
         BrowserModule,

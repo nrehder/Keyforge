@@ -1,0 +1,29 @@
+<br />
+<div class="row">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col">
+                <h4 style="text-align: center">Decks</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div *ngFor="let deck of decks | async; let i = index">
+                    <a
+                        style="cursor:pointer;"
+                        class="list-group-item list-group-item-secondary"
+                        [routerLink]="i"
+                        routerLinkActive="link-active"
+                    >
+                        <h5 class="list-group-item-heading">
+                            {{ deck.deckname }}
+                        </h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <router-outlet></router-outlet>
+    </div>
+</div>

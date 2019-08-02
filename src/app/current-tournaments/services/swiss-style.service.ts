@@ -4,7 +4,7 @@ import { take, map } from "rxjs/operators";
 import { DatabaseService } from "../../shared/database.service";
 import { tournament, round, player } from "../../shared/tournament.model";
 
-export interface deck {
+export interface swissDeck {
     name: string;
     wins: number;
     losses: number;

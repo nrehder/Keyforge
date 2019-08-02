@@ -14,6 +14,8 @@ import { NoTournamentComponent } from "./current-tournaments/no-tournament/no-to
 import { FinishedTournamentsComponent } from "./finished-tournaments/finished-tournaments.component";
 import { ViewFinishedTournamentComponent } from "./finished-tournaments/view-finished-tournament/view-finished-tournament.component";
 import { FullFinishedTournamentComponent } from "./finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component";
+import { DecksComponent } from "./decks/decks.component";
+import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
 
 const routes: Routes = [
     { path: "", component: HomeComponent },
@@ -36,6 +38,12 @@ const routes: Routes = [
             { path: ":id", component: ViewFinishedTournamentComponent },
             { path: ":id/history", component: FullFinishedTournamentComponent },
         ],
+    },
+    {
+        path: "decks",
+        component: DecksComponent,
+        canActivate: [AuthGuard],
+        children: [{ path: ":id", component: ViewDeckComponent }],
     },
     { path: "login", component: LoginComponent },
 ];
