@@ -12,8 +12,9 @@
                 <h2>{{ deck.deckName }}</h2>
             </div>
         </div>
+        <br />
         <div class="row">
-            <div class="col">
+            <div class="col" style="text-align: center;">
                 <button
                     class="btn"
                     [ngClass]="{
@@ -24,6 +25,8 @@
                 >
                     Unofficial Stats
                 </button>
+            </div>
+            <div class="col" style="text-align: center;">
                 <button
                     class="btn"
                     [ngClass]="{
@@ -39,7 +42,46 @@
         <br />
         <div class="row" *ngIf="unofficial">
             <div class="col" style="text-align: center">
-                Unofficial
+                <div class="row">
+                    <div class="col">
+                        <!-- wins, loses, byes, chains -->
+                        <ul class="list-group">
+                            <li
+                                class="list-group-item list-group-item-primary "
+                            >
+                                <h5 class="my-0 font-weight-bold">
+                                    Unofficial Results
+                                </h5>
+                            </li>
+                            <li
+                                class="list-group-item list-group-item-secondary"
+                            >
+                                <div class="row">
+                                    <div class="col">
+                                        <p>Wins: {{ deck.wins }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <p>Losses: {{ deck.losses }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <p>Byes: {{ deck.byes }}</p>
+                                    </div>
+                                    <div class="col">
+                                        <p>Chains: {{ deck.chains }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col">
+                        <app-tourn-list
+                            [tourns]="deck.tournament"
+                        ></app-tourn-list>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row" *ngIf="!unofficial">
@@ -54,36 +96,28 @@
                         <h5>{{ house.name }}</h5>
                     </div>
                 </div>
-                <div class="row mx-0">
-                    <div class="col">
-                        <h6>Actions</h6>
-                        <p
-                            *ngFor="
-                                let card of house.cards.Action.Common;
-                                let i = index
-                            "
-                        >
-                            {{ card.name }}
-                        </p>
-                        <p
-                            *ngFor="
-                                let card of house.cards.Action.Unommon;
-                                let i = index
-                            "
-                        >
-                            {{ card.name }}
-                        </p>
-                        <p
-                            *ngFor="
-                                let card of house.cards.Action.Rare;
-                                let i = index
-                            "
-                        >
-                            {{ card.name }}
-                        </p>
+                <div class="row mx-0 px-0">
+                    <div class="col px-0">
+                        <app-card-list
+                            [cardList]="house.cards.Action"
+                            [listType]="'Action'"
+                        ></app-card-list>
+                        <app-card-list
+                            [cardList]="house.cards.Artifact"
+                            [listType]="'Artifact'"
+                        ></app-card-list>
+                        <app-card-list
+                            [cardList]="house.cards.Creature"
+                            [listType]="'Creature'"
+                        ></app-card-list>
+                        <app-card-list
+                            [cardList]="house.cards.Upgrade"
+                            [listType]="'Upgrade'"
+                        ></app-card-list>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<br />

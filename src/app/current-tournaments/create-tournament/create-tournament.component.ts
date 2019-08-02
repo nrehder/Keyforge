@@ -183,6 +183,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 .getTournamentDecks(getArray)
                 .subscribe((decksData: DeckData[]) => {
                     for (let i = 0; i < decksData.length; i++) {
+                        console.log(decksData[i].data.name);
                         let newDeck = {
                             deckName: decksData[i].data.name,
                             deckUrl:
@@ -287,6 +288,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                                 newDeck["expansion"] = "Unknown";
                         }
 
+                        console.log(decksData[i]);
                         /*
 						adds cards to the correct house sorted by card type
 						then rarity
@@ -311,14 +313,27 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             ) {
                                 index = 2;
                             }
-                            newDeck.house[index].cards[card.card_type][
-                                card.rarity
-                            ].push({
-                                name: decksData[i]._linked.cards[j].card_title,
-                                img: decksData[i]._linked.cards[j].front_image,
+                            let number = 0;
+                            decksData[i].data._links.cards.forEach(element => {
+                                if (element === card.id) {
+                                    number += 1;
+                                }
                             });
+                            for (let k = 0; k < number; k++) {
+                                newDeck.house[index].cards[card.card_type][
+                                    card.rarity
+                                ].push({
+                                    name:
+                                        decksData[i]._linked.cards[j]
+                                            .card_title,
+                                    img:
+                                        decksData[i]._linked.cards[j]
+                                            .front_image,
+                                });
+                            }
                         }
 
+                        console.log(newDeck);
                         //alphabetizes the cards
                         for (let i = 0; i < 3; i++) {
                             for (let type in newDeck.house[i].cards) {

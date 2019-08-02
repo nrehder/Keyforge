@@ -1,0 +1,40 @@
+<div *ngIf="cardCount > 0">
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-primary font-weight-bold">
+            {{ listType }}
+        </li>
+        <li
+            *ngFor="let card of cardList.Common; let i = index"
+            class="list-group-item list-group-item-secondary"
+            style="cursor: pointer"
+            (click)="onClickCard(i, 'Common')"
+        >
+            {{ card.name }}
+        </li>
+        <li
+            *ngFor="let card of cardList.Uncommon; let i = index"
+            class="list-group-item list-group-item-secondary"
+            style="cursor: pointer"
+            (click)="onClickCard(i, 'Uncommon')"
+        >
+            {{ card.name }}
+        </li>
+        <li
+            *ngFor="let card of cardList.Rare; let i = index"
+            class="list-group-item list-group-item-secondary"
+            style="cursor: pointer"
+            (click)="onClickCard(i, 'Rare')"
+        >
+            {{ card.name }}
+        </li>
+    </ul>
+</div>
+<div *ngIf="viewCard" (click)="onClearView()">
+    <div class="backdrop">
+        <img
+            src="{{ viewCardImg }}"
+            alt="{{ viewCardName }}"
+            class="mx-auto d-block"
+        />
+    </div>
+</div>

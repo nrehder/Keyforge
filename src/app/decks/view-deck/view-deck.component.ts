@@ -18,7 +18,7 @@ export class ViewDeckComponent implements OnInit {
     deckId: number;
     decks: Observable<DocumentData[]>;
     keyforgeDeck: DeckData;
-    unofficial = false;
+    unofficial = true;
 
     constructor(private db: DatabaseService, private route: ActivatedRoute) {}
 
@@ -28,9 +28,6 @@ export class ViewDeckComponent implements OnInit {
         });
 
         this.decks = this.db.loadDecks();
-        this.decks.subscribe(decks => {
-            console.log(decks);
-        });
     }
 
     onUnofficial() {

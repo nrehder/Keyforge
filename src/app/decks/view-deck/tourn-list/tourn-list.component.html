@@ -1,0 +1,22 @@
+<div *ngIf="tourns.length > 0">
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">
+            <h5 class="font-weight-bold my-0">Previous Tournaments</h5>
+        </li>
+        <li
+            *ngFor="let tourn of tourns; let i = index"
+            class="list-group-item list-group-item-secondary"
+        >
+            <div class="row">
+                <div class="col">
+                    <h5 class="font-weight-bold">{{ tourn.name }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">Wins: {{ tourn.wins }}</div>
+                <div class="col">Losses: {{ tourn.losses }}</div>
+                <div class="col">Byes: {{ tourn.byes }}</div>
+            </div>
+        </li>
+    </ul>
+</div>

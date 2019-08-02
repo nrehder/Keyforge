@@ -36,6 +36,8 @@ import { AlertComponent } from "./shared/alert/alert.component";
 
 import { DecksComponent } from "./decks/decks.component";
 import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
+import { CardListComponent } from './decks/view-deck/card-list/card-list.component';
+import { TournListComponent } from './decks/view-deck/tourn-list/tourn-list.component';
 
 @NgModule({
     declarations: [
@@ -58,6 +60,8 @@ import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
         AlertComponent,
         DecksComponent,
         ViewDeckComponent,
+        CardListComponent,
+        TournListComponent,
     ],
     imports: [
         BrowserModule,
