@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { map, take } from "rxjs/operators";
-import { tournament } from "../shared/tournament.model";
 import { Router } from "@angular/router";
+import { map, take } from "rxjs/operators";
+
+import { tournament } from "../shared/tournament.model";
 import { AuthService } from "./auth.service";
+import { deck } from "./deck.model";
 
 @Injectable({
     providedIn: "root",
@@ -147,8 +149,17 @@ export class DatabaseService {
             });
     }
 
+    saveNewDeck(deck: deck) {
+        this.db
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("decks")
+            .doc(deck.deckName)
+            .set(deck);
+    }
+
     updateDeckStats(tourn: tournament) {
-        let finalStats = tourn.rounds[tourn.curRound].players;
+        const finalStats = tourn.rounds[tourn.curRound].players;
         const deckRef = this.db
             .collection("storage")
             .doc(this.authService.username)
@@ -161,30 +172,28 @@ export class DatabaseService {
                 .pipe(take(1))
                 .subscribe((data: firebase.firestore.DocumentSnapshot) => {
                     let deck = {};
-                    //checks if deck already exists and updates wins/losses
-                    if (data.exists) {
-                        deck = { ...data.data() };
-                        deck["wins"] += finalStats[i].wins;
-                        deck["losses"] += finalStats[i].losses;
-                        deck["byes"] += finalStats[i].byes;
-                    } else {
-                        deck = {
-                            deckname: finalStats[i].deckname,
-                            deckUrl: finalStats[i].deckUrl,
-                            losses: finalStats[i].losses,
-                            wins: finalStats[i].wins,
-                            byes: finalStats[i].byes,
-                            unoffChains: 0,
-                        };
+                    deck = { ...data.data() };
+                    deck["wins"] += finalStats[i].wins;
+                    deck["losses"] += finalStats[i].losses;
+                    deck["byes"] += finalStats[i].byes;
+
+                    if (!deck["tournament"]) {
+                        deck["tournament"] = [];
                     }
+                    deck["tournament"].push({
+                        name: tourn.name,
+                        wins: finalStats[i].wins,
+                        losses: finalStats[i].losses,
+                        byes: finalStats[i].byes,
+                    });
 
                     //determines chains as chainbound event
                     if (
                         tourn.chainType === "unofficial" &&
                         tourn.type === "swiss"
                     ) {
-                        deck["unoffChains"] = Math.max(
-                            deck["unoffChains"] +
+                        deck["chains"] = Math.max(
+                            deck["chains"] +
                                 this.swissChains(
                                     finalStats.length,
                                     finalStats[i].wins
@@ -195,8 +204,8 @@ export class DatabaseService {
                         tourn.chainType === "unofficial" &&
                         tourn.type === "roundRobin"
                     ) {
-                        deck["unoffChains"] = Math.max(
-                            deck["unoffChains"] +
+                        deck["chains"] = Math.max(
+                            deck["chains"] +
                                 this.robinChains(
                                     finalStats.length,
                                     finalStats[i].wins / finalStats[i].games
@@ -205,7 +214,9 @@ export class DatabaseService {
                         );
                     }
 
-                    deckRef.doc(finalStats[i].deckname).set(deck);
+                    deckRef
+                        .doc(finalStats[i].deckname)
+                        .set(deck, { merge: true });
                 });
         }
     }

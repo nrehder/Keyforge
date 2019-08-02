@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { Subscription } from "rxjs";
+import { take } from "rxjs/operators";
 
 import {
     DeckRetrievalService,
     DeckData,
 } from "../../shared/deck-retrieval.service";
 import { tournament } from "../../shared/tournament.model";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { DatabaseService } from "src/app/shared/database.service";
+import { DatabaseService } from "../../shared/database.service";
+import { deck } from "../../shared/deck.model";
 
 @Component({
     selector: "app-create-tournament",
@@ -135,49 +137,137 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         const formArray = this.createForm.get("decks").value;
-        const getArray = [];
+        let getArray: { playerName: string; url: string }[] = [];
+        const deckArray: { playerName: string; deck: deck }[] = [];
         for (let i = 0; i < formArray.length; i++) {
-            getArray.push(formArray[i].deck);
+            getArray.push({
+                playerName: formArray[i].name,
+                url: formArray[i].deck,
+            });
+        }
+        this.isloading = true;
+        this.db
+            .loadDecks()
+            .pipe(take(1))
+            .subscribe((deck: deck[]) => {
+                for (let i = 0; i < deck.length; i++) {
+                    getArray = getArray.filter(element => {
+                        if (element.url === deck[i].deckUrl) {
+                            deckArray.push({
+                                playerName: element.playerName,
+                                deck: deck[i],
+                            });
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                }
+                this.getDecks(getArray, deckArray);
+            });
+    }
+
+    //gets any deck not already in database from keyforgegame.com
+    private getDecks(
+        get: { playerName: string; url: string }[],
+        decks: { playerName: string; deck: deck }[]
+    ) {
+        if (get.length > 0) {
+            const getArray: string[] = [];
+            const nameArray: string[] = [];
+            for (let i = 0; i < get.length; i++) {
+                getArray.push(get[i].url);
+                nameArray.push(get[i].playerName);
+            }
+            this.deckService
+                .getTournamentDecks(getArray)
+                .subscribe((decksData: DeckData[]) => {
+                    for (let i = 0; i < decksData.length; i++) {
+                        let newDeck = {
+                            deckName: decksData[i].data.name,
+                            deckUrl:
+                                "https://www.keyforgegame.com/deck-details/" +
+                                decksData[i].data.id,
+                            wins: 0,
+                            losses: 0,
+                            byes: 0,
+                            chains: 0,
+                            expansion: "",
+                            house: [],
+                            cards: [],
+                        };
+
+                        switch (decksData[i].data.expansion) {
+                            case 435:
+                                newDeck["expansion"] = "AoA";
+                                break;
+                            case 341:
+                                newDeck["expansion"] = "CotA";
+                                break;
+                            default:
+                                newDeck["expansion"] = "Unknown";
+                        }
+                        for (
+                            let j = 0;
+                            j < decksData[i]._linked.houses.length;
+                            j++
+                        ) {
+                            newDeck["house"].push({
+                                name: decksData[i]._linked.houses[j].name,
+                                img: decksData[i]._linked.houses[j].image,
+                            });
+                        }
+                        for (
+                            let j = 0;
+                            j < decksData[i]._linked.cards.length;
+                            j++
+                        ) {
+                            newDeck["cards"].push({
+                                name: decksData[i]._linked.cards[j].card_title,
+                                img: decksData[i]._linked.cards[j].front_image,
+                            });
+                        }
+                        decks.push({
+                            playerName: nameArray[i],
+                            deck: newDeck,
+                        });
+                        //saves deck to database
+                        this.db.saveNewDeck(newDeck);
+                    }
+                    this.tournamentDecks(decks);
+                });
+        } else {
+            this.tournamentDecks(decks);
+        }
+    }
+
+    //sets up decks for tournament, removing data not needed for tournament
+    private tournamentDecks(decks: { playerName: string; deck: deck }[]) {
+        let tournDecks = [];
+        for (let i = 0; i < decks.length; i++) {
+            if (this.createForm.get("chains").value === "no") {
+                tournDecks.push({
+                    player: decks[i].playerName,
+                    deckName: decks[i].deck.deckName,
+                    deckUrl: decks[i].deck.deckUrl,
+                });
+            } else {
+                tournDecks.push({
+                    player: decks[i].playerName,
+                    deckName: decks[i].deck.deckName,
+                    deckUrl: decks[i].deck.deckUrl,
+                    chains: decks[i].deck.chains,
+                });
+            }
         }
 
-        this.isloading = true;
-        this.deckService
-            .getTournamentDecks(getArray)
-            .subscribe((decksData: DeckData[]) => {
-                let decks = [];
-                for (let i = 0; i < decksData.length; i++) {
-                    if (this.createForm.get("chains").value === "no") {
-                        decks.push({
-                            player: formArray[i].name,
-                            deckName: decksData[i].data.name,
-                            deckUrl: getArray[i],
-                        });
-                    } else if (
-                        this.createForm.get("chains").value === "official"
-                    ) {
-                        decks.push({
-                            player: formArray[i].name,
-                            deckName: decksData[i].data.name,
-                            chains: decksData[i].data.chains,
-                            deckUrl: getArray[i],
-                        });
-                    } else {
-                        decks.push({
-                            player: formArray[i].name,
-                            deckName: decksData[i].data.name,
-                            deckUrl: getArray[i],
-                        });
-                    }
-                }
-
-                this.newTournament(
-                    this.createForm.get("tournamentName").value,
-                    this.createForm.get("tournamentType").value,
-                    this.createForm.get("chains").value,
-                    decks
-                );
-                this.isloading = false;
-            });
+        this.newTournament(
+            this.createForm.get("tournamentName").value,
+            this.createForm.get("tournamentType").value,
+            this.createForm.get("chains").value,
+            tournDecks
+        );
+        this.isloading = false;
     }
 
     private newTournament(

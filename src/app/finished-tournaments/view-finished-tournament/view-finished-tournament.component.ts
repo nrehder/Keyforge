@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
 import { DocumentData } from "@angular/fire/firestore";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { DatabaseService } from "src/app/shared/database.service";
+import { Observable } from "rxjs";
 import { take } from "rxjs/operators";
-import { tournament } from "src/app/shared/tournament.model";
+
+import { DatabaseService } from "../../shared/database.service";
+import { tournament } from "../../shared/tournament.model";
 
 @Component({
     selector: "app-view-finished-tournament",

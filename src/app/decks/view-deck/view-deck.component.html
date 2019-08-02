@@ -1,1 +1,21 @@
-<p>view-deck works!</p>
+<div
+    class="row"
+    style="margin:0"
+    *ngFor="let deck of decks | async; let i = index"
+>
+    <div class="col" *ngIf="i === deckId">
+        <div class="row">
+            <div
+                class="col bg-secondary text-light"
+                style="text-align:center; border-radius: 15px"
+            >
+                <h2>{{ deck.deckname }}</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="text-align: center">
+                <!-- {{ keyforgeDeck.data.expansion }} -->
+            </div>
+        </div>
+    </div>
+</div>
