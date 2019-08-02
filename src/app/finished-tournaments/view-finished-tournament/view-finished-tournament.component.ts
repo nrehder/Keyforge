@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
 import { DocumentData } from "@angular/fire/firestore";
-import { ActivatedRoute, Params } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DatabaseService } from "src/app/shared/database.service";
 import { take } from "rxjs/operators";
 import { tournament } from "src/app/shared/tournament.model";
@@ -18,7 +18,11 @@ export class ViewFinishedTournamentComponent implements OnInit {
     deleting: boolean = false;
     loading: boolean = false;
 
-    constructor(private route: ActivatedRoute, private db: DatabaseService) {}
+    constructor(
+        private route: ActivatedRoute,
+        private db: DatabaseService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.route.params.subscribe((params: Params) => {
@@ -29,7 +33,11 @@ export class ViewFinishedTournamentComponent implements OnInit {
         this.finishedTournaments
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
-                this.tournName = tourns[this.tournId].name;
+                if (tourns[this.tournId]) {
+                    this.tournName = tourns[this.tournId].name;
+                } else {
+                    this.router.navigate(["/finished"]);
+                }
             });
     }
 
@@ -43,15 +51,7 @@ export class ViewFinishedTournamentComponent implements OnInit {
         } else if (choice === "confirm") {
             this.deleting = false;
             this.loading = true;
-            this.db
-                .loadCurrentTournaments()
-                .pipe(take(1))
-                .subscribe((tourns: tournament[]) => {
-                    this.db.deleteTournament(
-                        "finishedTournament",
-                        tourns[this.tournId].name
-                    );
-                });
+            this.db.deleteTournament("finishedTournaments", this.tournName);
         }
     }
 

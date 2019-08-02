@@ -11,7 +11,7 @@ import { AuthService } from "./auth.service";
 export class DatabaseService {
     constructor(
         private db: AngularFirestore,
-        private route: Router,
+        private router: Router,
         private authService: AuthService
     ) {}
 
@@ -80,7 +80,7 @@ export class DatabaseService {
                     )
                     .subscribe(tourns => {
                         //navigates to the tournament that was just added
-                        this.route.navigate([
+                        this.router.navigate([
                             "/tournaments",
                             tourns.indexOf(newTourn.name),
                         ]);
@@ -96,15 +96,21 @@ export class DatabaseService {
 	document is the tournament name
 	*/
     deleteTournament(collection: string, document: string) {
+        console.log(collection);
+        console.log(document);
+        if (collection === "finishedTournaments") {
+            this.router.navigate(["/finished"]);
+        } else if (collection === "currentTournaments") {
+            this.router.navigate(["/tournaments"]);
+        } else {
+            this.router.navigate(["/"]);
+        }
         this.db
             .collection("storage")
             .doc(this.authService.username)
             .collection(collection)
             .doc(document)
             .delete()
-            .then(() => {
-                // console.log("Deleted Successfully");
-            })
             .catch(error => {
                 console.log(error);
             });
@@ -134,7 +140,7 @@ export class DatabaseService {
                         console.log(err);
                     });
                 this.updateDeckStats(tourn);
-                this.route.navigate(["/finished"]);
+                this.router.navigate(["/finished"]);
             })
             .catch(err => {
                 console.log(err);
