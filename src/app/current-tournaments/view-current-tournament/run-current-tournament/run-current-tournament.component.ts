@@ -1,19 +1,21 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { SwissStyleService } from "../../services/swiss-style.service";
-import { Subscription, Observable } from "rxjs";
+import { Observable } from "rxjs";
 import { tournament } from "../../../shared/tournament.model";
 import { DatabaseService } from "src/app/shared/database.service";
 import { DocumentData } from "@angular/fire/firestore";
-import { take, map } from "rxjs/operators";
+import { take } from "rxjs/operators";
+import { RoundRobinService } from "../../services/round-robin.service";
+import { SingleElimService } from "../../services/single-elim.service";
 
 @Component({
     selector: "app-run-current-tournament",
     templateUrl: "./run-current-tournament.component.html",
     styleUrls: ["./run-current-tournament.component.css"],
 })
-export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
+export class RunCurrentTournamentComponent implements OnInit {
     curRound: number;
     tournId: number;
     tournType: string;
@@ -28,6 +30,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
 
     constructor(
         private swiss: SwissStyleService,
+        private roundRobin: RoundRobinService,
+        private singleElim: SingleElimService,
         private route: ActivatedRoute,
         private db: DatabaseService
     ) {}
@@ -69,6 +73,7 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     onChangeDisplay() {
         this.displayStats = !this.displayStats;
     }
+
     onClickPlayer(event: { index: number; winner: string }) {
         let index = event.index;
         let winner = event.winner;
@@ -114,31 +119,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         this.endingRound = true;
     }
 
-    onConfirmNextRound(choice: string) {
-        if (choice === "cancel") {
-            this.endingRound = false;
-        } else if (choice === "confirm") {
-            this.endingRound = false;
-            this.curRound += 1;
-            if (this.tournType === "swiss") {
-                this.swiss.onNextRound(this.tournId);
-            }
-            this.clearFinished();
-        }
-    }
-
     onFinish() {
         this.endingTourn = true;
-    }
-
-    onConfirmEndTourn(choice: string) {
-        if (choice === "cancel") {
-            this.endingTourn = false;
-        } else if (choice === "confirm") {
-            this.endingTourn = false;
-            this.swiss.onFinish(this.tournId);
-            this.clearFinished();
-        }
     }
 
     private clearFinished() {
@@ -146,7 +128,11 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
             this.finishedPairings[i] = false;
         }
         if (this.numPlayers % 2 === 1) {
-            this.finishedPairings[this.finishedPairings.length - 1] = true;
+            if (this.tournType === "swiss") {
+                this.finishedPairings[this.finishedPairings.length - 1] = true;
+            } else if (this.tournType === "roundRobin") {
+                this.finishedPairings[0] = true;
+            }
         }
         this.allFinished = false;
     }
@@ -163,5 +149,44 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {}
+    onConfirmNextRound(choice: string) {
+        if (choice === "cancel") {
+            this.endingRound = false;
+        } else if (choice === "confirm") {
+            this.endingRound = false;
+            this.curRound += 1;
+            switch (this.tournType) {
+                case "swiss":
+                    this.swiss.onNextRound(this.tournId);
+                    break;
+                case "roundRobin":
+                    this.roundRobin.onNextRound(this.tournId);
+                    break;
+                case "singleElim":
+                    this.singleElim;
+                    break;
+            }
+            this.clearFinished();
+        }
+    }
+
+    onConfirmEndTourn(choice: string) {
+        if (choice === "cancel") {
+            this.endingTourn = false;
+        } else if (choice === "confirm") {
+            this.endingTourn = false;
+            switch (this.tournType) {
+                case "swiss":
+                    this.swiss.onFinish(this.tournId);
+                    break;
+                case "roundRobin":
+                    this.roundRobin.onFinish(this.tournId);
+                    break;
+                case "singleElim":
+                    this.singleElim;
+                    break;
+            }
+            this.clearFinished();
+        }
+    }
 }

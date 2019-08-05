@@ -40,8 +40,23 @@
                         <h5 class="list-group-item-heading">
                             {{ curTourn.name }}
                         </h5>
-                        <p class="list-group-item-text">
-                            {{ curTourn.type | titlecase }}
+                        <p
+                            class="list-group-item-text"
+                            *ngIf="curTourn.type === 'swiss'"
+                        >
+                            Swiss Style
+                        </p>
+                        <p
+                            class="list-group-item-text"
+                            *ngIf="curTourn.type === 'singleElim'"
+                        >
+                            Single Elimination
+                        </p>
+                        <p
+                            class="list-group-item-text"
+                            *ngIf="curTourn.type === 'roundRobin'"
+                        >
+                            Round Robin
                         </p>
                     </a>
                 </div>

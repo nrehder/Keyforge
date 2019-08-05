@@ -8,6 +8,7 @@ import { tournament } from "../tournament.model";
 })
 export class PairingsTableComponent implements OnInit {
     @Input() tourn: tournament;
+    @Input() tournType: string;
     @Input() round: number;
     @Input() running: boolean;
     @Input() displayStats: boolean;
@@ -21,13 +22,11 @@ export class PairingsTableComponent implements OnInit {
     ngOnInit() {}
 
     onClickPlayer(index: number, winner: string) {
-        if (this.running) {
+        if (this.running && winner !== "BYE") {
             this.clickPlayer.emit({
                 index,
                 winner,
             });
-            console.log("thing");
         }
-        console.log("click");
     }
 }

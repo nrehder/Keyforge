@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { take, map } from "rxjs/operators";
+import { take } from "rxjs/operators";
 
 import { DatabaseService } from "../../shared/database.service";
-import { tournament, round, player } from "../../shared/tournament.model";
+import { tournament, round } from "../../shared/tournament.model";
 
 export interface swissDeck {
     name: string;
@@ -29,16 +29,15 @@ export class SwissStyleService {
         pairings: [],
         players: [],
     };
+    type: string;
 
     onNextRound(tournId: number) {
         this.db
             .loadCurrentTournaments()
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
+                this.type = "next";
                 this.copyTournament(tournId, tourns);
-                this.updateStats();
-                this.getPairings();
-                this.updateTournament();
             });
     }
 
@@ -47,9 +46,8 @@ export class SwissStyleService {
             .loadCurrentTournaments()
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
+                this.type = "end";
                 this.copyTournament(tournId, tourns);
-                this.updateStats();
-                this.finishTournament();
             });
     }
 
@@ -70,6 +68,7 @@ export class SwissStyleService {
                 opponents: [...originalRound.players[i].opponents],
             });
         }
+        this.updateStats();
     }
 
     private updateStats() {
@@ -219,6 +218,12 @@ export class SwissStyleService {
                 }
             }
         });
+
+        if (this.type === "next") {
+            this.getPairings();
+        } else {
+            this.finishTournament();
+        }
     }
 
     private getPairings() {
@@ -230,11 +235,17 @@ export class SwissStyleService {
                     name: this.curRound.players[2 * i].playername,
                     deck: this.curRound.players[2 * i].deckname,
                     winner: false,
+                    wins: this.curRound.players[2 * i].wins,
+                    losses: this.curRound.players[2 * i].losses,
+                    byes: this.curRound.players[2 * i].byes,
                 },
                 player2: {
                     name: this.curRound.players[2 * i + 1].playername,
                     deck: this.curRound.players[2 * i + 1].deckname,
                     winner: false,
+                    wins: this.curRound.players[2 * i + 1].wins,
+                    losses: this.curRound.players[2 * i + 1].losses,
+                    byes: this.curRound.players[2 * i + 1].byes,
                 },
             });
             if (
@@ -260,14 +271,27 @@ export class SwissStyleService {
                         this.curRound.players.length - 1
                     ].deckname,
                     winner: true,
+                    wins: this.curRound.players[
+                        this.curRound.players.length - 1
+                    ].wins,
+                    losses: this.curRound.players[
+                        this.curRound.players.length - 1
+                    ].losses,
+                    byes: this.curRound.players[
+                        this.curRound.players.length - 1
+                    ].byes,
                 },
                 player2: {
                     name: "BYE",
                     deck: "",
                     winner: false,
+                    wins: 0,
+                    losses: 0,
+                    byes: 0,
                 },
             });
         }
+        this.updateTournament();
     }
 
     private updateTournament() {

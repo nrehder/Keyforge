@@ -33,7 +33,7 @@
     <div
         class="col match"
         (click)="onClickPlayer(i, pair.player1.name)"
-        [ngClass]="{ winner: pair.player1.winner && running }"
+        [ngClass]="{ winner: pair.player1.winner }"
     >
         <div
             class="box h-100 d-flex justify-content-center align-item-center flex-column"
@@ -42,14 +42,13 @@
                 {{ pair.player1.name }}
             </p>
             <small>{{ pair.player1.deck | deckName }}</small>
-
-            <small *ngIf="displayStats">
+            <small *ngIf="!(pair.player1.deck === '') && displayStats">
                 W
-                {{ tourn.rounds[round].players[2 * i].wins }}
+                {{ pair.player1.wins }}
                 - L
-                {{ tourn.rounds[round].players[2 * i].losses }}
+                {{ pair.player1.losses }}
                 - B
-                {{ tourn.rounds[round].players[2 * i].byes }}</small
+                {{ pair.player1.byes }}</small
             >
             <small *ngIf="pair.player1.chains >= 0">
                 Chains: {{ pair.player1.chains }}
@@ -59,7 +58,7 @@
     <div
         class="col match"
         (click)="onClickPlayer(i, pair.player2.name)"
-        [ngClass]="{ winner: pair.player2.winner && running }"
+        [ngClass]="{ winner: pair.player2.winner }"
     >
         <div
             class="box h-100 d-flex justify-content-center align-item-center flex-column"
@@ -70,13 +69,13 @@
             <small *ngIf="!(pair.player2.deck === '')">{{
                 pair.player2.deck | deckName
             }}</small>
-            <small *ngIf="!(pair.player2.deck === '') && displayStats"
-                >W
-                {{ tourn.rounds[round].players[2 * i + 1].wins }}
+            <small *ngIf="!(pair.player2.deck === '') && displayStats">
+                W
+                {{ pair.player2.wins }}
                 - L
-                {{ tourn.rounds[round].players[2 * i + 1].losses }}
+                {{ pair.player2.losses }}
                 - B
-                {{ tourn.rounds[round].players[2 * i + 1].byes }}</small
+                {{ pair.player2.byes }}</small
             >
             <small *ngIf="pair.player2.chains >= 0">
                 Chains: {{ pair.player2.chains }}

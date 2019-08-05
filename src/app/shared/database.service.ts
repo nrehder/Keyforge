@@ -55,38 +55,7 @@ export class DatabaseService {
             .doc(newTourn.name)
             .set(newTourn)
             .then(() => {
-                //gets new list of tournament names
-                this.db
-                    .collection("storage")
-                    .doc(this.authService.username)
-                    .collection("currentTournaments")
-                    .get()
-                    .pipe(
-                        take(1),
-                        map((item: firebase.firestore.QuerySnapshot) => {
-                            //maps DocumentData[] to tournament[]
-                            return item.docs.map(
-                                (
-                                    dataItem: firebase.firestore.QueryDocumentSnapshot
-                                ) => {
-                                    return <tournament>dataItem.data();
-                                }
-                            );
-                        }),
-                        map(tournArray => {
-                            //converts the tournament[] to string[]
-                            return tournArray.map(element => {
-                                return element.name;
-                            });
-                        })
-                    )
-                    .subscribe(tourns => {
-                        //navigates to the tournament that was just added
-                        this.router.navigate([
-                            "/tournaments",
-                            tourns.indexOf(newTourn.name),
-                        ]);
-                    });
+                this.navigate(newTourn.name, "currentTournaments");
             })
             .catch(err => {
                 console.log(err);
@@ -98,8 +67,6 @@ export class DatabaseService {
 	document is the tournament name
 	*/
     deleteTournament(collection: string, document: string) {
-        console.log(collection);
-        console.log(document);
         if (collection === "finishedTournaments") {
             this.router.navigate(["/finished"]);
         } else if (collection === "currentTournaments") {
@@ -115,6 +82,19 @@ export class DatabaseService {
             .delete()
             .catch(error => {
                 console.log(error);
+            });
+    }
+
+    //takes in updated tournament and saves it to database
+    updateTournament(upTourn: tournament) {
+        this.db
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection("currentTournaments")
+            .doc(upTourn.name)
+            .set(upTourn)
+            .catch(err => {
+                console.log(err);
             });
     }
 
@@ -142,7 +122,7 @@ export class DatabaseService {
                         console.log(err);
                     });
                 this.updateDeckStats(tourn);
-                this.router.navigate(["/finished"]);
+                this.navigate(tourn.name, "finishedTournaments");
             })
             .catch(err => {
                 console.log(err);
@@ -221,6 +201,47 @@ export class DatabaseService {
         }
     }
 
+    private navigate(tournName: string, collection: string) {
+        this.db
+            .collection("storage")
+            .doc(this.authService.username)
+            .collection(collection)
+            .get()
+            .pipe(
+                take(1),
+                map((item: firebase.firestore.QuerySnapshot) => {
+                    //maps DocumentData[] to tournament[]
+                    return item.docs.map(
+                        (
+                            dataItem: firebase.firestore.QueryDocumentSnapshot
+                        ) => {
+                            return <tournament>dataItem.data();
+                        }
+                    );
+                }),
+                map(tournArray => {
+                    //converts the tournament[] to string[]
+                    return tournArray.map(element => {
+                        return element.name;
+                    });
+                })
+            )
+            .subscribe(tourns => {
+                //navigates to the tournament that was just added or finished
+                if (collection === "currentTournaments") {
+                    this.router.navigate([
+                        "/tournaments",
+                        tourns.indexOf(tournName),
+                    ]);
+                } else {
+                    this.router.navigate([
+                        "/finished",
+                        tourns.indexOf(tournName),
+                    ]);
+                }
+            });
+    }
+
     private swissChains(numPlayers, wins) {
         if (numPlayers < 9) {
             switch (wins) {
@@ -266,18 +287,5 @@ export class DatabaseService {
         } else {
             return 4;
         }
-    }
-
-    //takes in updated tournament and saves it to database
-    updateTournament(upTourn: tournament) {
-        this.db
-            .collection("storage")
-            .doc(this.authService.username)
-            .collection("currentTournaments")
-            .doc(upTourn.name)
-            .set(upTourn)
-            .catch(err => {
-                console.log(err);
-            });
     }
 }

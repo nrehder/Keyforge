@@ -19,12 +19,18 @@ export interface pairing {
         deck: string;
         winner: boolean;
         chains?: number;
+        wins: number;
+        losses: number;
+        byes: number;
     };
     player2: {
         name: string;
         deck: string;
         winner: boolean;
         chains?: number;
+        wins: number;
+        losses: number;
+        byes: number;
     };
 }
 
@@ -40,6 +46,13 @@ export interface tournament {
     curRound: number;
     maxRounds: number;
     rounds: round[];
-    roundRobinArray?: string[];
+    roundRobinArray?: {
+        name: string;
+        deck: string;
+        chains?: number;
+        wins: number;
+        losses: number;
+        byes: number;
+    }[];
     singleElimBracket?: {}[];
 }
