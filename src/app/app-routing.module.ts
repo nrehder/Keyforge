@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
 import { AuthGuard } from "./shared/auth.guard";
+import { LoginGuard } from "./shared/login.guard";
 
 import { CurrentTournamentsComponent } from "./current-tournaments/current-tournaments.component";
 import { CreateTournamentComponent } from "./current-tournaments/create-tournament/create-tournament.component";
@@ -45,7 +46,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [{ path: ":id", component: ViewDeckComponent }],
     },
-    { path: "login", component: LoginComponent },
+    { path: "login", canActivate: [LoginGuard], component: LoginComponent },
 ];
 
 @NgModule({
