@@ -6,7 +6,6 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import {
     AngularFirestore,
     AngularFirestoreDocument,
-    QueryFn,
 } from "@angular/fire/firestore";
 
 import { Observable, of } from "rxjs";
@@ -43,7 +42,11 @@ export class AuthService {
             }),
             tap(user => {
                 if (user) {
-                    this.username = user.username;
+                    if (user.username !== undefined) {
+                        this.username = user.username;
+                    } else {
+                        this.router.navigate(["/username"]);
+                    }
                 } else {
                     this.username = "";
                 }
@@ -68,7 +71,7 @@ export class AuthService {
         this.isloading = true;
         this.fireAuth.auth
             .signInWithEmailAndPassword(email, password)
-            .then(res => {
+            .then(() => {
                 this.isloading = false;
                 this.router.navigate(["/"]);
             })
@@ -145,7 +148,7 @@ export class AuthService {
             .subscribe(doc => {
                 if (doc.username === undefined) {
                     this.isloading = false;
-                    this.needUsername = true;
+                    this.router.navigate(["/username"]);
                 } else {
                     this.isloading = false;
                     this.router.navigate(["/"]);

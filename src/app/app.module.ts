@@ -40,6 +40,7 @@ import { CardListComponent } from './decks/view-deck/card-list/card-list.compone
 import { TournListComponent } from './decks/view-deck/tourn-list/tourn-list.component';
 import { StandingsTableComponent } from './shared/standings-table/standings-table.component';
 import { PairingsTableComponent } from './shared/pairings-table/pairings-table.component';
+import { UsernameComponent } from './login/username/username.component';
 
 @NgModule({
     declarations: [
@@ -66,6 +67,7 @@ import { PairingsTableComponent } from './shared/pairings-table/pairings-table.c
         TournListComponent,
         StandingsTableComponent,
         PairingsTableComponent,
+        UsernameComponent,
     ],
     imports: [
         BrowserModule,

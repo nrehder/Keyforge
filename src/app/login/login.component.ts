@@ -7,7 +7,6 @@ import {
 } from "@angular/forms";
 
 import { AuthService } from "../shared/auth.service";
-import { Observable } from "rxjs";
 
 @Component({
     selector: "app-login",
@@ -55,13 +54,6 @@ export class LoginComponent implements OnInit {
             },
             [this.emailMatch, this.passwordMatch]
         );
-        this.usernameForm = new FormGroup({
-            username: new FormControl(
-                null,
-                [Validators.required, this.usernameStyleValidator],
-                this.usernameAvailable.bind(this)
-            ),
-        });
     }
 
     onChangeMode() {
@@ -82,34 +74,11 @@ export class LoginComponent implements OnInit {
         );
     }
 
-    onSubmitUsername() {
-        this.authService.addUsername(this.usernameForm.get("username").value);
-    }
-
     onHandleError() {
         this.authService.error = "";
     }
 
     //Validators
-    private usernameStyleValidator(
-        control: FormControl
-    ): { [s: string]: boolean } {
-        if (control.value) {
-            let stringArray = (<string>control.value).split(" ");
-            if (stringArray.length > 1) {
-                return { oneWord: true };
-            }
-        }
-
-        return null;
-    }
-
-    private usernameAvailable(
-        control: FormControl
-    ): Promise<any> | Observable<any> {
-        return this.authService.checkUsername(control.value);
-    }
-
     private emailMatch(control: AbstractControl): { [s: string]: boolean } {
         const email = control.get("email").value;
         const verifyEmail = control.get("verifyEmail").value;

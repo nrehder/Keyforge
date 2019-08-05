@@ -1,5 +1,7 @@
 import { Component, OnInit, HostListener, ElementRef } from "@angular/core";
 import { AuthService } from "../shared/auth.service";
+import { take } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-header",

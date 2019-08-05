@@ -17,6 +17,7 @@ import { ViewFinishedTournamentComponent } from "./finished-tournaments/view-fin
 import { FullFinishedTournamentComponent } from "./finished-tournaments/view-finished-tournament/full-finished-tournament/full-finished-tournament.component";
 import { DecksComponent } from "./decks/decks.component";
 import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
+import { UsernameComponent } from "./login/username/username.component";
 
 const routes: Routes = [
     { path: "", component: HomeComponent },
@@ -46,6 +47,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [{ path: ":id", component: ViewDeckComponent }],
     },
+    { path: "username", component: UsernameComponent },
     { path: "login", canActivate: [LoginGuard], component: LoginComponent },
 ];
 

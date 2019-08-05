@@ -1,12 +1,3 @@
-.login-box {
-    width: 30vw;
-    margin-left: auto;
-    margin-right: auto;
-    min-width: 280px;
-    padding: 30px;
-    border-radius: 20px;
-}
-
 .backdrop {
     position: fixed;
     top: 0;
@@ -25,13 +16,4 @@
     padding: 30px;
     border-radius: 20px;
     z-index: 1032;
-}
-
-input.ng-invalid.ng-touched,
-textarea.ng-invalid.ng-touched {
-    border: 1px solid red;
-}
-
-p {
-    margin-bottom: 0;
 }

@@ -1,0 +1,41 @@
+<div class="backdrop"></div>
+<div
+    class="box d-flex justify-content-center align-item-center flex-column bg-light username-box text-dark"
+>
+    <h4>Choose a username</h4>
+    <small style="color:red;margin-bottom: 10px">This cannot be changed!</small>
+    <form [formGroup]="usernameForm" (ngSubmit)="onSubmitUsername()">
+        <div class="form-group">
+            <input
+                type="text"
+                id="username"
+                class="form-control"
+                formControlName="username"
+            />
+            <p>
+                <small
+                    style="color:red"
+                    *ngIf="usernameForm.controls.username.hasError('oneWord')"
+                    >Username should be one word!</small
+                >
+            </p>
+            <p>
+                <small
+                    style="color:red"
+                    *ngIf="
+                        usernameForm.controls.username.hasError('usernameTaken')
+                    "
+                    >Username is already in use!</small
+                >
+            </p>
+        </div>
+
+        <button
+            class="btn btn-primary w-100"
+            type="submit"
+            style="margin-bottom: 10px"
+        >
+            Submit
+        </button>
+    </form>
+</div>
