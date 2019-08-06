@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { SwissStyleService } from "../../services/swiss-style.service";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { tournament } from "../../../shared/tournament.model";
 import { DatabaseService } from "src/app/shared/database.service";
 import { DocumentData } from "@angular/fire/firestore";
@@ -15,8 +15,10 @@ import { SingleElimService } from "../../services/single-elim.service";
     templateUrl: "./run-current-tournament.component.html",
     styleUrls: ["./run-current-tournament.component.css"],
 })
-export class RunCurrentTournamentComponent implements OnInit {
+export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     curRound: number;
+
+    tournSub: Subscription;
     tournId: number;
     tournType: string;
     currentTournaments: Observable<DocumentData[]>;
@@ -43,31 +45,34 @@ export class RunCurrentTournamentComponent implements OnInit {
 
         this.currentTournaments = this.db.loadCurrentTournaments();
 
-        this.currentTournaments
-            .pipe(take(1))
-            .subscribe((tourns: tournament[]) => {
-                this.curRound = tourns[this.tournId].curRound;
-                this.tournType = tourns[this.tournId].type;
-                this.numPlayers =
-                    tourns[this.tournId].rounds[
-                        tourns[this.tournId].curRound - 1
-                    ].players.length;
-                const curPairings =
-                    tourns[this.tournId].rounds[
-                        tourns[this.tournId].curRound - 1
-                    ].pairings;
-                for (let i = 0; i < curPairings.length; i++) {
-                    if (
-                        curPairings[i].player1.winner ||
-                        curPairings[i].player2.winner
-                    ) {
-                        this.finishedPairings.push(true);
-                    } else {
-                        this.finishedPairings.push(false);
+        this.tournSub = this.currentTournaments.subscribe(
+            (tourns: tournament[]) => {
+                if (tourns.length > 0) {
+                    this.curRound = tourns[this.tournId].curRound;
+                    this.tournType = tourns[this.tournId].type;
+                    this.numPlayers =
+                        tourns[this.tournId].rounds[
+                            tourns[this.tournId].curRound - 1
+                        ].players.length;
+                    const curPairings =
+                        tourns[this.tournId].rounds[
+                            tourns[this.tournId].curRound - 1
+                        ].pairings;
+                    this.finishedPairings = [];
+                    for (let i = 0; i < curPairings.length; i++) {
+                        if (
+                            curPairings[i].player1.winner ||
+                            curPairings[i].player2.winner
+                        ) {
+                            this.finishedPairings.push(true);
+                        } else {
+                            this.finishedPairings.push(false);
+                        }
                     }
+                    this.checkFinished();
                 }
-                this.checkFinished();
-            });
+            }
+        );
     }
 
     onChangeDisplay() {
@@ -124,16 +129,7 @@ export class RunCurrentTournamentComponent implements OnInit {
     }
 
     private clearFinished() {
-        for (let i = 0; i < this.finishedPairings.length; i++) {
-            this.finishedPairings[i] = false;
-        }
-        if (this.numPlayers % 2 === 1) {
-            if (this.tournType === "swiss") {
-                this.finishedPairings[this.finishedPairings.length - 1] = true;
-            } else if (this.tournType === "roundRobin") {
-                this.finishedPairings[0] = true;
-            }
-        }
+        this.finishedPairings = [];
         this.allFinished = false;
     }
 
@@ -154,7 +150,7 @@ export class RunCurrentTournamentComponent implements OnInit {
             this.endingRound = false;
         } else if (choice === "confirm") {
             this.endingRound = false;
-            this.curRound += 1;
+            // this.curRound += 1;
             switch (this.tournType) {
                 case "swiss":
                     this.swiss.onNextRound(this.tournId);
@@ -163,7 +159,7 @@ export class RunCurrentTournamentComponent implements OnInit {
                     this.roundRobin.onNextRound(this.tournId);
                     break;
                 case "singleElim":
-                    this.singleElim;
+                    this.singleElim.onNextRound(this.tournId);
                     break;
             }
             this.clearFinished();
@@ -183,10 +179,14 @@ export class RunCurrentTournamentComponent implements OnInit {
                     this.roundRobin.onFinish(this.tournId);
                     break;
                 case "singleElim":
-                    this.singleElim;
+                    this.singleElim.onFinish(this.tournId);
                     break;
             }
             this.clearFinished();
         }
+    }
+
+    ngOnDestroy() {
+        this.tournSub.unsubscribe();
     }
 }
