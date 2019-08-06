@@ -23,6 +23,9 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     createForm: FormGroup;
     isloading: boolean;
     tournamentNames: string[] = [];
+    numPlayers: number = 4;
+    missing: string = "0";
+    needByes: boolean = false;
 
     constructor(
         private deckService: DeckRetrievalService,
@@ -50,7 +53,8 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 Validators.required,
                 this.validateTournamentName.bind(this),
             ]),
-            tournamentType: new FormControl("swiss", Validators.required),
+            tournamentType: new FormControl("swiss"),
+            elimType: new FormControl("seeded"),
             chains: new FormControl("no", Validators.required),
             decks: new FormArray([
                 new FormGroup({
@@ -109,10 +113,31 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             ),
         });
         (<FormArray>this.createForm.get("decks")).push(control);
+        this.numPlayers += 1;
+        this.checkNum();
     }
 
     onDeleteDeck(index: number) {
         (<FormArray>this.createForm.get("decks")).removeAt(index);
+        this.numPlayers -= 1;
+        this.checkNum();
+    }
+
+    //checks if the number of players is a power of 2 for single elimination
+    private checkNum() {
+        let missing =
+            Math.pow(2, Math.ceil(Math.log2(this.numPlayers))) -
+            this.numPlayers;
+        if (missing > 1) {
+            this.needByes = true;
+            this.missing = missing + " byes";
+        } else if (missing === 1) {
+            this.needByes = true;
+            this.missing = "1 bye";
+        } else {
+            this.needByes = false;
+            this.missing = "0";
+        }
     }
 
     validateDeckUrl(control: FormControl): { [s: string]: boolean } {
@@ -137,12 +162,17 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         const formArray = this.createForm.get("decks").value;
-        let getArray: { playerName: string; url: string }[] = [];
-        const deckArray: { playerName: string; deck: deck }[] = [];
+        let getArray: { playerName: string; url: string; index: number }[] = [];
+        const deckArray: {
+            playerName: string;
+            deck: deck;
+            index: number;
+        }[] = [];
         for (let i = 0; i < formArray.length; i++) {
             getArray.push({
                 playerName: formArray[i].name,
                 url: formArray[i].deck,
+                index: i,
             });
         }
         this.isloading = true;
@@ -156,6 +186,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             deckArray.push({
                                 playerName: element.playerName,
                                 deck: deck[i],
+                                index: element.index,
                             });
                             return false;
                         } else {
@@ -169,15 +200,17 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
 
     //gets any deck not already in database from keyforgegame.com
     private getDecks(
-        get: { playerName: string; url: string }[],
-        decks: { playerName: string; deck: deck }[]
+        get: { playerName: string; url: string; index: number }[],
+        decks: { playerName: string; deck: deck; index: number }[]
     ) {
         if (get.length > 0) {
             const getArray: string[] = [];
             const nameArray: string[] = [];
+            const indexArray: number[] = [];
             for (let i = 0; i < get.length; i++) {
                 getArray.push(get[i].url);
                 nameArray.push(get[i].playerName);
+                indexArray.push(get[i].index);
             }
             this.deckService
                 .getTournamentDecks(getArray)
@@ -362,6 +395,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         decks.push({
                             playerName: nameArray[i],
                             deck: newDeck,
+                            index: indexArray[i],
                         });
                         //saves deck to database
                         this.db.saveNewDeck(newDeck);
@@ -374,7 +408,33 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     }
 
     //sets up decks for tournament, removing data not needed for tournament
-    private tournamentDecks(decks: { playerName: string; deck: deck }[]) {
+    private tournamentDecks(
+        decks: { playerName: string; deck: deck; index: number }[]
+    ) {
+        //sorts decks if order matters for single elimination
+        //randomizes otherwise
+        if (
+            this.createForm.get("tournamentType").value === "singleElim" &&
+            this.createForm.get("elimType").value === "seeded"
+        ) {
+            decks.sort((a, b) => {
+                if (a.index > b.index) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+        } else {
+            for (let i = 0; i < decks.length; i++) {
+                let rand = Math.floor(Math.random() * decks.length);
+                let temp = decks[i];
+                decks[i] = decks[rand];
+                decks[rand] = temp;
+            }
+        }
+
+        //changes the decks variable to now be similar to the player that will
+        //be added to the tournament
         let tournDecks = [];
         for (let i = 0; i < decks.length; i++) {
             if (this.createForm.get("chains").value === "no") {
@@ -462,8 +522,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             if (newTourn.type === "swiss") {
                 newTourn.rounds[0].players[i].SoS = 0;
                 newTourn.rounds[0].players[i].ESoS = 0;
-            } else if (newTourn.type === "singleElim") {
-                newTourn.rounds[0].players[i].eliminated = false;
             }
         }
 
@@ -482,16 +540,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     }
 
     swissSetup(tourn: tournament) {
-        //randomizes initial standings
-        for (let i = 0; i < tourn.rounds[0].players.length; i++) {
-            let rand = Math.floor(
-                Math.random() * tourn.rounds[0].players.length
-            );
-            let temp = tourn.rounds[0].players[i];
-            tourn.rounds[0].players[i] = tourn.rounds[0].players[rand];
-            tourn.rounds[0].players[rand] = temp;
-        }
-
         //sets up pairings array for first round
         for (
             let i = 0;
@@ -557,16 +605,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     }
 
     roundRobinSetup(tourn: tournament) {
-        //randomizes initial standings
-        for (let i = 0; i < tourn.rounds[0].players.length; i++) {
-            let rand = Math.floor(
-                Math.random() * tourn.rounds[0].players.length
-            );
-            let temp = tourn.rounds[0].players[i];
-            tourn.rounds[0].players[i] = tourn.rounds[0].players[rand];
-            tourn.rounds[0].players[rand] = temp;
-        }
-
         //sets up array to track round robin players.  after each round, first
         //player in array goes to the end to ensure every player faces each other
         tourn.roundRobinArray = [];
@@ -646,7 +684,92 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         this.db.addNewTournament(tourn);
     }
 
-    singleElimSetup(tourn: tournament) {}
+    singleElimSetup(tourn: tournament) {
+        let numPlayers: number = tourn.rounds[0].players.length;
+        const rounds = Math.ceil(Math.log2(numPlayers));
+        tourn.rounds[0].singleElim = [];
+
+        //puts all players into the single elim array to be organized
+        for (let i = 0; i < numPlayers; i++) {
+            let temp = {
+                name: tourn.rounds[0].players[i].playername,
+                deck: tourn.rounds[0].players[i].deckname,
+            };
+            if (tourn.chainType === "unofficial") {
+                temp["chains"] = tourn.rounds[0].players[i].chains;
+            }
+            tourn.rounds[0].singleElim.push(temp);
+        }
+
+        //determines first round byes to bring it to a power of 2
+        let byes = Math.pow(2, rounds) - numPlayers;
+        for (let i = 0; i < byes; i++) {
+            tourn.rounds[0].singleElim.push({
+                name: "BYE",
+                deck: "",
+            });
+        }
+
+        numPlayers = tourn.rounds[0].singleElim.length;
+        /*
+		Sorts the single elim array to match eventual pairings
+		For example: 1,2,3,4,5,6,7,8 should become 1,8,5,4,2,7,6,3
+		This gives round 1: 1vs8, 5vs4, 2vs7, 6vs3
+		Round 2 would have the winner of 1vs8 face 5vs4, etc
+		*/
+        for (let i = 0; i < rounds - 1; i++) {
+            let pairs = Math.pow(2, i);
+            let temp = [];
+            for (let j = 0; j < numPlayers / (pairs * 2); j++) {
+                for (let k = 0; k < pairs; k++) {
+                    temp.push(tourn.rounds[0].singleElim.shift());
+                }
+                for (let k = 0; k < pairs; k++) {
+                    temp.push(tourn.rounds[0].singleElim.pop());
+                }
+            }
+            tourn.rounds[0].singleElim = [...temp];
+        }
+
+        //Sets up round 1 pairings
+        for (let i = 0; i < numPlayers / 2; i++) {
+            if (tourn.rounds[0].singleElim[2 * i].name === "BYE") {
+                tourn.rounds[0].pairings.push({
+                    player1: {
+                        ...tourn.rounds[0].singleElim[2 * i],
+                        winner: false,
+                    },
+                    player2: {
+                        ...tourn.rounds[0].singleElim[2 * i + 1],
+                        winner: true,
+                    },
+                });
+            } else if (tourn.rounds[0].singleElim[2 * i + 1].name === "BYE") {
+                tourn.rounds[0].pairings.push({
+                    player1: {
+                        ...tourn.rounds[0].singleElim[2 * i],
+                        winner: true,
+                    },
+                    player2: {
+                        ...tourn.rounds[0].singleElim[2 * i + 1],
+                        winner: false,
+                    },
+                });
+            } else {
+                tourn.rounds[0].pairings.push({
+                    player1: {
+                        ...tourn.rounds[0].singleElim[2 * i],
+                        winner: false,
+                    },
+                    player2: {
+                        ...tourn.rounds[0].singleElim[2 * i + 1],
+                        winner: false,
+                    },
+                });
+            }
+        }
+        this.db.addNewTournament(tourn);
+    }
 
     ngOnDestroy() {
         this.currentSub.unsubscribe();

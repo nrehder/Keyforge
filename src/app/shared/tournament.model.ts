@@ -10,7 +10,6 @@ export interface player {
     chains?: number;
     SoS?: number;
     ESoS?: number;
-    eliminated?: boolean;
 }
 
 export interface pairing {
@@ -19,24 +18,29 @@ export interface pairing {
         deck: string;
         winner: boolean;
         chains?: number;
-        wins: number;
-        losses: number;
-        byes: number;
+        wins?: number;
+        losses?: number;
+        byes?: number;
     };
     player2: {
         name: string;
         deck: string;
         winner: boolean;
         chains?: number;
-        wins: number;
-        losses: number;
-        byes: number;
+        wins?: number;
+        losses?: number;
+        byes?: number;
     };
 }
 
 export interface round {
     pairings: pairing[];
     players: player[];
+    singleElim?: {
+        name: string;
+        deck: string;
+        chains?: number;
+    }[];
 }
 
 export interface tournament {
@@ -54,5 +58,4 @@ export interface tournament {
         losses: number;
         byes: number;
     }[];
-    singleElimBracket?: {}[];
 }
