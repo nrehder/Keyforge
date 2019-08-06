@@ -12,7 +12,7 @@ import { tournament } from "src/app/shared/tournament.model";
     styleUrls: ["./view-current-tournament.component.css"],
 })
 export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
-    tournName: string;
+    deleteName: string;
     tournId: number;
     currentTournaments: Observable<DocumentData[]>;
     deleting: boolean = false;
@@ -33,25 +33,25 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
         this.currentTournaments
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
-                if (tourns[this.tournId]) {
-                    this.tournName = tourns[this.tournId].name;
-                } else {
+                if (!tourns[this.tournId]) {
                     this.router.navigate(["/tournaments"]);
                 }
             });
     }
 
-    onDelete() {
+    onDelete(tournName: string) {
+        this.deleteName = tournName;
         this.deleting = true;
     }
 
     onConfirmation(choice: string) {
         if (choice === "cancel") {
             this.deleting = false;
+            this.deleteName = "";
         } else if (choice === "confirm") {
             this.deleting = false;
             this.loading = true;
-            this.db.deleteTournament("currentTournaments", this.tournName);
+            this.db.deleteTournament("currentTournaments", this.deleteName);
         }
     }
 

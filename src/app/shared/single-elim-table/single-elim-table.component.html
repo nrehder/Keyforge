@@ -1,0 +1,146 @@
+<div class="row">
+    <div class="col" *ngFor="let round of rounds; let i = index">
+        <div
+            class="row"
+            style="text-align: center"
+            *ngIf="i < rounds.length - 1"
+        >
+            <div class="col">
+                <h4>Round {{ i + 1 }}</h4>
+            </div>
+        </div>
+        <div
+            class="row"
+            style="text-align: center"
+            *ngIf="i === rounds.length - 1"
+        >
+            <div class="col">
+                <h4>Winner</h4>
+            </div>
+        </div>
+        <div
+            *ngIf="i < tourn.curRound && running"
+            class="box pair-container d-flex justify-content-center align-item-center flex-column"
+        >
+            <div style="border:1px solid black">
+                <div
+                    class="row pair"
+                    *ngFor="
+                        let pairing of tourn.rounds[i].pairings;
+                        let j = index
+                    "
+                >
+                    <div class="col">
+                        <p
+                            [ngClass]="{
+                                'font-weight-bold': pairing.player1.winner
+                            }"
+                        >
+                            {{ pairing.player1.name }}
+                        </p>
+                        <small *ngIf="showDecks">
+                            {{ pairing.player1.deck | deckName: 12 }}
+                        </small>
+                        <p
+                            [ngClass]="{
+                                'font-weight-bold': pairing.player2.winner
+                            }"
+                        >
+                            {{ pairing.player2.name }}
+                        </p>
+                        <small *ngIf="showDecks">
+                            {{ pairing.player2.deck | deckName: 12 }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            *ngIf="i <= tourn.curRound && !running"
+            class="box pair-container d-flex justify-content-center align-item-center flex-column"
+        >
+            <div style="border:1px solid black">
+                <div
+                    class="row pair"
+                    *ngFor="
+                        let pairing of tourn.rounds[i].pairings;
+                        let j = index
+                    "
+                >
+                    <div class="col">
+                        <p
+                            [ngClass]="{
+                                'font-weight-bold': pairing.player1.winner
+                            }"
+                        >
+                            {{ pairing.player1.name }}
+                        </p>
+                        <small *ngIf="showDecks">
+                            {{ pairing.player1.deck | deckName: 12 }}
+                        </small>
+                        <p
+                            [ngClass]="{
+                                'font-weight-bold': pairing.player2.winner
+                            }"
+                        >
+                            {{ pairing.player2.name }}
+                        </p>
+                        <small *ngIf="showDecks">
+                            {{ pairing.player2.deck | deckName: 12 }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="box pair-container d-flex justify-content-center align-item-center flex-column"
+            *ngIf="i >= tourn.rounds.length && running"
+        >
+            <div style="border: 1px solid black;">
+                <div
+                    class="row pair"
+                    *ngFor="let r of round; let j = index"
+                    style="background-color:white"
+                >
+                    <div class="col">
+                        <p style="color:white">
+                            {{ r.space1 }}
+                        </p>
+
+                        <p style="color:white">
+                            {{ r.space2 }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="box pair-container d-flex justify-content-center align-item-center flex-column"
+            *ngIf="i > tourn.rounds.length && !running"
+        >
+            <div style="border: 1px solid black;">
+                <div
+                    class="row pair"
+                    *ngFor="let r of round; let j = index"
+                    style="background-color:white"
+                >
+                    <div class="col">
+                        <p style="color:white">
+                            {{ r.space1 }}
+                        </p>
+
+                        <p style="color:white">
+                            {{ r.space2 }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="col" style="text-align: center;">
+    <button class="btn btn-success" type="button" (click)="onShowDecks()">
+        Show Decks
+    </button>
+</div>

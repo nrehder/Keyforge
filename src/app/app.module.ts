@@ -41,6 +41,7 @@ import { TournListComponent } from './decks/view-deck/tourn-list/tourn-list.comp
 import { StandingsTableComponent } from './shared/standings-table/standings-table.component';
 import { PairingsTableComponent } from './shared/pairings-table/pairings-table.component';
 import { UsernameComponent } from './login/username/username.component';
+import { SingleElimTableComponent } from './shared/single-elim-table/single-elim-table.component';
 
 @NgModule({
     declarations: [
@@ -68,6 +69,7 @@ import { UsernameComponent } from './login/username/username.component';
         StandingsTableComponent,
         PairingsTableComponent,
         UsernameComponent,
+        SingleElimTableComponent,
     ],
     imports: [
         BrowserModule,

@@ -1,0 +1,13 @@
+p {
+    margin: 0;
+}
+
+.pair-container {
+    height: calc(100% - 36px);
+}
+
+.pair {
+    text-align: center;
+    border: 1px solid black;
+    margin: 0;
+}

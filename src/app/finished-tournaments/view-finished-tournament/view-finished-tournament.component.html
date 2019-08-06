@@ -23,28 +23,47 @@
         <app-standings-table
             [tourn]="tourn"
             [round]="tourn.curRound"
+            *ngIf="tourn.type !== 'singleElim'"
         ></app-standings-table>
+        <app-single-elim-table
+            [tourn]="tourn"
+            [round]="tourn.curRound"
+            [running]="false"
+            *ngIf="tourn.type === 'singleElim'"
+        ></app-single-elim-table>
+        <br />
+
+        <div class="row">
+            <div
+                class="col"
+                style="text-align: center;"
+                *ngIf="tourn.type !== 'singleElim'"
+            >
+                <button
+                    class="btn btn-primary"
+                    type="button"
+                    routerLink="history"
+                >
+                    See All Rounds
+                </button>
+            </div>
+            <div class="col" style="text-align: center;">
+                <button
+                    class="btn btn-danger"
+                    type="button"
+                    (click)="onDelete(tourn.name)"
+                >
+                    Delete Tournament
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
-<br />
-
-<div class="row">
-    <div class="col" style="text-align: center;">
-        <button class="btn btn-primary" type="button" routerLink="history">
-            See All Rounds
-        </button>
-    </div>
-    <div class="col" style="text-align: center;">
-        <button class="btn btn-danger" type="button" (click)="onDelete()">
-            Delete Tournament
-        </button>
-    </div>
-</div>
 <br />
 
 <app-variable-confirmation
-    [message]="'delete ' + tournName"
+    [message]="'delete ' + deleteName"
     *ngIf="deleting"
     (choice)="onConfirmation($event)"
 >

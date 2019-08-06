@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ActivatedRoute, Params } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 
 import { SwissStyleService } from "../../services/swiss-style.service";
 import { Observable, Subscription } from "rxjs";
@@ -35,6 +35,7 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         private roundRobin: RoundRobinService,
         private singleElim: SingleElimService,
         private route: ActivatedRoute,
+        private router: Router,
         private db: DatabaseService
     ) {}
 
@@ -47,7 +48,9 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
 
         this.tournSub = this.currentTournaments.subscribe(
             (tourns: tournament[]) => {
-                if (tourns.length > 0) {
+                if (!tourns[this.tournId]) {
+                    this.router.navigate(["/tournaments"]);
+                } else if (tourns.length > 0) {
                     this.curRound = tourns[this.tournId].curRound;
                     this.tournType = tourns[this.tournId].type;
                     this.numPlayers =

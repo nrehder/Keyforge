@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
 import { DocumentData } from "@angular/fire/firestore";
-import { ActivatedRoute, Params } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DatabaseService } from "src/app/shared/database.service";
 import { take } from "rxjs/operators";
 import { tournament } from "src/app/shared/tournament.model";
@@ -18,7 +18,11 @@ export class FullFinishedTournamentComponent implements OnInit {
     results: boolean[] = [];
     pairings: boolean[] = [];
 
-    constructor(private route: ActivatedRoute, private db: DatabaseService) {}
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private db: DatabaseService
+    ) {}
 
     ngOnInit() {
         this.route.params.subscribe((params: Params) => {
@@ -29,10 +33,20 @@ export class FullFinishedTournamentComponent implements OnInit {
         this.finishedTournaments
             .pipe(take(1))
             .subscribe((tourns: tournament[]) => {
-                this.tournName = tourns[this.tournId].name;
-                for (let i = 0; i < tourns[this.tournId].rounds.length; i++) {
-                    this.results.push(true);
-                    this.pairings.push(true);
+                if (!tourns[this.tournId]) {
+                    this.router.navigate(["finished"]);
+                } else if (tourns[this.tournId].type === "singleElim") {
+                    this.router.navigate(["finished/" + this.tournId]);
+                } else {
+                    this.tournName = tourns[this.tournId].name;
+                    for (
+                        let i = 0;
+                        i < tourns[this.tournId].rounds.length;
+                        i++
+                    ) {
+                        this.results.push(true);
+                        this.pairings.push(true);
+                    }
                 }
             });
     }

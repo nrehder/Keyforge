@@ -8,6 +8,7 @@ import {
     DeckData,
     DeckRetrievalService,
 } from "../../shared/deck-retrieval.service";
+import { take } from "rxjs/operators";
 
 @Component({
     selector: "app-view-deck",
@@ -20,7 +21,11 @@ export class ViewDeckComponent implements OnInit {
     keyforgeDeck: DeckData;
     unofficial = true;
 
-    constructor(private db: DatabaseService, private route: ActivatedRoute) {}
+    constructor(
+        private db: DatabaseService,
+        private route: ActivatedRoute,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.route.params.subscribe((params: Params) => {
@@ -28,6 +33,11 @@ export class ViewDeckComponent implements OnInit {
         });
 
         this.decks = this.db.loadDecks();
+        this.decks.pipe(take(1)).subscribe(decks => {
+            if (!decks[this.deckId]) {
+                this.router.navigate(["decks"]);
+            }
+        });
     }
 
     onUnofficial() {
