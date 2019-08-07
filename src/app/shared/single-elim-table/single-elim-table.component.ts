@@ -12,6 +12,7 @@ export class SingleElimTableComponent implements OnInit {
     @Input() running: boolean;
     rounds = [];
     showDecks = false;
+    showChains = false;
 
     constructor() {}
 
@@ -39,5 +40,8 @@ export class SingleElimTableComponent implements OnInit {
 
     onShowDecks() {
         this.showDecks = !this.showDecks;
+    }
+    onShowChains() {
+        this.showChains = !this.showChains;
     }
 }

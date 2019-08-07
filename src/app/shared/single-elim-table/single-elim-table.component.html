@@ -38,8 +38,15 @@
                         >
                             {{ pairing.player1.name }}
                         </p>
-                        <small *ngIf="showDecks">
-                            {{ pairing.player1.deck | deckName: 12 }}
+                        <p>
+                            <small *ngIf="showDecks">
+                                {{ pairing.player1.deck | deckName: 12 }}
+                            </small>
+                        </p>
+                        <small
+                            *ngIf="showChains && pairing.player1.name !== 'BYE'"
+                        >
+                            Chains: {{ pairing.player1.chains }}
                         </small>
                         <p
                             [ngClass]="{
@@ -48,8 +55,15 @@
                         >
                             {{ pairing.player2.name }}
                         </p>
-                        <small *ngIf="showDecks">
-                            {{ pairing.player2.deck | deckName: 12 }}
+                        <p>
+                            <small *ngIf="showDecks">
+                                {{ pairing.player2.deck | deckName: 12 }}
+                            </small>
+                        </p>
+                        <small
+                            *ngIf="showChains && pairing.player2.name !== 'BYE'"
+                        >
+                            Chains: {{ pairing.player2.chains }}
                         </small>
                     </div>
                 </div>
@@ -75,8 +89,15 @@
                         >
                             {{ pairing.player1.name }}
                         </p>
-                        <small *ngIf="showDecks">
-                            {{ pairing.player1.deck | deckName: 12 }}
+                        <p>
+                            <small *ngIf="showDecks">
+                                {{ pairing.player1.deck | deckName: 12 }}
+                            </small>
+                        </p>
+                        <small
+                            *ngIf="showChains && pairing.player1.name !== 'BYE'"
+                        >
+                            Chains: {{ pairing.player1.chains }}
                         </small>
                         <p
                             [ngClass]="{
@@ -85,8 +106,15 @@
                         >
                             {{ pairing.player2.name }}
                         </p>
-                        <small *ngIf="showDecks">
-                            {{ pairing.player2.deck | deckName: 12 }}
+                        <p>
+                            <small *ngIf="showDecks">
+                                {{ pairing.player2.deck | deckName: 12 }}
+                            </small>
+                        </p>
+                        <small
+                            *ngIf="showChains && pairing.player2.deck !== ''"
+                        >
+                            Chains: {{ pairing.player2.chains }}
                         </small>
                     </div>
                 </div>
@@ -139,8 +167,19 @@
     </div>
 </div>
 <br />
-<div class="col" style="text-align: center;">
-    <button class="btn btn-success" type="button" (click)="onShowDecks()">
-        Show Decks
-    </button>
+<div class="row">
+    <div class="col" style="text-align: center;">
+        <button class="btn btn-success" type="button" (click)="onShowDecks()">
+            Show Decks
+        </button>
+    </div>
+    <div
+        class="col"
+        style="text-align: center;"
+        *ngIf="tourn.chainType === 'unofficial'"
+    >
+        <button class="btn btn-success" type="button" (click)="onShowChains()">
+            Show Chains
+        </button>
+    </div>
 </div>

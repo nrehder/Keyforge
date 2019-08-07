@@ -201,6 +201,9 @@ export class SingleElimService {
                 winner: false,
             },
         });
+        if (typeof this.curRound.singleElim[0].chains === "number") {
+            this.curRound.pairings[0].player1.chains = this.curRound.singleElim[0].chains;
+        }
 
         this.finishTournament();
     }
