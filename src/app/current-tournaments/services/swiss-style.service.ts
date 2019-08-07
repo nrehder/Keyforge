@@ -290,6 +290,16 @@ export class SwissStyleService {
                     byes: 0,
                 },
             });
+            if (
+                typeof this.curRound.players[this.curRound.players.length - 1]
+                    .chains === "number"
+            ) {
+                this.curRound.pairings[
+                    this.curRound.pairings.length - 1
+                ].player1.chains = this.curRound.players[
+                    this.curRound.players.length - 1
+                ].chains;
+            }
         }
         this.updateTournament();
     }

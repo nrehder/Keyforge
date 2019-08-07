@@ -150,7 +150,7 @@ export class DatabaseService {
                 .doc(finalStats[i].deckname)
                 .get()
                 .pipe(take(1))
-                .subscribe((data: firebase.firestore.DocumentSnapshot) => {
+                .subscribe((data: any) => {
                     let deck = {};
                     deck = { ...data.data() };
                     deck["wins"] += finalStats[i].wins;
@@ -170,11 +170,11 @@ export class DatabaseService {
                     //determines chains as chainbound event
                     if (
                         tourn.chainType === "unofficial" &&
-                        tourn.type === "swiss"
+                        (tourn.type === "swiss" || tourn.type === "singleElim")
                     ) {
                         deck["chains"] = Math.max(
                             deck["chains"] +
-                                this.swissChains(
+                                this.swissElimChains(
                                     finalStats.length,
                                     finalStats[i].wins
                                 ),
@@ -188,7 +188,9 @@ export class DatabaseService {
                             deck["chains"] +
                                 this.robinChains(
                                     finalStats.length,
-                                    finalStats[i].wins / finalStats[i].games
+                                    finalStats[i].wins /
+                                        (finalStats[i].wins +
+                                            finalStats[i].losses)
                                 ),
                             0
                         );
@@ -242,7 +244,7 @@ export class DatabaseService {
             });
     }
 
-    private swissChains(numPlayers, wins) {
+    private swissElimChains(numPlayers, wins) {
         if (numPlayers < 9) {
             switch (wins) {
                 case 3:
@@ -269,12 +271,15 @@ export class DatabaseService {
     }
 
     private robinChains(numPlayers, winPercent) {
+        //0->25% win
         if (winPercent < 0.26) {
             return -1;
         }
+        //26->50% wins
         if (winPercent < 0.51) {
             return 0;
         }
+        // 51->75% wins
         if (winPercent < 0.76) {
             if (numPlayers < 9) {
                 return 2;
@@ -282,6 +287,7 @@ export class DatabaseService {
                 return 3;
             }
         }
+        //76->100% wins
         if (numPlayers < 9) {
             return 3;
         } else {

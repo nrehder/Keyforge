@@ -64,7 +64,11 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     ]),
                     deck: new FormControl(
                         "https://www.keyforgegame.com/deck-details/18374c28-ad98-4d1f-9a61-938fdeed0d4c",
-                        [Validators.required, this.validateDeckUrl]
+                        [
+                            Validators.required,
+                            this.validateDeckUrl,
+                            RxwebValidators.unique(),
+                        ]
                     ),
                 }),
                 new FormGroup({
@@ -74,7 +78,11 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     ]),
                     deck: new FormControl(
                         "https://www.keyforgegame.com/deck-details/289a7505-141b-4ab9-9963-4dd83c657126",
-                        [Validators.required, this.validateDeckUrl]
+                        [
+                            Validators.required,
+                            this.validateDeckUrl,
+                            RxwebValidators.unique(),
+                        ]
                     ),
                 }),
                 new FormGroup({
@@ -84,7 +92,11 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     ]),
                     deck: new FormControl(
                         "https://www.keyforgegame.com/deck-details/b2d1936e-7b6a-48db-a9f0-cd951e7ba79f",
-                        [Validators.required, this.validateDeckUrl]
+                        [
+                            Validators.required,
+                            this.validateDeckUrl,
+                            RxwebValidators.unique(),
+                        ]
                     ),
                 }),
                 new FormGroup({
@@ -94,7 +106,11 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     ]),
                     deck: new FormControl(
                         "https://www.keyforgegame.com/deck-details/a27134ae-523f-4954-ab1b-675b4ed72709",
-                        [Validators.required, this.validateDeckUrl]
+                        [
+                            Validators.required,
+                            this.validateDeckUrl,
+                            RxwebValidators.unique(),
+                        ]
                     ),
                 }),
             ]),
@@ -109,7 +125,11 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             ]),
             deck: new FormControl(
                 "https://www.keyforgegame.com/deck-details/a27134ae-523f-4954-ab1b-675b4ed72709",
-                [Validators.required, this.validateDeckUrl]
+                [
+                    Validators.required,
+                    this.validateDeckUrl,
+                    RxwebValidators.unique(),
+                ]
             ),
         });
         (<FormArray>this.createForm.get("decks")).push(control);
@@ -600,6 +620,18 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     byes: 0,
                 },
             });
+            if (
+                typeof tourn.rounds[0].players[
+                    tourn.rounds[0].players.length - 1
+                ].chains === "number"
+            ) {
+                tourn.rounds[0].pairings[
+                    tourn.rounds[0].pairings.length - 1
+                ].player1.chains =
+                    tourn.rounds[0].players[
+                        tourn.rounds[0].players.length - 1
+                    ].chains;
+            }
         }
         this.db.addNewTournament(tourn);
     }
@@ -616,9 +648,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 losses: 0,
                 byes: 0,
             };
-            if (tourn.chainType === "unofficial") {
-                temp["chains"] = 0;
-            }
             tourn.roundRobinArray.push(temp);
         }
         for (let i = 0; i < tourn.rounds[0].players.length; i++) {

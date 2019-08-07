@@ -83,7 +83,7 @@
                 Ex:
                 https://www.keyforgegame.com/deck-details/6d42472e-2e9c-457b-bc89-20801bbf96dc
             </small>
-
+            <br />
             <div
                 *ngFor="
                     let deck of createForm.get('decks')['controls'];
@@ -125,7 +125,7 @@
                         deck.controls.name.invalid && deck.controls.name.touched
                     "
                 >
-                    Please enter a unique name.
+                    Please enter a valid unique player name.
                 </span>
                 <span
                     class="help-block"
@@ -134,9 +134,10 @@
                         deck.controls.deck.invalid && deck.controls.deck.touched
                     "
                 >
-                    Please enter a valid URL.
+                    Please enter a valid unique deck URL.
                 </span>
             </div>
+            <br />
             <button
                 type="button"
                 class="btn btn-secondary"
@@ -154,3 +155,4 @@
         </button>
     </form>
 </div>
+<br />

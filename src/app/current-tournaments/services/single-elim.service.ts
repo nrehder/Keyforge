@@ -139,11 +139,10 @@ export class SingleElimService {
                 return 1;
             }
         });
-
         if (this.type === "next") {
             this.updatePairings();
         } else {
-            this.finishTournament();
+            this.winnerPairing();
         }
     }
 
@@ -184,7 +183,26 @@ export class SingleElimService {
         this.curRound = {
             pairings: [],
             players: [],
+            singleElim: [],
         };
+    }
+
+    private winnerPairing() {
+        this.curRound.pairings = [];
+        this.curRound.pairings.push({
+            player1: {
+                name: this.curRound.singleElim[0].name,
+                deck: this.curRound.singleElim[0].deck,
+                winner: true,
+            },
+            player2: {
+                name: "",
+                deck: "",
+                winner: false,
+            },
+        });
+
+        this.finishTournament();
     }
 
     private finishTournament() {
@@ -193,6 +211,7 @@ export class SingleElimService {
         this.curRound = {
             pairings: [],
             players: [],
+            singleElim: [],
         };
     }
 }
