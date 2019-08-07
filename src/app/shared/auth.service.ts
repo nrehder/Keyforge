@@ -196,4 +196,41 @@ export class AuthService {
             this.router.navigate(["/login"]);
         });
     }
+
+    resetPassword(email: string) {
+        this.fireAuth.auth
+            .fetchSignInMethodsForEmail(email)
+            .then((providers: string[]) => {
+                let foundEmailLogin = false;
+                for (let i = 0; i < providers.length; i++) {
+                    if (providers[i] === "password") {
+                        foundEmailLogin = true;
+                    }
+                }
+                if (foundEmailLogin) {
+                    this.onResetPassword(email);
+                } else {
+                    this.errorMessage({
+                        message:
+                            "No user with this email exists!  Try logging in with google.",
+                    });
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    onResetPassword(email: string) {
+        this.fireAuth.auth
+            .sendPasswordResetEmail(email)
+            .then(res => {
+                console.log("then");
+                console.log(res);
+            })
+            .catch(err => {
+                console.log("error");
+                console.log(err);
+            });
+    }
 }

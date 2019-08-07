@@ -19,6 +19,8 @@ export class LoginComponent implements OnInit {
     signupForm: FormGroup;
     usernameForm: FormGroup;
     isLoading: boolean = false;
+    forgotPass: boolean = false;
+    forgotPassForm: FormGroup;
 
     constructor(public authService: AuthService) {}
 
@@ -54,10 +56,17 @@ export class LoginComponent implements OnInit {
             },
             [this.emailMatch, this.passwordMatch]
         );
+        this.forgotPassForm = new FormGroup({
+            email: new FormControl(null, [
+                Validators.required,
+                Validators.email,
+            ]),
+        });
     }
 
     onChangeMode() {
         this.signUp = !this.signUp;
+        this.forgotPass = false;
     }
 
     onSubmitLogin() {
@@ -130,5 +139,13 @@ export class LoginComponent implements OnInit {
             errors["tooShort"] = true;
         }
         return errors;
+    }
+
+    forgotPassword() {
+        this.forgotPass = !this.forgotPass;
+    }
+
+    onSubmitPassword() {
+        this.authService.resetPassword(this.forgotPassForm.get("email").value);
     }
 }

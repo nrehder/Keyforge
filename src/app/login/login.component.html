@@ -12,7 +12,7 @@
         <!-- Log In Mode -->
         <div
             class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
-            *ngIf="!signUp && !authService.needUsername"
+            *ngIf="!signUp && !authService.needUsername && !forgotPass"
         >
             <h4>Log In</h4>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
@@ -61,7 +61,10 @@
 
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col text-center">
-                    <button class="btn btn-link btn-sm">
+                    <button
+                        class="btn btn-link btn-sm"
+                        (click)="forgotPassword()"
+                    >
                         Forgot Password
                     </button>
                 </div>
@@ -86,7 +89,7 @@
         <!-- Sign Up Mode -->
         <div
             class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
-            *ngIf="signUp && !authService.needUsername"
+            *ngIf="signUp && !authService.needUsername && !forgotPass"
         >
             <h4>Sign Up</h4>
             <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignup()">
@@ -318,6 +321,61 @@
                     </button>
                 </form>
             </div>
+        </div>
+
+        <!-- Forgot Password -->
+        <div
+            class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
+            *ngIf="forgotPass"
+        >
+            <h4>Forgot Password</h4>
+            <form [formGroup]="forgotPassForm" (ngSubmit)="onSubmitPassword()">
+                <div class="form-group">
+                    <label for="email">Please Enter Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-control"
+                        formControlName="email"
+                    />
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            forgotPassForm.get('email').invalid &&
+                            forgotPassForm.get('email').touched
+                        "
+                        >Please enter a valid email!</small
+                    >
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col text-center">
+                        <button
+                            type="button"
+                            class="btn btn-link btn-sm"
+                            (click)="forgotPassword()"
+                        >
+                            Go Back
+                        </button>
+                    </div>
+                    <div class="col text-center">
+                        <button
+                            type="button"
+                            (click)="onChangeMode()"
+                            class="btn btn-link btn-sm"
+                        >
+                            Sign Up
+                        </button>
+                    </div>
+                </div>
+
+                <button
+                    class="btn btn-primary w-100"
+                    type="submit"
+                    style="margin-bottom: 10px"
+                >
+                    Submit
+                </button>
+            </form>
         </div>
     </div>
 </div>
