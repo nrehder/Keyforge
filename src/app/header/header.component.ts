@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit {
     @HostListener("document:click", ["$event"]) clickOutside(event) {
         if (!this.eleRef.nativeElement.contains(event.target)) {
             this.tournamentDropdown = false;
+            this.navbarOpen = false;
         }
     }
 
@@ -26,8 +27,5 @@ export class HeaderComponent implements OnInit {
     }
     tournamentToggle() {
         this.tournamentDropdown = !this.tournamentDropdown;
-    }
-    clearDropdowns() {
-        this.tournamentDropdown = false;
     }
 }
