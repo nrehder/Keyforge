@@ -49,7 +49,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [{ path: ":id", component: ViewDeckComponent }],
     },
-    { path: "user", component: UserComponent },
+    { path: "user", canActivate: [AuthGuard], component: UserComponent },
     { path: "username", component: UsernameComponent },
     { path: "login", canActivate: [LoginGuard], component: LoginComponent },
     { path: "userManageLink", component: UserManageLinkComponent },
