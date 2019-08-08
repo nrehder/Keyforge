@@ -14,7 +14,7 @@
             class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
             *ngIf="!signUp && !authService.needUsername && !forgotPass"
         >
-            <h4>Log In</h4>
+            <h4 style="text-align: center">Log In</h4>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -316,6 +316,7 @@
                         class="btn btn-primary w-100"
                         type="submit"
                         style="margin-bottom: 10px"
+                        [disabled]="usernameForm.invalid"
                     >
                         Submit
                     </button>
@@ -375,6 +376,7 @@
                     class="btn btn-primary w-100"
                     type="submit"
                     style="margin-bottom: 10px"
+                    [disabled]="forgotPasswordForm.invalid"
                 >
                     Submit
                 </button>

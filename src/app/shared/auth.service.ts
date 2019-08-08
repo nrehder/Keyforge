@@ -14,7 +14,7 @@ import { switchMap, take, map, tap } from "rxjs/operators";
 export interface User {
     uid: string;
     email: string;
-    userName?: string;
+    username?: string;
 }
 
 @Injectable({ providedIn: "root" })
@@ -222,6 +222,12 @@ export class AuthService {
             });
     }
 
+    getUser() {
+        return this.fireAuth.user;
+    }
+    getAuthState() {
+        return this.fireAuth.authState;
+    }
     getAuth() {
         return this.fireAuth.auth;
     }

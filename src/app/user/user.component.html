@@ -1,0 +1,227 @@
+<div *ngIf="authService.isloading" style="text-align:center;">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<app-alert
+    [message]="authService.error"
+    *ngIf="authService.error"
+    (close)="onHandleError()"
+></app-alert>
+
+<div
+    class="row"
+    style="min-height: 300px"
+    *ngIf="authService.user | async as user"
+>
+    <div class="col">
+        <br />
+        <!-- View User Info -->
+        <div class=" bg-light login-box text-dark" *ngIf="!changingPassword">
+            <h4 style="text-align: center">User Info</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="font-weight-bold">Username</p>
+                </div>
+                <div class="col">
+                    {{ user.username }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="font-weight-bold">Email</p>
+                </div>
+                <div class="col">
+                    {{ user.email }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="font-weight-bold">Current Tournaments</p>
+                </div>
+                <div class="col">
+                    {{ numCurrent }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="font-weight-bold">Finished Tournaments</p>
+                </div>
+                <div class="col">
+                    {{ numFinished }}
+                </div>
+            </div>
+            <br />
+            <div class="col text-center" *ngIf="password">
+                <button class="btn btn-primary" (click)="togglePassword()">
+                    Change Password
+                </button>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class=" bg-light login-box text-dark" *ngIf="changingPassword">
+            <h4 style="text-align: center">
+                Change Password for {{ user.username }}
+            </h4>
+            <form
+                [formGroup]="changePasswordForm"
+                (ngSubmit)="onChangePassword()"
+            >
+                <div class="form-group">
+                    <label for="oldPassword">Old Password</label>
+                    <input
+                        type="password"
+                        id="oldPassword"
+                        class="form-control"
+                        formControlName="oldPassword"
+                    />
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            changePasswordForm.get('oldPassword').invalid &&
+                            changePasswordForm.get('oldPassword').touched
+                        "
+                        >Please enter a valid password!</small
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        class="form-control"
+                        formControlName="newPassword"
+                    />
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.newPassword.hasError(
+                                    'hasNoNum'
+                                )
+                            "
+                            >A number is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.newPassword.hasError(
+                                    'hasNoCap'
+                                )
+                            "
+                            >A capital letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.newPassword.hasError(
+                                    'hasNoLow'
+                                )
+                            "
+                            >A lowercase letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.newPassword.hasError(
+                                    'tooShort'
+                                )
+                            "
+                            >Password must have a length of 8 or more!</small
+                        >
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="password">Verify New Password</label>
+                    <input
+                        type="password"
+                        id="verifyNewPassword"
+                        class="form-control"
+                        formControlName="verifyNewPassword"
+                    />
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.verifyNewPassword.hasError(
+                                    'hasNoNum'
+                                )
+                            "
+                            >A number is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.verifyNewPassword.hasError(
+                                    'hasNoCap'
+                                )
+                            "
+                            >A capital letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.verifyNewPassword.hasError(
+                                    'hasNoLow'
+                                )
+                            "
+                            >A lowercase letter is required!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.verifyNewPassword.hasError(
+                                    'tooShort'
+                                )
+                            "
+                            >Password must have a length of 8 or more!</small
+                        >
+                    </p>
+                    <p>
+                        <small
+                            style="color:red"
+                            *ngIf="
+                                changePasswordForm.controls.verifyNewPassword.hasError(
+                                    'NoPasswordMatch'
+                                )
+                            "
+                            >Passwords do not match!</small
+                        >
+                    </p>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col text-center" *ngIf="password">
+                        <button
+                            class="btn btn-danger"
+                            (click)="togglePassword()"
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                    <div class="col text-center" *ngIf="password">
+                        <button
+                            class="btn btn-success"
+                            type="submit"
+                            [disabled]="changePasswordForm.invalid"
+                        >
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
