@@ -59,6 +59,7 @@ export class AuthService {
         this.fireAuth.auth
             .createUserWithEmailAndPassword(email, password)
             .then(res => {
+                this.fireAuth.auth.currentUser.sendEmailVerification();
                 this.updateUserData(res.user);
             })
             .catch(err => {
@@ -180,7 +181,7 @@ export class AuthService {
         });
     }
 
-    private errorMessage(err) {
+    errorMessage(err) {
         switch (err.code) {
             case "auth/wrong-password":
             case "auth/invalid-email":
@@ -221,16 +222,21 @@ export class AuthService {
             });
     }
 
+    getAuth() {
+        return this.fireAuth.auth;
+    }
+
     onResetPassword(email: string) {
         this.fireAuth.auth
-            .sendPasswordResetEmail(email)
+            .sendPasswordResetEmail(email, { url: "http://localhost:4200" })
             .then(res => {
-                console.log("then");
-                console.log(res);
+                this.errorMessage({
+                    message:
+                        "A password reset link has been sent to your email address!",
+                });
             })
             .catch(err => {
-                console.log("error");
-                console.log(err);
+                this.errorMessage(err);
             });
     }
 }

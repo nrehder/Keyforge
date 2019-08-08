@@ -329,7 +329,10 @@
             *ngIf="forgotPass"
         >
             <h4>Forgot Password</h4>
-            <form [formGroup]="forgotPassForm" (ngSubmit)="onSubmitPassword()">
+            <form
+                [formGroup]="forgotPassForm"
+                (ngSubmit)="onSubmitPasswordReset()"
+            >
                 <div class="form-group">
                     <label for="email">Please Enter Email</label>
                     <input

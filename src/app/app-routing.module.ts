@@ -18,6 +18,7 @@ import { FullFinishedTournamentComponent } from "./finished-tournaments/view-fin
 import { DecksComponent } from "./decks/decks.component";
 import { ViewDeckComponent } from "./decks/view-deck/view-deck.component";
 import { UsernameComponent } from "./login/username/username.component";
+import { UserManageLinkComponent } from "./login/user-manage-link/user-manage-link.component";
 
 const routes: Routes = [
     { path: "", component: HomeComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
     },
     { path: "username", component: UsernameComponent },
     { path: "login", canActivate: [LoginGuard], component: LoginComponent },
+    { path: "userManageLink", component: UserManageLinkComponent },
 ];
 
 @NgModule({

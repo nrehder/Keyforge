@@ -145,7 +145,7 @@ export class LoginComponent implements OnInit {
         this.forgotPass = !this.forgotPass;
     }
 
-    onSubmitPassword() {
+    onSubmitPasswordReset() {
         this.authService.resetPassword(this.forgotPassForm.get("email").value);
     }
 }

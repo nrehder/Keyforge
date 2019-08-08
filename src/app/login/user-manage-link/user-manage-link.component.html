@@ -1,0 +1,127 @@
+<br />
+
+<div *ngIf="actionCodeChecked" [ngSwitch]="mode">
+    <div
+        class="box d-flex justify-content-center align-item-center flex-column bg-light login-box text-dark"
+        *ngSwitchCase="'resetPassword'"
+    >
+        <h4>Reset Password</h4>
+        <form [formGroup]="resetForm" (ngSubmit)="onSubmitReset()">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    class="form-control"
+                    formControlName="password"
+                />
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="resetForm.controls.password.hasError('hasNoNum')"
+                        >A number is required!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="resetForm.controls.password.hasError('hasNoCap')"
+                        >A capital letter is required!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="resetForm.controls.password.hasError('hasNoLow')"
+                        >A lowercase letter is required!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="resetForm.controls.password.hasError('tooShort')"
+                        >Password must have a length of 8 or more!</small
+                    >
+                </p>
+                <label for="verifyPassword">Verify Password</label>
+                <input
+                    type="password"
+                    id="verifyPassword"
+                    class="form-control"
+                    formControlName="verifyPassword"
+                />
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            resetForm.controls.verifyPassword.hasError(
+                                'hasNoNum'
+                            )
+                        "
+                        >A number is required!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            resetForm.controls.verifyPassword.hasError(
+                                'hasNoCap'
+                            )
+                        "
+                        >A capital letter is required!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            resetForm.controls.verifyPassword.hasError(
+                                'hasNoLow'
+                            )
+                        "
+                        >A lowercase letter is required!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            resetForm.controls.verifyPassword.hasError(
+                                'tooShort'
+                            )
+                        "
+                        >Password must have a length of 8 or more!</small
+                    >
+                </p>
+                <p>
+                    <small
+                        style="color:red"
+                        *ngIf="
+                            resetForm.controls.verifyPassword.hasError(
+                                'NoPasswordMatch'
+                            )
+                        "
+                        >Passwords do not match!</small
+                    >
+                </p>
+            </div>
+            <button
+                class="btn btn-primary w-100"
+                type="submit"
+                style="margin-bottom: 10px"
+                [disabled]="resetForm.invalid"
+            >
+                Submit
+            </button>
+        </form>
+
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col text-center">
+                <button routerLink="/login" class="btn btn-link btn-sm">
+                    Return to Log In
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
