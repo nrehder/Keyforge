@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 
 import { AlertComponent } from "./alert/alert.component";
@@ -13,13 +12,12 @@ import { VariableConfirmationComponent } from "./variable-confirmation/variable-
         LoadingSpinnerComponent,
         VariableConfirmationComponent,
     ],
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule],
     exports: [
         CommonModule,
         AlertComponent,
         LoadingSpinnerComponent,
         VariableConfirmationComponent,
-        RouterModule,
         ReactiveFormsModule,
     ],
 })

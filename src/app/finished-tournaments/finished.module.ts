@@ -6,6 +6,7 @@ import { FinishedTournamentsComponent } from "./finished-tournaments.component";
 
 import { SharedModule } from "../shared/shared.module";
 import { TableModule } from "../shared/table.module";
+import { FinishedTournamentsRoutingModule } from "./finished-tournaments-routing.module";
 
 @NgModule({
     declarations: [
@@ -13,6 +14,6 @@ import { TableModule } from "../shared/table.module";
         FullFinishedTournamentComponent,
         FinishedTournamentsComponent,
     ],
-    imports: [SharedModule, TableModule],
+    imports: [SharedModule, TableModule, FinishedTournamentsRoutingModule],
 })
 export class FinishedModule {}

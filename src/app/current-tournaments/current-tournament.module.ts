@@ -10,6 +10,7 @@ import { ViewCurrentTournamentComponent } from "./view-current-tournament/view-c
 import { RunCurrentTournamentComponent } from "./view-current-tournament/run-current-tournament/run-current-tournament.component";
 import { CreateTournamentComponent } from "./create-tournament/create-tournament.component";
 import { NoTournamentComponent } from "./no-tournament/no-tournament.component";
+import { CurrentTournamentsRoutingModule } from "./current-tournament-routing.module";
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import { NoTournamentComponent } from "./no-tournament/no-tournament.component";
         NoTournamentComponent,
     ],
     imports: [
+        CurrentTournamentsRoutingModule,
         ReactiveFormsModule,
         RxReactiveFormsModule,
         TableModule,
