@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-
-import { SwissStyleService } from "../../services/swiss-style.service";
-import { Observable, Subscription } from "rxjs";
-import { tournament } from "../../../shared/tournament.model";
-import { DatabaseService } from "src/app/shared/database.service";
 import { DocumentData } from "@angular/fire/firestore";
+import { Observable, Subscription } from "rxjs";
 import { take } from "rxjs/operators";
+
+import { tournament } from "../../../shared/tournament.model";
+import { DatabaseService } from "../../../shared/database.service";
+import { SwissStyleService } from "../../services/swiss-style.service";
 import { RoundRobinService } from "../../services/round-robin.service";
 import { SingleElimService } from "../../services/single-elim.service";
 

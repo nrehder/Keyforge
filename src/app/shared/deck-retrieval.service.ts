@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { forkJoin } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { forkJoin } from "rxjs";
 
 export interface DeckData {
     data: {

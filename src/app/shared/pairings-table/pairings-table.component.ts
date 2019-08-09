@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+
 import { tournament } from "../tournament.model";
 
 @Component({

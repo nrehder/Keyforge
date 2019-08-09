@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Observable } from "rxjs";
 import { DocumentData } from "@angular/fire/firestore";
+import { Observable } from "rxjs";
 
 import { DatabaseService } from "../shared/database.service";
 

@@ -6,8 +6,9 @@ import {
     Router,
 } from "@angular/router";
 import { Observable } from "rxjs";
+import { take, map } from "rxjs/operators";
+
 import { AuthService } from "./auth.service";
-import { take, map, tap } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class LoginGuard implements CanActivate {

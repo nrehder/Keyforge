@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { DatabaseService } from "../shared/database.service";
-import { Observable } from "rxjs";
 import { DocumentData } from "@angular/fire/firestore";
+import { Observable } from "rxjs";
+
+import { DatabaseService } from "../shared/database.service";
 
 @Component({
     selector: "app-finished-tournaments",

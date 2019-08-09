@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
+
 import { tournament } from "../tournament.model";
 
 @Component({

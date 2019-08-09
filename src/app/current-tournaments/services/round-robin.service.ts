@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
+import { take } from "rxjs/operators";
 
 import { tournament, round, player } from "../../shared/tournament.model";
-import { DatabaseService } from "src/app/shared/database.service";
-import { take } from "rxjs/operators";
+import { DatabaseService } from "../../shared/database.service";
 
 @Injectable({
     providedIn: "root",

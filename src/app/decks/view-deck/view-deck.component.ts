@@ -2,13 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DocumentData } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
+import { take } from "rxjs/operators";
 
 import { DatabaseService } from "../../shared/database.service";
-import {
-    DeckData,
-    DeckRetrievalService,
-} from "../../shared/deck-retrieval.service";
-import { take } from "rxjs/operators";
+import { DeckData } from "../../shared/deck-retrieval.service";
 
 @Component({
     selector: "app-view-deck",

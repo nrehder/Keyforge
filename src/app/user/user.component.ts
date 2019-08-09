@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { take } from "rxjs/operators";
 import {
     FormGroup,
     FormControl,
@@ -7,6 +6,7 @@ import {
     Validators,
 } from "@angular/forms";
 import * as firebase from "firebase/app";
+import { take } from "rxjs/operators";
 
 import { DatabaseService } from "../shared/database.service";
 import { AuthService } from "../shared/auth.service";

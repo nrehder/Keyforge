@@ -6,7 +6,8 @@ import {
     AbstractControl,
 } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
-import { AuthService } from "src/app/shared/auth.service";
+
+import { AuthService } from "../../shared/auth.service";
 
 @Component({
     selector: "app-user-manage-link",
