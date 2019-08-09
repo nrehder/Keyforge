@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { TableModule } from "../shared/table.module";
 import { SharedModule } from "../shared/shared.module";
@@ -23,7 +22,6 @@ import { CurrentTournamentsRoutingModule } from "./current-tournament-routing.mo
     imports: [
         CurrentTournamentsRoutingModule,
         ReactiveFormsModule,
-        RxReactiveFormsModule,
         TableModule,
         SharedModule,
     ],

@@ -99,6 +99,16 @@
                             placeholder="Player Name"
                             formControlName="name"
                         />
+                        <span
+                            class="help-block"
+                            style="color:red; padding:0 15px;"
+                            *ngIf="
+                                deck.controls.name.invalid &&
+                                deck.controls.name.touched
+                            "
+                        >
+                            Please enter a unique name.
+                        </span>
                     </div>
                     <div class="col-8">
                         <input
@@ -107,6 +117,16 @@
                             formControlName="deck"
                             placeholder="Enter keyforgegame.com URL"
                         />
+                        <span
+                            class="help-block"
+                            style="color:red; padding:0 15px;"
+                            *ngIf="
+                                deck.controls.deck.invalid &&
+                                deck.controls.deck.touched
+                            "
+                        >
+                            Please enter a valid unique deck URL.
+                        </span>
                     </div>
                     <div class="col-1">
                         <button
@@ -118,24 +138,6 @@
                         </button>
                     </div>
                 </div>
-                <span
-                    class="help-block"
-                    style="color:red; padding:0 15px;"
-                    *ngIf="
-                        deck.controls.name.invalid && deck.controls.name.touched
-                    "
-                >
-                    Please enter a valid unique player name.
-                </span>
-                <span
-                    class="help-block"
-                    style="color:red; padding:0 15px;"
-                    *ngIf="
-                        deck.controls.deck.invalid && deck.controls.deck.touched
-                    "
-                >
-                    Please enter a valid unique deck URL.
-                </span>
             </div>
             <br />
             <button

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
 
@@ -56,81 +55,49 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             tournamentType: new FormControl("swiss"),
             elimType: new FormControl("seeded"),
             chains: new FormControl("no", Validators.required),
-            decks: new FormArray([
-                new FormGroup({
-                    name: new FormControl(1, [
-                        Validators.required,
-                        RxwebValidators.unique(),
-                    ]),
-                    deck: new FormControl(
-                        "https://www.keyforgegame.com/deck-details/18374c28-ad98-4d1f-9a61-938fdeed0d4c",
-                        [
+            decks: new FormArray(
+                [
+                    new FormGroup({
+                        name: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [
                             Validators.required,
                             this.validateDeckUrl,
-                            RxwebValidators.unique(),
-                        ]
-                    ),
-                }),
-                new FormGroup({
-                    name: new FormControl(2, [
-                        Validators.required,
-                        RxwebValidators.unique(),
-                    ]),
-                    deck: new FormControl(
-                        "https://www.keyforgegame.com/deck-details/289a7505-141b-4ab9-9963-4dd83c657126",
-                        [
+                        ]),
+                    }),
+                    new FormGroup({
+                        name: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [
                             Validators.required,
                             this.validateDeckUrl,
-                            RxwebValidators.unique(),
-                        ]
-                    ),
-                }),
-                new FormGroup({
-                    name: new FormControl(3, [
-                        Validators.required,
-                        RxwebValidators.unique(),
-                    ]),
-                    deck: new FormControl(
-                        "https://www.keyforgegame.com/deck-details/b2d1936e-7b6a-48db-a9f0-cd951e7ba79f",
-                        [
+                        ]),
+                    }),
+                    new FormGroup({
+                        name: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [
                             Validators.required,
                             this.validateDeckUrl,
-                            RxwebValidators.unique(),
-                        ]
-                    ),
-                }),
-                new FormGroup({
-                    name: new FormControl(4, [
-                        Validators.required,
-                        RxwebValidators.unique(),
-                    ]),
-                    deck: new FormControl(
-                        "https://www.keyforgegame.com/deck-details/a27134ae-523f-4954-ab1b-675b4ed72709",
-                        [
+                        ]),
+                    }),
+                    new FormGroup({
+                        name: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [
                             Validators.required,
                             this.validateDeckUrl,
-                            RxwebValidators.unique(),
-                        ]
-                    ),
-                }),
-            ]),
+                        ]),
+                    }),
+                ],
+                this.validateUniquePlayers
+            ),
         });
     }
 
     onAddDeck() {
         const control = new FormGroup({
-            name: new FormControl(null, [
+            name: new FormControl(null, [Validators.required]),
+            deck: new FormControl(null, [
                 Validators.required,
-                RxwebValidators.unique(),
+                this.validateDeckUrl,
             ]),
-            deck: new FormControl(
-                "https://www.keyforgegame.com/deck-details/a27134ae-523f-4954-ab1b-675b4ed72709",
-                [
-                    Validators.required,
-                    this.validateDeckUrl,
-                    RxwebValidators.unique(),
-                ]
-            ),
         });
         (<FormArray>this.createForm.get("decks")).push(control);
         this.numPlayers += 1;
@@ -158,26 +125,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             this.needByes = false;
             this.missing = "0";
         }
-    }
-
-    validateDeckUrl(control: FormControl): { [s: string]: boolean } {
-        if (control.value !== null) {
-            if (
-                control.value.length != 78 ||
-                control.value.search("keyforgegame.com") === -1 ||
-                control.value.search("deck-details") === -1
-            ) {
-                return { "Invalid URL": true };
-            }
-        }
-        return null;
-    }
-
-    validateTournamentName(control: FormControl): { [s: string]: boolean } {
-        if (this.tournamentNames.indexOf(control.value) >= 0) {
-            return { "Tournament Name In Use!": true };
-        }
-        return null;
     }
 
     onSubmit() {
@@ -803,5 +750,52 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.currentSub.unsubscribe();
         this.finishedSub.unsubscribe();
+    }
+
+    //Validators
+    onTest() {
+        console.log(this.createForm.get("decks").value);
+    }
+
+    validateUniquePlayers(controls: FormArray) {
+        let values = controls.value;
+
+        for (let i = 0; i < values.length; i++) {
+            for (let j = 0; j < values.length; j++) {
+                if (i !== j) {
+                    if (values[i].name === values[j].name) {
+                        controls.controls[i]["controls"]["name"].setErrors({
+                            notUnique: true,
+                        });
+                    }
+                    if (values[i].deck === values[j].deck) {
+                        controls.controls[i]["controls"]["deck"].setErrors({
+                            notUnique: true,
+                        });
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    validateDeckUrl(control: FormControl): { [s: string]: boolean } {
+        if (control.value !== null) {
+            if (
+                control.value.length != 78 ||
+                control.value.search("keyforgegame.com") === -1 ||
+                control.value.search("deck-details") === -1
+            ) {
+                return { "Invalid URL": true };
+            }
+        }
+        return null;
+    }
+
+    validateTournamentName(control: FormControl): { [s: string]: boolean } {
+        if (this.tournamentNames.indexOf(control.value) >= 0) {
+            return { "Tournament Name In Use!": true };
+        }
+        return null;
     }
 }
