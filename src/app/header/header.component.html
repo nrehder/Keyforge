@@ -16,7 +16,7 @@
             *ngIf="authService.username !== undefined"
         >
             <li class="nav-item">
-                <a class="nav-link" routerLink="/">Home</a>
+                <a class="nav-link" routerLink="/" (click)="onClear()">Home</a>
             </li>
             <li class="nav-item dropdown">
                 <a
@@ -32,26 +32,38 @@
                     class="dropdown-menu"
                     [ngClass]="{ show: tournamentDropdown }"
                 >
-                    <a class="dropdown-item" routerLink="/tournaments"
-                        >Active Tournaments</a
+                    <a
+                        class="dropdown-item"
+                        routerLink="/tournaments"
+                        (click)="onClear()"
                     >
-                    <a class="dropdown-item" routerLink="/tournaments/create"
-                        >New Tournament</a
+                        Active tournaments
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        routerLink="/tournaments/create"
+                        (click)="onClear()"
                     >
-                    <a class="dropdown-item" routerLink="/finished"
-                        >Finished Tournaments</a
+                        New Tournament
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        routerLink="/finished"
+                        (click)="onClear()"
                     >
+                        Finished Tournaments
+                    </a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLink="/decks">
+                <a class="nav-link" routerLink="/decks" (click)="onClear()">
                     Decks
                 </a>
             </li>
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" routerLink="/user">
+                <a class="nav-link" routerLink="/user" (click)="onClear()">
                     {{ user.username }}
                 </a>
             </li>
@@ -69,12 +81,16 @@
         <div class="collapse navbar-collapse" [ngClass]="{ show: navbarOpen }">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/">Home</a>
+                    <a class="nav-link" routerLink="/" (click)="onClear()"
+                        >Home</a
+                    >
                 </li>
             </ul>
             <ul class="navbar-nav navbar-right">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/login">Log In</a>
+                    <a class="nav-link" routerLink="/login" (click)="onClear()"
+                        >Log In</a
+                    >
                 </li>
             </ul>
         </div>
