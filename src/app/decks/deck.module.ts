@@ -8,6 +8,7 @@ import { TournListComponent } from "./view-deck/tourn-list/tourn-list.component"
 import { SharedModule } from "../shared/shared.module";
 import { RouterModule } from "@angular/router";
 import { AuthGuard } from "../shared/auth.guard";
+import { NoDeckComponent } from "./no-deck/no-deck.component";
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { AuthGuard } from "../shared/auth.guard";
         ViewDeckComponent,
         CardListComponent,
         TournListComponent,
+        NoDeckComponent,
     ],
     imports: [
         SharedModule,
@@ -23,7 +25,14 @@ import { AuthGuard } from "../shared/auth.guard";
                 path: "",
                 component: DecksComponent,
                 canActivate: [AuthGuard],
-                children: [{ path: ":id", component: ViewDeckComponent }],
+                children: [
+                    {
+                        path: "",
+                        component: NoDeckComponent,
+                        pathMatch: "full",
+                    },
+                    { path: ":id", component: ViewDeckComponent },
+                ],
             },
         ]),
     ],
