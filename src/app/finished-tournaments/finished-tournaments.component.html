@@ -85,8 +85,8 @@
 <!-- Content -->
 <div
     [ngClass]="{
-        'content-visible': sidebarVisible,
-        'content-hidden': !sidebarVisible
+        'content-visible': sidebarVisible && innerWidth > 600,
+        'content-hidden': !sidebarVisible || innerWidth < 600
     }"
 >
     <router-outlet></router-outlet>

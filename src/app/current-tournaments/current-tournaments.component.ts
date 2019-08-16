@@ -13,9 +13,16 @@ export class CurrentTournamentsComponent implements OnInit {
     constructor(private db: DatabaseService) {}
 
     currentTournaments: Observable<DocumentData[]>;
-    sidebarVisible: boolean = true;
+    sidebarVisible: boolean;
+    innerWidth;
 
     ngOnInit() {
         this.currentTournaments = this.db.loadCurrentTournaments();
+        this.innerWidth = window.innerWidth;
+        if (this.innerWidth < 600) {
+            this.sidebarVisible = false;
+        } else {
+            this.sidebarVisible = true;
+        }
     }
 }
