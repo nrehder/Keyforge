@@ -2,3 +2,81 @@
     color: #004085 !important;
     background-color: #b8daff !important;
 }
+
+.sidebar-visible {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    height: calc(100vh - 56px);
+    width: 350px;
+    z-index: 1000;
+    padding: 15px 15px;
+    background-color: #f8f9fa;
+    overflow: auto;
+    transition-property: all;
+    transition-duration: 1s;
+}
+
+.sidebar-hidden {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    height: calc(100vh - 56px);
+    width: 350px;
+    z-index: 1000;
+    padding: 15px 50px 15px 15px;
+    background-color: #f8f9fa;
+    overflow: auto;
+    transition-property: all;
+    transition-duration: 1s;
+    transform: translate3d(-300px, 0, 0);
+}
+
+.sidebar-arrow-visible {
+    position: fixed;
+    top: calc(56px + 9px);
+    left: 1px;
+    z-index: 1001;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 1s;
+}
+
+.sidebar-arrow-hidden {
+    position: fixed;
+    top: calc(56px + 9px);
+    left: 1px;
+    z-index: 1001;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 1s;
+    transform: rotateZ(180deg);
+}
+
+.content-visible {
+    position: fixed;
+    top: 56px;
+    left: 350px;
+    height: calc(100vh - 56px);
+    width: calc(100vw - 350px);
+    padding: 15px 30px 15px 15px;
+    overflow: auto;
+    transition-property: all;
+    transition-duration: 1s;
+}
+
+.content-hidden {
+    position: fixed;
+    top: 56px;
+    left: 50px;
+    height: calc(100vh - 56px);
+    width: calc(100vw - 50px);
+    padding: 15px 30px 15px 15px;
+    overflow: auto;
+    transition-property: all;
+    transition-duration: 1s;
+}

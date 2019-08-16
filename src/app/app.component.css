@@ -1,6 +1,7 @@
 .main {
-    top: 80px;
+    top: 56px;
     position: fixed;
     overflow: auto;
-    height: calc(100% - 80px);
+    height: calc(100vh - 56px);
+    padding: 15px;
 }

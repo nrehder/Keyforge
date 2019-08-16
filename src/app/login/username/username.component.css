@@ -9,11 +9,12 @@
 }
 .username-box {
     position: fixed;
-    top: 30vh;
-    left: 35vw;
+    top: 50vh;
+    left: 50vw;
     width: 30vw;
     min-width: 280px;
     padding: 30px;
     border-radius: 20px;
     z-index: 1032;
+    transform: translate3d(-50%, -50%, 0);
 }

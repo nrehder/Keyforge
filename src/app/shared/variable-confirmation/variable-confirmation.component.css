@@ -5,19 +5,21 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.75);
-    z-index: 50;
+    z-index: 1050;
 }
 
 .alert-box {
     position: fixed;
-    top: 30vh;
-    left: 20vw;
-    width: 60vw;
+    top: 50vh;
+    left: 50vw;
+    width: 40%;
+    min-width: 300px;
     padding: 16px;
-    z-index: 100;
+    z-index: 1100;
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     text-align: center;
+    transform: translate3d(-50%, -50%, 0);
 }
 
 .alert-box-actions {

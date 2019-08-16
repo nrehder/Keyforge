@@ -11,10 +11,18 @@ import { DatabaseService } from "../shared/database.service";
 })
 export class DecksComponent implements OnInit {
     decks: Observable<DocumentData[]>;
+    sidebarVisible: boolean = true;
+    innerWidth;
 
     constructor(private db: DatabaseService) {}
 
     ngOnInit() {
         this.decks = this.db.loadDecks();
+        this.innerWidth = window.innerWidth;
+        if (this.innerWidth < 600) {
+            this.sidebarVisible = false;
+        } else {
+            this.sidebarVisible = true;
+        }
     }
 }

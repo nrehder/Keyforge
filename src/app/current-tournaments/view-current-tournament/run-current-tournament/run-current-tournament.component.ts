@@ -9,6 +9,7 @@ import { DatabaseService } from "../../../shared/database.service";
 import { SwissStyleService } from "../../services/swiss-style.service";
 import { RoundRobinService } from "../../services/round-robin.service";
 import { SingleElimService } from "../../services/single-elim.service";
+import { VariableConfirmationService } from "src/app/shared/variable-confirmation/variable-confirmation.service";
 
 @Component({
     selector: "app-run-current-tournament",
@@ -25,8 +26,6 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     finishedPairings: boolean[] = [];
     numPlayers: number;
     allFinished: boolean;
-    endingRound: boolean;
-    endingTourn: boolean;
 
     displayStats: boolean = false;
 
@@ -36,7 +35,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
         private singleElim: SingleElimService,
         private route: ActivatedRoute,
         private router: Router,
-        private db: DatabaseService
+        private db: DatabaseService,
+        private vcService: VariableConfirmationService
     ) {}
 
     ngOnInit() {
@@ -124,11 +124,17 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     }
 
     onNextRound() {
-        this.endingRound = true;
+        this.vcService.message = "end round " + this.curRound;
+        this.vcService.choice.pipe(take(1)).subscribe(res => {
+            this.onConfirmNextRound(res);
+        });
     }
 
     onFinish() {
-        this.endingTourn = true;
+        this.vcService.message = "end the tournament";
+        this.vcService.choice.pipe(take(1)).subscribe(res => {
+            this.onConfirmEndTourn(res);
+        });
     }
 
     private clearFinished() {
@@ -149,10 +155,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     }
 
     onConfirmNextRound(choice: string) {
-        if (choice === "cancel") {
-            this.endingRound = false;
-        } else if (choice === "confirm") {
-            this.endingRound = false;
+        this.vcService.message = "";
+        if (choice === "confirm") {
             // this.curRound += 1;
             switch (this.tournType) {
                 case "swiss":
@@ -170,10 +174,8 @@ export class RunCurrentTournamentComponent implements OnInit, OnDestroy {
     }
 
     onConfirmEndTourn(choice: string) {
-        if (choice === "cancel") {
-            this.endingTourn = false;
-        } else if (choice === "confirm") {
-            this.endingTourn = false;
+        this.vcService.message = "";
+        if (choice === "confirm") {
             switch (this.tournType) {
                 case "swiss":
                     this.swiss.onFinish(this.tournId);

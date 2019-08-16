@@ -4,65 +4,90 @@
         router-outlet to show selected tournament
         'please select tournament' if no selected tournaent
  -->
-<div class="row">
-    <div class="col-md-3">
-        <div class="row">
-            <div class="col">
-                <h4 style="text-align: center">Finished Tournaments</h4>
+<!-- Sidebar -->
+<div
+    [ngClass]="{
+        'sidebar-visible': sidebarVisible,
+        'sidebar-hidden': !sidebarVisible
+    }"
+>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <h4 style="text-align: center">Finished Tournaments</h4>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <button
-                    class="btn btn-success btn-block"
-                    routerLink="/tournaments/create"
-                    type="button"
-                >
-                    New Tournament
-                </button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div
-                    *ngFor="
-                        let finTourn of finishedTournaments | async;
-                        let i = index
-                    "
-                >
-                    <a
-                        style="cursor:pointer;"
-                        class="list-group-item list-group-item-secondary"
-                        [routerLink]="i"
-                        routerLinkActive="link-active"
+            <div class="row">
+                <div class="col">
+                    <button
+                        class="btn btn-success btn-block"
+                        routerLink="/tournaments/create"
+                        type="button"
                     >
-                        <h5 class="list-group-item-heading">
-                            {{ finTourn.name }}
-                        </h5>
-                        <p
-                            class="list-group-item-text"
-                            *ngIf="finTourn.type === 'swiss'"
+                        New Tournament
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div
+                        *ngFor="
+                            let finTourn of finishedTournaments | async;
+                            let i = index
+                        "
+                    >
+                        <a
+                            style="cursor:pointer;"
+                            class="list-group-item list-group-item-secondary"
+                            [routerLink]="i"
+                            routerLinkActive="link-active"
                         >
-                            Swiss Style
-                        </p>
-                        <p
-                            class="list-group-item-text"
-                            *ngIf="finTourn.type === 'singleElim'"
-                        >
-                            Single Elimination
-                        </p>
-                        <p
-                            class="list-group-item-text"
-                            *ngIf="finTourn.type === 'roundRobin'"
-                        >
-                            Round Robin
-                        </p>
-                    </a>
+                            <h5 class="list-group-item-heading">
+                                {{ finTourn.name }}
+                            </h5>
+                            <p
+                                class="list-group-item-text"
+                                *ngIf="finTourn.type === 'swiss'"
+                            >
+                                Swiss Style
+                            </p>
+                            <p
+                                class="list-group-item-text"
+                                *ngIf="finTourn.type === 'singleElim'"
+                            >
+                                Single Elimination
+                            </p>
+                            <p
+                                class="list-group-item-text"
+                                *ngIf="finTourn.type === 'roundRobin'"
+                            >
+                                Round Robin
+                            </p>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-9">
-        <router-outlet></router-outlet>
-    </div>
+</div>
+
+<!-- Sidebar Arrow -->
+<img
+    src="..\..\assets\left_arrow.png"
+    [ngClass]="{
+        'sidebar-arrow-visible': sidebarVisible,
+        'sidebar-arrow-hidden': !sidebarVisible
+    }"
+    (click)="sidebarVisible = !sidebarVisible"
+/>
+
+<!-- Content -->
+<div
+    [ngClass]="{
+        'content-visible': sidebarVisible && innerWidth > 600,
+        'content-hidden': !sidebarVisible || innerWidth < 600
+    }"
+>
+    <router-outlet></router-outlet>
 </div>

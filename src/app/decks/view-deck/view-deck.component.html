@@ -78,6 +78,7 @@
                 <div class="row">
                     <div class="col">
                         <app-tourn-list
+                            *ngIf="deck.tournament"
                             [tourns]="deck.tournament"
                         ></app-tourn-list>
                     </div>
@@ -85,7 +86,7 @@
             </div>
         </div>
         <div class="row" *ngIf="!unofficial">
-            <div class="col house-columns" *ngFor="let house of deck.house">
+            <div class="col-md house-columns" *ngFor="let house of deck.house">
                 <div class="row mx-0">
                     <div class="col house-header">
                         <img

@@ -8,7 +8,6 @@ import { CurrentTournamentsComponent } from "./current-tournaments.component";
 import { ViewCurrentTournamentComponent } from "./view-current-tournament/view-current-tournament.component";
 import { RunCurrentTournamentComponent } from "./view-current-tournament/run-current-tournament/run-current-tournament.component";
 import { CreateTournamentComponent } from "./create-tournament/create-tournament.component";
-import { NoTournamentComponent } from "./no-tournament/no-tournament.component";
 import { CurrentTournamentsRoutingModule } from "./current-tournament-routing.module";
 
 @NgModule({
@@ -17,7 +16,6 @@ import { CurrentTournamentsRoutingModule } from "./current-tournament-routing.mo
         ViewCurrentTournamentComponent,
         RunCurrentTournamentComponent,
         CreateTournamentComponent,
-        NoTournamentComponent,
     ],
     imports: [
         CurrentTournamentsRoutingModule,

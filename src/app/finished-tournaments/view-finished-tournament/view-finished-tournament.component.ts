@@ -6,6 +6,7 @@ import { take } from "rxjs/operators";
 
 import { DatabaseService } from "../../shared/database.service";
 import { tournament } from "../../shared/tournament.model";
+import { VariableConfirmationService } from "src/app/shared/variable-confirmation/variable-confirmation.service";
 
 @Component({
     selector: "app-view-finished-tournament",
@@ -22,7 +23,8 @@ export class ViewFinishedTournamentComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private db: DatabaseService,
-        private router: Router
+        private router: Router,
+        private vcService: VariableConfirmationService
     ) {}
 
     ngOnInit() {
@@ -41,19 +43,18 @@ export class ViewFinishedTournamentComponent implements OnInit {
 
     onDelete(tournName: string) {
         this.deleteName = tournName;
-        this.deleting = true;
+        this.vcService.message = "delete " + tournName;
+        this.vcService.choice.pipe(take(1)).subscribe(res => {
+            this.onConfirmation(res);
+        });
     }
 
     onConfirmation(choice: string) {
-        if (choice === "cancel") {
-            this.deleting = false;
-            this.deleteName = "";
-        } else if (choice === "confirm") {
-            this.deleting = false;
+        this.vcService.message = "";
+        if (choice === "confirm") {
             this.loading = true;
             this.db.deleteTournament("finishedTournaments", this.deleteName);
         }
+        this.deleteName = "";
     }
-
-    ngOnDestroy() {}
 }
