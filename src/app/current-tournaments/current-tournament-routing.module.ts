@@ -1,7 +1,7 @@
 import { Routes, RouterModule } from "@angular/router";
 import { CurrentTournamentsComponent } from "./current-tournaments.component";
 import { AuthGuard } from "../shared/auth.guard";
-import { NoTournamentComponent } from "./no-tournament/no-tournament.component";
+import { NoTournamentComponent } from "../shared/no-tournament/no-tournament.component";
 import { CreateTournamentComponent } from "./create-tournament/create-tournament.component";
 import { ViewCurrentTournamentComponent } from "./view-current-tournament/view-current-tournament.component";
 import { RunCurrentTournamentComponent } from "./view-current-tournament/run-current-tournament/run-current-tournament.component";

@@ -11,6 +11,7 @@ import { DatabaseService } from "../shared/database.service";
 })
 export class DecksComponent implements OnInit {
     decks: Observable<DocumentData[]>;
+    sidebarVisible: boolean = true;
 
     constructor(private db: DatabaseService) {}
 

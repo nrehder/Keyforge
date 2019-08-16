@@ -4,65 +4,86 @@
         router-outlet to show selected tournament
         'please select tournament' if no selected tournaent
 -->
-<div class="row">
-    <div class="col-md-3">
-        <div class="row">
-            <div class="col">
-                <h4 style="text-align: center">Active Tournaments</h4>
-            </div>
+
+<div
+    [ngClass]="{
+        'sidebar-visible': sidebarVisible,
+        'sidebar-hidden': !sidebarVisible
+    }"
+>
+    <div class="row">
+        <div class="col">
+            <h4 style="text-align: center">Active Tournaments</h4>
         </div>
-        <div class="row">
-            <div class="col">
-                <button
-                    class="btn btn-success btn-block"
-                    routerLink="create"
-                    type="button"
-                >
-                    New Tournament
-                </button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button
+                class="btn btn-success btn-block"
+                routerLink="create"
+                type="button"
+            >
+                New Tournament
+            </button>
         </div>
-        <div class="row">
-            <div class="col">
-                <div
-                    *ngFor="
-                        let curTourn of currentTournaments | async;
-                        let i = index
-                    "
+    </div>
+    <div class="row">
+        <div class="col">
+            <div
+                *ngFor="
+                    let curTourn of currentTournaments | async;
+                    let i = index
+                "
+            >
+                <a
+                    style="cursor:pointer;"
+                    class="list-group-item list-group-item-secondary"
+                    [routerLink]="i"
+                    routerLinkActive="link-active"
                 >
-                    <a
-                        style="cursor:pointer;"
-                        class="list-group-item list-group-item-secondary"
-                        [routerLink]="i"
-                        routerLinkActive="link-active"
+                    <h5 class="list-group-item-heading">
+                        {{ curTourn.name }}
+                    </h5>
+                    <p
+                        class="list-group-item-text"
+                        *ngIf="curTourn.type === 'swiss'"
                     >
-                        <h5 class="list-group-item-heading">
-                            {{ curTourn.name }}
-                        </h5>
-                        <p
-                            class="list-group-item-text"
-                            *ngIf="curTourn.type === 'swiss'"
-                        >
-                            Swiss Style
-                        </p>
-                        <p
-                            class="list-group-item-text"
-                            *ngIf="curTourn.type === 'singleElim'"
-                        >
-                            Single Elimination
-                        </p>
-                        <p
-                            class="list-group-item-text"
-                            *ngIf="curTourn.type === 'roundRobin'"
-                        >
-                            Round Robin
-                        </p>
-                    </a>
-                </div>
+                        Swiss Style
+                    </p>
+                    <p
+                        class="list-group-item-text"
+                        *ngIf="curTourn.type === 'singleElim'"
+                    >
+                        Single Elimination
+                    </p>
+                    <p
+                        class="list-group-item-text"
+                        *ngIf="curTourn.type === 'roundRobin'"
+                    >
+                        Round Robin
+                    </p>
+                </a>
             </div>
         </div>
     </div>
-    <div class="col-md-9">
-        <router-outlet></router-outlet>
-    </div>
+</div>
+
+<!-- Sidebar Arrow -->
+<img
+    src="..\..\assets\left_arrow.png"
+    [ngClass]="{
+        'sidebar-arrow-visible': sidebarVisible,
+        'sidebar-arrow-hidden': !sidebarVisible
+    }"
+    (click)="sidebarVisible = !sidebarVisible"
+/>
+
+<!-- Content -->
+<div
+    [ngClass]="{
+        'content-visible': sidebarVisible,
+        'content-hidden': !sidebarVisible
+    }"
+>
+    <router-outlet></router-outlet>
 </div>

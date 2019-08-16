@@ -13,6 +13,7 @@ export class FinishedTournamentsComponent implements OnInit {
     constructor(private db: DatabaseService) {}
 
     finishedTournaments: Observable<DocumentData[]>;
+    sidebarVisible: boolean = true;
 
     ngOnInit() {
         this.finishedTournaments = this.db.loadFinishedTournaments();
