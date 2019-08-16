@@ -11,10 +11,7 @@
         [ngClass]="{ show: navbarOpen }"
         *ngIf="authService.user | async as user; else guest"
     >
-        <ul
-            class="navbar-nav mr-auto"
-            *ngIf="authService.username !== undefined"
-        >
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" routerLink="/" (click)="onClear()">Home</a>
             </li>

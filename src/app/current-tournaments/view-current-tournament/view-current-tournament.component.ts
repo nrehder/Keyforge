@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DocumentData } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
@@ -6,23 +6,24 @@ import { take } from "rxjs/operators";
 
 import { DatabaseService } from "../../shared/database.service";
 import { tournament } from "../../shared/tournament.model";
+import { VariableConfirmationService } from "src/app/shared/variable-confirmation/variable-confirmation.service";
 
 @Component({
     selector: "app-view-current-tournament",
     templateUrl: "./view-current-tournament.component.html",
     styleUrls: ["./view-current-tournament.component.css"],
 })
-export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
+export class ViewCurrentTournamentComponent implements OnInit {
     deleteName: string;
     tournId: number;
     currentTournaments: Observable<DocumentData[]>;
-    deleting: boolean = false;
     loading: boolean = false;
 
     constructor(
         private route: ActivatedRoute,
         private db: DatabaseService,
-        private router: Router
+        private router: Router,
+        private vcService: VariableConfirmationService
     ) {}
 
     ngOnInit() {
@@ -42,19 +43,18 @@ export class ViewCurrentTournamentComponent implements OnInit, OnDestroy {
 
     onDelete(tournName: string) {
         this.deleteName = tournName;
-        this.deleting = true;
+        this.vcService.message = "delete " + tournName;
+        this.vcService.choice.pipe(take(1)).subscribe(res => {
+            this.onConfirmation(res);
+        });
     }
 
     onConfirmation(choice: string) {
-        if (choice === "cancel") {
-            this.deleting = false;
-            this.deleteName = "";
-        } else if (choice === "confirm") {
-            this.deleting = false;
+        this.vcService.message = "";
+        if (choice === "confirm") {
             this.loading = true;
             this.db.deleteTournament("currentTournaments", this.deleteName);
         }
+        this.deleteName = "";
     }
-
-    ngOnDestroy() {}
 }

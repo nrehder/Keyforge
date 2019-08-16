@@ -51,10 +51,3 @@
         </div>
     </div>
 </div>
-
-<app-variable-confirmation
-    [message]="'delete ' + deleteName"
-    *ngIf="deleting"
-    (choice)="onConfirmation($event)"
->
-</app-variable-confirmation>

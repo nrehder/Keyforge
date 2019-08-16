@@ -3,3 +3,6 @@
     <router-outlet></router-outlet>
     <br />
 </div>
+<app-variable-confirmation *ngIf="vcService.message">
+</app-variable-confirmation>
+<app-username *ngIf="authService.needUsername"></app-username>

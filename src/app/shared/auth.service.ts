@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 
 import * as firebase from "firebase/app";
@@ -28,7 +28,8 @@ export class AuthService {
     constructor(
         private fireAuth: AngularFireAuth,
         private angFire: AngularFirestore,
-        private router: Router
+        private router: Router,
+        private ngZone: NgZone
     ) {
         this.user = this.fireAuth.authState.pipe(
             switchMap(user => {
@@ -44,8 +45,9 @@ export class AuthService {
                 if (user) {
                     if (user.username !== undefined) {
                         this.username = user.username;
+                        this.needUsername = false;
                     } else {
-                        this.router.navigate(["/username"]);
+                        this.needUsername = true;
                     }
                 } else {
                     this.username = "";
@@ -134,27 +136,10 @@ export class AuthService {
 
         userRef.set(data, { merge: true });
 
-        /*
-			Checks if a user has a username already.  If not, changes login form
-			Google Login always updates userdata, but may already have a username
-		*/
-        userRef
-            .get()
-            .pipe(
-                take(1),
-                map((item: firebase.firestore.DocumentSnapshot) => {
-                    return item.data();
-                })
-            )
-            .subscribe(doc => {
-                if (doc.username === undefined) {
-                    this.isloading = false;
-                    this.router.navigate(["/username"]);
-                } else {
-                    this.isloading = false;
-                    this.router.navigate(["/"]);
-                }
-            });
+        //Angular doesn't like google Oauth and then route away
+        this.ngZone.run(() => {
+            this.router.navigate(["/"]);
+        });
     }
 
     addUsername(username: string) {

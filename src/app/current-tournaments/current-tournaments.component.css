@@ -35,7 +35,7 @@
 .sidebar-arrow-visible {
     position: fixed;
     top: calc(56px + 9px);
-    left: 9px;
+    left: 1px;
     z-index: 1001;
     height: 32px;
     width: 32px;
@@ -47,7 +47,7 @@
 .sidebar-arrow-hidden {
     position: fixed;
     top: calc(56px + 9px);
-    left: 9px;
+    left: 1px;
     z-index: 1001;
     height: 32px;
     width: 32px;
