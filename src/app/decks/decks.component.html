@@ -5,6 +5,14 @@
         'please select deck' if no selected deck
  -->
 
+<!-- Overlay for when on mobile -->
+<div
+    class="sidebar-overlay"
+    *ngIf="sidebarVisible"
+    (click)="sidebarVisible = !sidebarVisible"
+    [@fadeInOut]
+></div>
+
 <!-- Sidebar -->
 <div
     [ngClass]="{
@@ -57,6 +65,7 @@
         </div>
     </div>
 </div>
+
 <!-- Sidebar Arrow -->
 <img
     src="..\..\assets\left_arrow.png"
@@ -70,9 +79,9 @@
 <!-- Content -->
 <div
     [ngClass]="{
-        'content-visible': sidebarVisible && innerWidth > 600,
-        'content-hidden': !sidebarVisible || innerWidth < 600
+        'content-visible': sidebarVisible
     }"
+    class="content-hidden"
 >
     <router-outlet></router-outlet>
 </div>

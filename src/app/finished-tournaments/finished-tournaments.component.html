@@ -4,6 +4,15 @@
         router-outlet to show selected tournament
         'please select tournament' if no selected tournaent
  -->
+
+<!-- Overlay for when on mobile -->
+<div
+    class="sidebar-overlay"
+    *ngIf="sidebarVisible"
+    (click)="sidebarVisible = !sidebarVisible"
+    [@fadeInOut]
+></div>
+
 <!-- Sidebar -->
 <div
     [ngClass]="{
@@ -85,9 +94,9 @@
 <!-- Content -->
 <div
     [ngClass]="{
-        'content-visible': sidebarVisible && innerWidth > 600,
-        'content-hidden': !sidebarVisible || innerWidth < 600
+        'content-visible': sidebarVisible
     }"
+    class="content-hidden"
 >
     <router-outlet></router-outlet>
 </div>
