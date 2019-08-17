@@ -7,7 +7,7 @@
     position: fixed;
     top: 56px;
     left: 0;
-    height: calc(100vh - 56px);
+    height: calc(100% - 56px);
     width: 350px;
     z-index: 1000;
     padding: 15px 15px;
@@ -21,7 +21,7 @@
     position: fixed;
     top: 56px;
     left: 0;
-    height: calc(100vh - 56px);
+    height: calc(100% - 56px);
     width: 350px;
     z-index: 1000;
     padding: 15px 50px 15px 15px;
@@ -61,8 +61,8 @@
     position: fixed;
     top: 56px;
     left: 350px;
-    height: calc(100vh - 56px);
-    width: calc(100vw - 350px);
+    height: calc(100% - 56px);
+    width: calc(100% - 350px);
     padding: 15px 30px 15px 15px;
     overflow: auto;
     transition-property: all;
@@ -73,8 +73,8 @@
     position: fixed;
     top: 56px;
     left: 50px;
-    height: calc(100vh - 56px);
-    width: calc(100vw - 50px);
+    height: calc(100% - 56px);
+    width: calc(100% - 50px);
     padding: 15px 30px 15px 15px;
     overflow: auto;
     transition-property: all;

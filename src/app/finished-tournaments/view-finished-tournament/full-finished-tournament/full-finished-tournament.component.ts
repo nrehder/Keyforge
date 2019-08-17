@@ -5,11 +5,30 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DatabaseService } from "src/app/shared/database.service";
 import { take } from "rxjs/operators";
 import { tournament } from "src/app/shared/tournament.model";
+import {
+    trigger,
+    transition,
+    style,
+    animate,
+    state,
+} from "@angular/animations";
 
 @Component({
     selector: "app-full-finished-tournament",
     templateUrl: "./full-finished-tournament.component.html",
     styleUrls: ["./full-finished-tournament.component.css"],
+    animations: [
+        trigger("fadeInOut", [
+            state(
+                "void",
+                style({
+                    opacity: 0,
+                    height: 0,
+                })
+            ),
+            transition("void<=>*", animate("0.2s")),
+        ]),
+    ],
 })
 export class FullFinishedTournamentComponent implements OnInit {
     tournName: string;

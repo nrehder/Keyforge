@@ -15,3 +15,16 @@ h5 {
     margin-bottom: 5px;
     text-align: center;
 }
+
+.hidden {
+    transform: scaleY(0);
+    opacity: 0;
+    transition-property: all;
+    transition-duration: 1s;
+}
+
+.visible {
+    opacity: 1;
+    transition-property: all;
+    transition-duration: 1s;
+}

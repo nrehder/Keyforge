@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireModule } from "@angular/fire";
@@ -47,6 +48,7 @@ import { SharedModule } from "./shared/shared.module";
         DeckModule,
         TableModule,
         SharedModule,
+        BrowserAnimationsModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

@@ -28,11 +28,13 @@
                             ></i>
                         </div>
                     </div>
-                    <app-standings-table
-                        [tourn]="tourn"
-                        [round]="j"
-                        *ngIf="results[j]"
-                    ></app-standings-table>
+                    <div [@fadeInOut] *ngIf="results[j]">
+                        <app-standings-table
+                            [tourn]="tourn"
+                            [round]="j"
+                        ></app-standings-table>
+                    </div>
+
                     <br />
                 </div>
 
@@ -54,14 +56,17 @@
                             ></i>
                         </div>
                     </div>
-                    <app-pairings-table
-                        [tourn]="tourn"
-                        [tournType]="tourn.type"
-                        [round]="j"
-                        [running]="false"
-                        [displayStats]="true"
-                        *ngIf="pairings[j]"
-                    ></app-pairings-table>
+                    <div [@fadeInOut] *ngIf="pairings[j]">
+                        <app-pairings-table
+                            [tourn]="tourn"
+                            [tournType]="tourn.type"
+                            [round]="j"
+                            [running]="false"
+                            [displayStats]="true"
+                        ></app-pairings-table>
+                    </div>
+
+                    <br />
                 </div>
             </div>
         </div>
