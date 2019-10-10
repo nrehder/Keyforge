@@ -2,6 +2,7 @@
     border: 1px solid black;
     min-height: 3rem;
     text-align: center;
+    user-select: none;
 }
 .winner {
     background-color: lightblue;

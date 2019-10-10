@@ -423,7 +423,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         let maxRounds = 0;
         //Decides the maximum number of rounds
         if (this.createForm.get("tournamentType").value === "roundRobin") {
-            if (this.tournamentDecks.length % 2 === 0) {
+            if (this.tournamentDecks.length % 2 !== 0) {
                 maxRounds = tournDecks.length;
             } else {
                 maxRounds = tournDecks.length - 1;
