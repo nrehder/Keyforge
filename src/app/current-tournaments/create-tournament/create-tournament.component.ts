@@ -202,21 +202,25 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Artifact: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Creature: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Upgrade: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                     },
                                 },
@@ -228,21 +232,25 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Artifact: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Creature: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Upgrade: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                     },
                                 },
@@ -254,21 +262,25 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Artifact: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Creature: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                         Upgrade: {
                                             Common: [],
                                             Uncommon: [],
                                             Rare: [],
+                                            FIXED: [],
                                         },
                                     },
                                 },
@@ -300,15 +312,9 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             let index = 0;
                             if (card.house === newDeck.house[0].name) {
                                 index = 0;
-                            } else if (
-                                decksData[i]._linked.cards[j].house ===
-                                newDeck.house[1].name
-                            ) {
+                            } else if (card.house === newDeck.house[1].name) {
                                 index = 1;
-                            } else if (
-                                decksData[i]._linked.cards[j].house ===
-                                newDeck.house[2].name
-                            ) {
+                            } else if (card.house === newDeck.house[2].name) {
                                 index = 2;
                             }
                             let number = 0;
@@ -753,9 +759,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     }
 
     //Validators
-    onTest() {
-        console.log(this.createForm.get("decks").value);
-    }
 
     validateUniquePlayers(controls: FormArray) {
         let values = controls.value;
