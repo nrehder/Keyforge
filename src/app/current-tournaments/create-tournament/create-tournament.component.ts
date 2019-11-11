@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { take } from "rxjs/operators";
+import { take, map } from "rxjs/operators";
 
 import {
     DeckRetrievalService,
@@ -25,6 +25,10 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     numPlayers: number = 4;
     missing: string = "0";
     needByes: boolean = false;
+    decksInDB: {
+        deckName: string;
+        deckURL: string;
+    }[] = [];
 
     constructor(
         private deckService: DeckRetrievalService,
@@ -32,6 +36,18 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
+        this.db
+            .loadDecks()
+            .pipe(take(1))
+            .subscribe((deck: deck[]) => {
+                for (let i = 0; i < deck.length; i++) {
+                    this.decksInDB.push({
+                        deckName: deck[i].deckName,
+                        deckURL: deck[i].deckUrl,
+                    });
+                }
+            });
+
         this.currentSub = this.db
             .loadCurrentTournaments()
             .subscribe((tourns: tournament[]) => {
@@ -61,28 +77,28 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         name: new FormControl(null, [Validators.required]),
                         deck: new FormControl(null, [
                             Validators.required,
-                            this.validateDeckUrl,
+                            this.validateDeckUrl.bind(this),
                         ]),
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
                         deck: new FormControl(null, [
                             Validators.required,
-                            this.validateDeckUrl,
+                            this.validateDeckUrl.bind(this),
                         ]),
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
                         deck: new FormControl(null, [
                             Validators.required,
-                            this.validateDeckUrl,
+                            this.validateDeckUrl.bind(this),
                         ]),
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
                         deck: new FormControl(null, [
                             Validators.required,
-                            this.validateDeckUrl,
+                            this.validateDeckUrl.bind(this),
                         ]),
                     }),
                 ],
@@ -148,236 +164,18 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             .pipe(take(1))
             .subscribe((deck: deck[]) => {
                 for (let i = 0; i < deck.length; i++) {
-                    getArray = getArray.filter(element => {
+                    getArray.forEach(element => {
                         if (element.url === deck[i].deckUrl) {
                             deckArray.push({
                                 playerName: element.playerName,
                                 deck: deck[i],
                                 index: element.index,
                             });
-                            return false;
-                        } else {
-                            return true;
                         }
                     });
                 }
-                this.getDecks(getArray, deckArray);
+                this.tournamentDecks(deckArray);
             });
-    }
-
-    //gets any deck not already in database from keyforgegame.com
-    private getDecks(
-        get: { playerName: string; url: string; index: number }[],
-        decks: { playerName: string; deck: deck; index: number }[]
-    ) {
-        if (get.length > 0) {
-            const getArray: string[] = [];
-            const nameArray: string[] = [];
-            const indexArray: number[] = [];
-            for (let i = 0; i < get.length; i++) {
-                getArray.push(get[i].url);
-                nameArray.push(get[i].playerName);
-                indexArray.push(get[i].index);
-            }
-            this.deckService
-                .getTournamentDecks(getArray)
-                .subscribe((decksData: DeckData[]) => {
-                    for (let i = 0; i < decksData.length; i++) {
-                        let newDeck = {
-                            deckName: decksData[i].data.name,
-                            deckUrl:
-                                "https://www.keyforgegame.com/deck-details/" +
-                                decksData[i].data.id,
-                            wins: 0,
-                            losses: 0,
-                            byes: 0,
-                            chains: 0,
-                            expansion: "",
-                            house: [
-                                {
-                                    name: decksData[i]._linked.houses[0].name,
-                                    img: decksData[i]._linked.houses[0].image,
-                                    cards: {
-                                        Action: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Artifact: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Creature: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Upgrade: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                    },
-                                },
-                                {
-                                    name: decksData[i]._linked.houses[1].name,
-                                    img: decksData[i]._linked.houses[1].image,
-                                    cards: {
-                                        Action: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Artifact: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Creature: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Upgrade: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                    },
-                                },
-                                {
-                                    name: decksData[i]._linked.houses[2].name,
-                                    img: decksData[i]._linked.houses[2].image,
-                                    cards: {
-                                        Action: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Artifact: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Creature: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                        Upgrade: {
-                                            Common: [],
-                                            Uncommon: [],
-                                            Rare: [],
-                                            FIXED: [],
-                                        },
-                                    },
-                                },
-                            ],
-                            cards: [],
-                        };
-
-                        switch (decksData[i].data.expansion) {
-                            case 435:
-                                newDeck["expansion"] = "AoA";
-                                break;
-                            case 341:
-                                newDeck["expansion"] = "CotA";
-                                break;
-                            default:
-                                newDeck["expansion"] = "Unknown";
-                        }
-
-                        /*
-						adds cards to the correct house sorted by card type
-						then rarity
-						*/
-                        for (
-                            let j = 0;
-                            j < decksData[i]._linked.cards.length;
-                            j++
-                        ) {
-                            let card = decksData[i]._linked.cards[j];
-                            let index = 0;
-                            if (card.house === newDeck.house[0].name) {
-                                index = 0;
-                            } else if (card.house === newDeck.house[1].name) {
-                                index = 1;
-                            } else if (card.house === newDeck.house[2].name) {
-                                index = 2;
-                            }
-                            let number = 0;
-                            decksData[i].data._links.cards.forEach(element => {
-                                if (element === card.id) {
-                                    number += 1;
-                                }
-                            });
-                            for (let k = 0; k < number; k++) {
-                                newDeck.house[index].cards[card.card_type][
-                                    card.rarity
-                                ].push({
-                                    name:
-                                        decksData[i]._linked.cards[j]
-                                            .card_title,
-                                    img:
-                                        decksData[i]._linked.cards[j]
-                                            .front_image,
-                                });
-                            }
-                        }
-
-                        //alphabetizes the cards
-                        for (let i = 0; i < 3; i++) {
-                            for (let type in newDeck.house[i].cards) {
-                                if (
-                                    newDeck.house[i].cards.hasOwnProperty(type)
-                                ) {
-                                    for (let rarity in newDeck.house[i].cards[
-                                        type
-                                    ]) {
-                                        if (
-                                            newDeck.house[i].cards[
-                                                type
-                                            ].hasOwnProperty(rarity)
-                                        ) {
-                                            newDeck.house[i].cards[type][
-                                                rarity
-                                            ].sort((a, b) => {
-                                                if (a.name > b.name) {
-                                                    return 1;
-                                                }
-                                                return -1;
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        decks.push({
-                            playerName: nameArray[i],
-                            deck: newDeck,
-                            index: indexArray[i],
-                        });
-                        //saves deck to database
-                        this.db.saveNewDeck(newDeck);
-                    }
-                    this.tournamentDecks(decks);
-                });
-        } else {
-            this.tournamentDecks(decks);
-        }
     }
 
     //sets up decks for tournament, removing data not needed for tournament
@@ -782,7 +580,196 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         return null;
     }
 
-    validateDeckUrl(control: FormControl): { [s: string]: boolean } {
+    private organizeDeckData(deckData: DeckData) {
+        let newDeck = {
+            deckName: deckData.data.name,
+            deckUrl:
+                "https://www.keyforgegame.com/deck-details/" + deckData.data.id,
+            wins: 0,
+            losses: 0,
+            byes: 0,
+            chains: 0,
+            expansion: "",
+            house: [
+                {
+                    name: deckData._linked.houses[0].name,
+                    img: deckData._linked.houses[0].image,
+                    cards: {
+                        Action: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Artifact: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Creature: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Upgrade: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                    },
+                },
+                {
+                    name: deckData._linked.houses[1].name,
+                    img: deckData._linked.houses[1].image,
+                    cards: {
+                        Action: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Artifact: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Creature: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Upgrade: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                    },
+                },
+                {
+                    name: deckData._linked.houses[2].name,
+                    img: deckData._linked.houses[2].image,
+                    cards: {
+                        Action: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Artifact: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Creature: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                        Upgrade: {
+                            Common: [],
+                            Uncommon: [],
+                            Rare: [],
+                            FIXED: [],
+                            Variant: [],
+                        },
+                    },
+                },
+            ],
+            cards: [],
+        };
+
+        switch (deckData.data.expansion) {
+            case 435:
+                newDeck["expansion"] = "AoA";
+                break;
+            case 341:
+                newDeck["expansion"] = "CotA";
+                break;
+            case 452:
+                newDeck["expansion"] = "WC";
+                break;
+            default:
+                newDeck["expansion"] = "Unknown";
+        }
+
+        /*
+        adds cards to the correct house sorted by card type
+        then rarity
+        */
+        for (let j = 0; j < deckData._linked.cards.length; j++) {
+            let card = deckData._linked.cards[j];
+            let index = 0;
+            //Figures out house card belongs to
+            if (card.house === newDeck.house[0].name) {
+                index = 0;
+            } else if (card.house === newDeck.house[1].name) {
+                index = 1;
+            } else if (card.house === newDeck.house[2].name) {
+                index = 2;
+            }
+            //counts number of times the card appears in the deck
+            let number = 0;
+            deckData.data._links.cards.forEach(element => {
+                if (element === card.id) {
+                    number += 1;
+                }
+            });
+            //adds that number of cards to the deck
+            for (let k = 0; k < number; k++) {
+                newDeck.house[index].cards[card.card_type][card.rarity].push({
+                    name: deckData._linked.cards[j].card_title,
+                    img: deckData._linked.cards[j].front_image,
+                });
+            }
+        }
+
+        //alphabetizes the cards
+        for (let i = 0; i < 3; i++) {
+            for (let type in newDeck.house[i].cards) {
+                if (newDeck.house[i].cards.hasOwnProperty(type)) {
+                    for (let rarity in newDeck.house[i].cards[type]) {
+                        if (
+                            newDeck.house[i].cards[type].hasOwnProperty(rarity)
+                        ) {
+                            newDeck.house[i].cards[type][rarity].sort(
+                                (a, b) => {
+                                    if (a.name > b.name) {
+                                        return 1;
+                                    }
+                                    return -1;
+                                }
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        //saves deck to database before returning it
+        this.db.saveNewDeck(newDeck);
+        return newDeck;
+    }
+
+    private validateDeckUrl(control: FormControl): { [s: string]: boolean } {
         if (control.value !== null) {
             if (
                 control.value.length != 78 ||
@@ -791,8 +778,24 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             ) {
                 return { "Invalid URL": true };
             }
+            const inList =
+                this.decksInDB.filter(ele => {
+                    return control.value === ele.deckURL;
+                }).length > 0;
+            if (!inList) {
+                this.deckService
+                    .getSingleDeck(control.value)
+                    .subscribe((deckData: DeckData) => {
+                        // console.log(deckData);
+                        this.organizeDeckData(deckData);
+                        return null;
+                    });
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
-        return null;
     }
 
     validateTournamentName(control: FormControl): { [s: string]: boolean } {

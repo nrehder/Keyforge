@@ -4,7 +4,7 @@
             {{ listType }}
         </li>
         <li
-            *ngFor="let card of cardList.Common; let i = index"
+            *ngFor="let card of cardList['Common']; let i = index"
             class="list-group-item list-group-item-secondary"
             style="cursor: pointer"
             (click)="onClickCard(i, 'Common')"
@@ -12,7 +12,7 @@
             {{ card.name }}
         </li>
         <li
-            *ngFor="let card of cardList.Uncommon; let i = index"
+            *ngFor="let card of cardList['Uncommon']; let i = index"
             class="list-group-item list-group-item-secondary"
             style="cursor: pointer"
             (click)="onClickCard(i, 'Uncommon')"
@@ -20,7 +20,23 @@
             {{ card.name }}
         </li>
         <li
-            *ngFor="let card of cardList.Rare; let i = index"
+            *ngFor="let card of cardList['Rare']; let i = index"
+            class="list-group-item list-group-item-secondary"
+            style="cursor: pointer"
+            (click)="onClickCard(i, 'Rare')"
+        >
+            {{ card.name }}
+        </li>
+        <li
+            *ngFor="let card of cardList['FIXED']; let i = index"
+            class="list-group-item list-group-item-secondary"
+            style="cursor: pointer"
+            (click)="onClickCard(i, 'Rare')"
+        >
+            {{ card.name }}
+        </li>
+        <li
+            *ngFor="let card of cardList['Variant']; let i = index"
             class="list-group-item list-group-item-secondary"
             style="cursor: pointer"
             (click)="onClickCard(i, 'Rare')"
