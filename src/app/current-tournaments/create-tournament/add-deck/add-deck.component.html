@@ -1,0 +1,34 @@
+<div class="backdrop" (click)="onClose()"></div>
+<div class="alert-box">
+    <p>Please add the deck URL below!</p>
+    <small class="form-text text-muted">
+        Ex:
+        https://www.keyforgegame.com/deck-details/6d42472e-2e9c-457b-bc89-20801bbf96dc
+    </small>
+    <form (ngSubmit)="onSubmit()" [formGroup]="urlForm">
+        <input
+            type="text"
+            class="form-control"
+            formControlName="url"
+            placeholder="Enter keyforgegame.com URL"
+        />
+        <span
+            class="help-block"
+            style="color:red; padding:0 15px;"
+            *ngIf="urlForm.get('url').invalid && urlForm.get('url').touched"
+        >
+            Please enter a valid url.
+        </span>
+        <br />
+        <div class="controls">
+            <button class="btn btn-primary" (click)="onClose()">Close</button>
+            <button
+                class="btn btn-primary"
+                (click)="onSubmit()"
+                [disabled]="urlForm.invalid"
+            >
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
