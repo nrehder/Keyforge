@@ -5,7 +5,7 @@ import { take } from "rxjs/operators";
 
 import {
     DeckRetrievalService,
-    DeckData,
+    DeckData
 } from "../../shared/deck-retrieval.service";
 import { tournament } from "../../shared/tournament.model";
 import { DatabaseService } from "../../shared/database.service";
@@ -14,7 +14,7 @@ import { deck } from "../../shared/deck.model";
 @Component({
     selector: "app-create-tournament",
     templateUrl: "./create-tournament.component.html",
-    styleUrls: ["./create-tournament.component.css"],
+    styleUrls: ["./create-tournament.component.css"]
 })
 export class CreateTournamentComponent implements OnInit, OnDestroy {
     isloading: boolean;
@@ -51,7 +51,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 for (let i = 0; i < deck.length; i++) {
                     this.decksInDB.push({
                         deckName: deck[i].deckName,
-                        deckURL: deck[i].deckUrl,
+                        deckURL: deck[i].deckUrl
                     });
                 }
             });
@@ -74,7 +74,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         this.createForm = new FormGroup({
             tournamentName: new FormControl(null, [
                 Validators.required,
-                this.validateTournamentName.bind(this),
+                this.validateTournamentName.bind(this)
             ]),
             tournamentType: new FormControl("swiss"),
             elimType: new FormControl("seeded"),
@@ -83,30 +83,30 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 [
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [Validators.required])
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [Validators.required])
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [Validators.required]),
+                        deck: new FormControl(null, [Validators.required])
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [Validators.required]),
-                    }),
+                        deck: new FormControl(null, [Validators.required])
+                    })
                 ],
                 this.validateUniquePlayers
-            ),
+            )
         });
     }
 
     onAddPlayer() {
         const control = new FormGroup({
             name: new FormControl(null, [Validators.required]),
-            deck: new FormControl(null, [Validators.required]),
+            deck: new FormControl(null, [Validators.required])
         });
         (<FormArray>this.createForm.get("decks")).push(control);
         this.numPlayers += 1;
@@ -137,7 +137,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         deckName: deckData.data.name,
                         deckURL:
                             "https://www.keyforgegame.com/deck-details/" +
-                            deckData.data.id,
+                            deckData.data.id
                     });
                     this.decksInDB.sort((a, b) => {
                         return a.deckName < b.deckName ? -1 : 1;
@@ -177,7 +177,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             getArray.push({
                 playerName: formArray[i].name,
                 url: formArray[i].deck,
-                index: i,
+                index: i
             });
         }
         this.isloading = true;
@@ -191,7 +191,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             deckArray.push({
                                 playerName: element.playerName,
                                 deck: deck[i],
-                                index: element.index,
+                                index: element.index
                             });
                         }
                     });
@@ -234,14 +234,14 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 tournDecks.push({
                     player: decks[i].playerName,
                     deckName: decks[i].deck.deckName,
-                    deckUrl: decks[i].deck.deckUrl,
+                    deckUrl: decks[i].deck.deckUrl
                 });
             } else {
                 tournDecks.push({
                     player: decks[i].playerName,
                     deckName: decks[i].deck.deckName,
                     deckUrl: decks[i].deck.deckUrl,
-                    chains: decks[i].deck.chains,
+                    chains: decks[i].deck.chains
                 });
             }
         }
@@ -249,7 +249,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         let maxRounds = 0;
         //Decides the maximum number of rounds
         if (this.createForm.get("tournamentType").value === "roundRobin") {
-            if (this.tournamentDecks.length % 2 !== 0) {
+            if (tournDecks.length % 2 !== 0) {
                 maxRounds = tournDecks.length;
             } else {
                 maxRounds = tournDecks.length - 1;
@@ -289,9 +289,9 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             rounds: [
                 {
                     players: [],
-                    pairings: [],
-                },
-            ],
+                    pairings: []
+                }
+            ]
         };
 
         //adds players to the players and standings array
@@ -304,7 +304,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 losses: 0,
                 byes: 0,
                 games: 0,
-                opponents: [],
+                opponents: []
             });
 
             if (typeof decks[i].chains === "number") {
@@ -346,7 +346,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     winner: false,
                     wins: 0,
                     losses: 0,
-                    byes: 0,
+                    byes: 0
                 },
                 player2: {
                     name: tourn.rounds[0].players[2 * i + 1].playername,
@@ -354,8 +354,8 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     winner: false,
                     wins: 0,
                     losses: 0,
-                    byes: 0,
-                },
+                    byes: 0
+                }
             });
             if (
                 typeof tourn.rounds[0].players[2 * i].chains === "number" &&
@@ -382,7 +382,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     winner: true,
                     wins: 0,
                     losses: 0,
-                    byes: 0,
+                    byes: 0
                 },
                 player2: {
                     name: "BYE",
@@ -390,8 +390,8 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                     winner: false,
                     wins: 0,
                     losses: 0,
-                    byes: 0,
-                },
+                    byes: 0
+                }
             });
             if (
                 typeof tourn.rounds[0].players[
@@ -419,7 +419,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 deck: "",
                 wins: 0,
                 losses: 0,
-                byes: 0,
+                byes: 0
             };
             tourn.roundRobinArray.push(temp);
         }
@@ -429,7 +429,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 deck: tourn.rounds[0].players[i].deckname,
                 wins: 0,
                 losses: 0,
-                byes: 0,
+                byes: 0
             };
             if (tourn.chainType === "unofficial") {
                 temp["chains"] = tourn.rounds[0].players[i].chains;
@@ -450,7 +450,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         winner: false,
                         wins: 0,
                         losses: 0,
-                        byes: 0,
+                        byes: 0
                     },
                     player2: {
                         ...tourn.roundRobinArray[
@@ -459,8 +459,8 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         winner: true,
                         wins: 0,
                         losses: 0,
-                        byes: 0,
-                    },
+                        byes: 0
+                    }
                 });
             } else {
                 tourn.rounds[0].pairings.push({
@@ -469,7 +469,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         winner: false,
                         wins: 0,
                         losses: 0,
-                        byes: 0,
+                        byes: 0
                     },
                     player2: {
                         ...tourn.roundRobinArray[
@@ -478,8 +478,8 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                         winner: false,
                         wins: 0,
                         losses: 0,
-                        byes: 0,
-                    },
+                        byes: 0
+                    }
                 });
             }
         }
@@ -495,7 +495,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         for (let i = 0; i < numPlayers; i++) {
             let temp = {
                 name: tourn.rounds[0].players[i].playername,
-                deck: tourn.rounds[0].players[i].deckname,
+                deck: tourn.rounds[0].players[i].deckname
             };
             if (tourn.chainType === "unofficial") {
                 temp["chains"] = tourn.rounds[0].players[i].chains;
@@ -508,7 +508,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         for (let i = 0; i < byes; i++) {
             tourn.rounds[0].singleElim.push({
                 name: "BYE",
-                deck: "",
+                deck: ""
             });
         }
 
@@ -539,34 +539,34 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 tourn.rounds[0].pairings.push({
                     player1: {
                         ...tourn.rounds[0].singleElim[2 * i],
-                        winner: false,
+                        winner: false
                     },
                     player2: {
                         ...tourn.rounds[0].singleElim[2 * i + 1],
-                        winner: true,
-                    },
+                        winner: true
+                    }
                 });
             } else if (tourn.rounds[0].singleElim[2 * i + 1].name === "BYE") {
                 tourn.rounds[0].pairings.push({
                     player1: {
                         ...tourn.rounds[0].singleElim[2 * i],
-                        winner: true,
+                        winner: true
                     },
                     player2: {
                         ...tourn.rounds[0].singleElim[2 * i + 1],
-                        winner: false,
-                    },
+                        winner: false
+                    }
                 });
             } else {
                 tourn.rounds[0].pairings.push({
                     player1: {
                         ...tourn.rounds[0].singleElim[2 * i],
-                        winner: false,
+                        winner: false
                     },
                     player2: {
                         ...tourn.rounds[0].singleElim[2 * i + 1],
-                        winner: false,
-                    },
+                        winner: false
+                    }
                 });
             }
         }
@@ -588,7 +588,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 if (i !== j) {
                     if (values[i].name === values[j].name) {
                         controls.controls[i]["controls"]["name"].setErrors({
-                            notUnique: true,
+                            notUnique: true
                         });
                     }
                 }
@@ -617,30 +617,30 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Artifact: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Creature: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Upgrade: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
-                        },
-                    },
+                            Variant: []
+                        }
+                    }
                 },
                 {
                     name: deckData._linked.houses[1].name,
@@ -651,30 +651,30 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Artifact: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Creature: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Upgrade: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
-                        },
-                    },
+                            Variant: []
+                        }
+                    }
                 },
                 {
                     name: deckData._linked.houses[2].name,
@@ -685,33 +685,33 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Artifact: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Creature: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
+                            Variant: []
                         },
                         Upgrade: {
                             Common: [],
                             Uncommon: [],
                             Rare: [],
                             FIXED: [],
-                            Variant: [],
-                        },
-                    },
-                },
+                            Variant: []
+                        }
+                    }
+                }
             ],
-            cards: [],
+            cards: []
         };
 
         switch (deckData.data.expansion) {
@@ -754,7 +754,7 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
             for (let k = 0; k < number; k++) {
                 newDeck.house[index].cards[card.card_type][card.rarity].push({
                     name: deckData._linked.cards[j].card_title,
-                    img: deckData._linked.cards[j].front_image,
+                    img: deckData._linked.cards[j].front_image
                 });
             }
         }
