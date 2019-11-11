@@ -1,3 +1,9 @@
+<app-alert
+    [message]="addingError"
+    *ngIf="addingError"
+    (close)="addingError = null"
+>
+</app-alert>
 <div class="container">
     <div *ngIf="isloading" style="text-align:center;">
         <app-loading-spinner></app-loading-spinner>
@@ -59,7 +65,7 @@
         </div>
         <br />
         <div formArrayName="decks" class="form-group">
-            <h5>Enter Player Decks Below</h5>
+            <h5>Players:</h5>
             <small
                 class="form-text"
                 *ngIf="
@@ -80,9 +86,9 @@
                 There will be {{ missing }} to fill in the bracket!
             </small>
             <small class="form-text text-muted">
-                Ex:
-                https://www.keyforgegame.com/deck-details/6d42472e-2e9c-457b-bc89-20801bbf96dc
+                Select a deck from the dropdown.
             </small>
+
             <br />
             <div
                 *ngFor="
@@ -111,28 +117,20 @@
                         </span>
                     </div>
                     <div class="col-8">
-                        <input
-                            type="text"
-                            class="form-control"
-                            formControlName="deck"
-                            placeholder="Enter keyforgegame.com URL"
-                        />
-                        <span
-                            class="help-block"
-                            style="color:red; padding:0 15px;"
-                            *ngIf="
-                                deck.controls.deck.invalid &&
-                                deck.controls.deck.touched
-                            "
-                        >
-                            Please enter a valid unique deck URL.
-                        </span>
+                        <select class="form-control" formControlName="deck">
+                            <option
+                                *ngFor="let deck of decksInDB"
+                                [ngValue]="deck.deckURL"
+                            >
+                                {{ deck.deckName }}
+                            </option>
+                        </select>
                     </div>
                     <div class="col-1">
                         <button
                             class="btn btn-danger"
                             type="button"
-                            (click)="onDeleteDeck(i)"
+                            (click)="onDeletePlayer(i)"
                         >
                             X
                         </button>
@@ -143,9 +141,16 @@
             <button
                 type="button"
                 class="btn btn-secondary"
-                (click)="onAddDeck()"
+                (click)="onAddPlayer()"
             >
                 Add Another Player
+            </button>
+            <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="addingDeck = true"
+            >
+                Add New Deck
             </button>
         </div>
         <button
@@ -157,3 +162,9 @@
         </button>
     </form>
 </div>
+
+<app-add-deck
+    *ngIf="addingDeck"
+    (close)="addingDeck = false"
+    (submit)="onAddDeck($event)"
+></app-add-deck>

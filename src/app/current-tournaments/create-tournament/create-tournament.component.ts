@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { take, map } from "rxjs/operators";
+import { take } from "rxjs/operators";
 
 import {
     DeckRetrievalService,
@@ -17,10 +17,18 @@ import { deck } from "../../shared/deck.model";
     styleUrls: ["./create-tournament.component.css"],
 })
 export class CreateTournamentComponent implements OnInit, OnDestroy {
+    isloading: boolean;
+
+    //Adding new deck variables
+    addingDeck: boolean = false;
+    addingError: string = "";
+
+    //tournament subscription variables
     currentSub: Subscription;
     finishedSub: Subscription;
+
+    //form variables
     createForm: FormGroup;
-    isloading: boolean;
     tournamentNames: string[] = [];
     numPlayers: number = 4;
     missing: string = "0";
@@ -75,31 +83,19 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                 [
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [
-                            Validators.required,
-                            this.validateDeckUrl.bind(this),
-                        ]),
+                        deck: new FormControl(null, [Validators.required]),
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [
-                            Validators.required,
-                            this.validateDeckUrl.bind(this),
-                        ]),
+                        deck: new FormControl(null, [Validators.required]),
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [
-                            Validators.required,
-                            this.validateDeckUrl.bind(this),
-                        ]),
+                        deck: new FormControl(null, [Validators.required]),
                     }),
                     new FormGroup({
                         name: new FormControl(null, [Validators.required]),
-                        deck: new FormControl(null, [
-                            Validators.required,
-                            this.validateDeckUrl.bind(this),
-                        ]),
+                        deck: new FormControl(null, [Validators.required]),
                     }),
                 ],
                 this.validateUniquePlayers
@@ -107,23 +103,49 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         });
     }
 
-    onAddDeck() {
+    onAddPlayer() {
         const control = new FormGroup({
             name: new FormControl(null, [Validators.required]),
-            deck: new FormControl(null, [
-                Validators.required,
-                this.validateDeckUrl,
-            ]),
+            deck: new FormControl(null, [Validators.required]),
         });
         (<FormArray>this.createForm.get("decks")).push(control);
         this.numPlayers += 1;
         this.checkNum();
     }
 
-    onDeleteDeck(index: number) {
+    onDeletePlayer(index: number) {
         (<FormArray>this.createForm.get("decks")).removeAt(index);
         this.numPlayers -= 1;
         this.checkNum();
+    }
+
+    onAddDeck(deckURL: string) {
+        this.addingDeck = false;
+        const inList =
+            this.decksInDB.filter(ele => {
+                return deckURL === ele.deckURL;
+            }).length > 0;
+        if (!inList) {
+            this.isloading = true;
+            this.deckService
+                .getSingleDeck(deckURL)
+                .subscribe((deckData: DeckData) => {
+                    this.organizeDeckData(deckData);
+                    this.isloading = false;
+                    this.addingError = "Deck has been added!";
+                    this.decksInDB.push({
+                        deckName: deckData.data.name,
+                        deckURL:
+                            "https://www.keyforgegame.com/deck-details/" +
+                            deckData.data.id,
+                    });
+                    this.decksInDB.sort((a, b) => {
+                        return a.deckName < b.deckName ? -1 : 1;
+                    });
+                });
+        } else {
+            this.addingError = "Deck already exists!";
+        }
     }
 
     //checks if the number of players is a power of 2 for single elimination
@@ -569,11 +591,6 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
                             notUnique: true,
                         });
                     }
-                    if (values[i].deck === values[j].deck) {
-                        controls.controls[i]["controls"]["deck"].setErrors({
-                            notUnique: true,
-                        });
-                    }
                 }
             }
         }
@@ -769,34 +786,34 @@ export class CreateTournamentComponent implements OnInit, OnDestroy {
         return newDeck;
     }
 
-    private validateDeckUrl(control: FormControl): { [s: string]: boolean } {
-        if (control.value !== null) {
-            if (
-                control.value.length != 78 ||
-                control.value.search("keyforgegame.com") === -1 ||
-                control.value.search("deck-details") === -1
-            ) {
-                return { "Invalid URL": true };
-            }
-            const inList =
-                this.decksInDB.filter(ele => {
-                    return control.value === ele.deckURL;
-                }).length > 0;
-            if (!inList) {
-                this.deckService
-                    .getSingleDeck(control.value)
-                    .subscribe((deckData: DeckData) => {
-                        // console.log(deckData);
-                        this.organizeDeckData(deckData);
-                        return null;
-                    });
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
+    // private validateDeckUrl(control: FormControl): { [s: string]: boolean } {
+    //     if (control.value !== null) {
+    //         if (
+    //             control.value.length != 78 ||
+    //             control.value.search("keyforgegame.com") === -1 ||
+    //             control.value.search("deck-details") === -1
+    //         ) {
+    //             return { "Invalid URL": true };
+    //         }
+    //         const inList =
+    //             this.decksInDB.filter(ele => {
+    //                 return control.value === ele.deckURL;
+    //             }).length > 0;
+    //         if (!inList) {
+    //             this.deckService
+    //                 .getSingleDeck(control.value)
+    //                 .subscribe((deckData: DeckData) => {
+    //                     // console.log(deckData);
+    //                     this.organizeDeckData(deckData);
+    //                     return null;
+    //                 });
+    //         } else {
+    //             return null;
+    //         }
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     validateTournamentName(control: FormControl): { [s: string]: boolean } {
         if (this.tournamentNames.indexOf(control.value) >= 0) {
