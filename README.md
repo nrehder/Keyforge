@@ -6,10 +6,15 @@ Webapp to be used alongside the cardgame Keyforge (https://www.keyforgegame.com/
 
 Working example at https://keyforge-2eb07.web.app/
 
-## Features to include:
+## Features:
 
-1. Custom tournament software for unofficial tournaments
-2. Deck tracking for wins/losses tracked by the offical website, as well as this webapp
+1. Create custom tournaments with either round robin, swiss style or single elimination rules.
+    a. Round robin ensures that each player faces each other player exactly once
+    b. Swiss style uses win/loss, followed by strength of schedule, followed by extended strength of schedule to determine rankings and pairings as described by the Keyforge tournament rules (see below)
+    c. Single elimination can either start with randomized pairings or seeded positions
+2. Tracks decks unofficial wins/losses as well as unofficial chains as described by the Keyforge tournament rules (see below)
+
+Keyforge Tournament Rules:  https://images-cdn.fantasyflightgames.com/filer_public/bf/4d/bf4db20f-92b7-4bdb-b1af-ba1dcb2fd435/kf_tournament_regulations-compressed.pdf
 
 ## How to use:
 
